@@ -22,5 +22,6 @@ namespace PerformanceApp.Server.Data
         }
 
         public DbSet<PerformanceApp.Server.Models.Portfolio> Portfolio { get; set; } = default!;
+        public DbSet<PerformanceApp.Server.Models.Benchmark> Benchmark { get; set; } = default!;
     }
 }

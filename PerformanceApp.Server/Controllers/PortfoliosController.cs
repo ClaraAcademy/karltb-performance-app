@@ -23,9 +23,19 @@ namespace PerformanceApp.Server.Controllers
 
         // GET: api/Portfolios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolio()
+        public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
         {
-            return await _context.Portfolio.ToListAsync();
+            var portfolios = await (from p in _context.Portfolio
+                                    join b in _context.Benchmark
+                                        on p.PortfolioId equals b.PortfolioId
+                                    select p).ToListAsync();
+
+            if (portfolios == null)
+            {
+                return NotFound();
+            }
+
+            return portfolios;
         }
 
         // GET: api/Portfolios/5
