@@ -1,41 +1,48 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-interface Portfolio {
-    portfolioId: number;
+interface PortfolioBenchmarkDTO {
+    portfolioID: number;
     portfolioName: string;
+    benchmarkID: number;
+    benchmarkName: string;
 }
 
 function App() {
-    const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+    const [portfolioBenchmarkDTO, setPortfolioBenchmarkDTO] = useState<PortfolioBenchmarkDTO[]>([]);
 
     useEffect(() => {
-        fetch("api/Portfolios")
+        fetch("api/PortfolioBenchmarkDTO")
             .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
                 return res.json();
             })
             .then((data) => {
-                console.log("Fetched portfolios:", data);
-                setPortfolios(data);
+                console.log("Fetched portfolios and benchmarks:", data);
+                setPortfolioBenchmarkDTO(data);
             })
             .catch((err) => console.error("Fetch error:", err));
+
     }, []);
 
-    const contents = portfolios === undefined
+    const contents = portfolioBenchmarkDTO === undefined
         ? <p><em>LOADING</em></p>
         : <table className="table table-striped" aria-labelledby="tableLabel">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
+                    <th>Portfolio ID</th>
+                    <th>Portfolio Name</th>
+                    <th>Benchmark ID</th>
+                    <th>Benchmark Name</th>
                 </tr>
             </thead>
             <tbody>
-                {portfolios.map(portfolio =>
-                    <tr key={portfolio.portfolioId}>
-                        <td>{portfolio.portfolioId}</td>
-                        <td>{portfolio.portfolioName}</td>
+                {portfolioBenchmarkDTO.map(pb =>
+                    <tr key={pb.portfolioID}>
+                        <td>{pb.portfolioID}</td>
+                        <td>{pb.portfolioName}</td>
+                        <td>{pb.benchmarkID}</td>
+                        <td>{pb.benchmarkName}</td>
                     </tr>
                 )}
             </tbody>
