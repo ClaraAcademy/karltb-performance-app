@@ -1,13 +1,28 @@
+import { useState } from "react";
 import "./App.css";
 import PortfolioDropdown from "./PortfolioDropdown";
 import PortfolioTable from "./PortfolioTable";
 
+interface Portfolio {
+    portfolioID: number;
+    portfolioName: string;
+}
+
 function App() {
+    const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
+
     return (
         <div>
             <h1 id="mainHeader">Performance Attribution</h1>
             <p>Choose a Portfolio</p>
-            <PortfolioDropdown />
+            <PortfolioDropdown onSelect={setSelectedPortfolio} />
+            {
+                selectedPortfolio ? (
+                    <p>Chosen Portfolio: {selectedPortfolio.portfolioName}</p>
+                ) : (
+                    <p>No Portfolio selected</p>
+                )
+            }
             <h2 id="tableLabel">Portfolios</h2>
             <PortfolioTable />
         </div>

@@ -5,7 +5,11 @@ interface Portfolio {
     portfolioName: string;
 }
 
-const PortfolioDropdown = () => {
+interface PortfolioDropdownProps {
+    onSelect?: (portfolio: Portfolio | null) => void;
+}
+
+const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const [selected, setSelected] = useState<Portfolio | null>(null);
 
@@ -19,15 +23,17 @@ const PortfolioDropdown = () => {
             .catch((err) => console.error(err))
     }, []);
 
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = Number(e.target.value);
+        const selectedPortfolio = portfolios.find(
+            (p) => p.portfolioID === id
+        ) ?? null;
+        setSelected(selectedPortfolio)
+        if (onSelect) onSelect(selectedPortfolio);
+    }
+
     return (
-        <select
-            value={selected?.portfolioID ?? ""}
-            onChange={(e) => {
-                const selectedId = Number(e.target.value);
-                const selectedPortfolio = portfolios.find((p) => p.portfolioID === selectedId) ?? null;
-                setSelected(selectedPortfolio)
-            }}
-        >
+        <select value={selected?.portfolioID ?? ""} onChange={handleChange} >
             {portfolios.map((p) => (
                 <option key={p.portfolioID} value={p.portfolioID}>
                     {p.portfolioName}
