@@ -11,15 +11,7 @@ function App() {
     return (
         <div>
             <h1 id="mainHeader">Performance Attribution</h1>
-            <p>Choose a Portfolio</p>
             <PortfolioDropdown onSelect={setSelectedPortfolio} />
-            {
-                selectedPortfolio ? (
-                    <p>Chosen Portfolio: {selectedPortfolio.portfolioName}</p>
-                ) : (
-                    <p>No Portfolio selected</p>
-                )
-            }
             <h2 id="tableLabel">Portfolios</h2>
             <PortfolioTable
                 portfolioID={selectedPortfolio?.portfolioID}
