@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { PortfolioBenchmarkDTO } from "../types";
+import "./PortfolioTable.css"
 
 interface PortfolioTableProps {
     portfolioID: number | undefined
