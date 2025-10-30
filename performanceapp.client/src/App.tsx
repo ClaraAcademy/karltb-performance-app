@@ -1,38 +1,41 @@
-import { useEffect, useState } from 'react';
-import './App.css';
+import { useState, useEffect } from "react";
+import "./App.css";
 
-interface Forecast {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
+interface Portfolio {
+    portfolioId: number;
+    portfolioName: string;
 }
 
 function App() {
-    const [forecasts, setForecasts] = useState<Forecast[]>();
+    const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
 
     useEffect(() => {
-        populateWeatherData();
+        fetch("api/Portfolios")
+            .then((res) => {
+                if (!res.ok) throw new Error(res.statusText);
+                return res.json();
+            })
+            .then((data) => {
+                console.log("Fetched portfolios:", data);
+                setPortfolios(data);
+            })
+            .catch((err) => console.error("Fetch error:", err));
     }, []);
 
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
+    const contents = portfolios === undefined
+        ? <p><em>LOADING</em></p>
         : <table className="table table-striped" aria-labelledby="tableLabel">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
+                    <th>ID</th>
+                    <th>Name</th>
                 </tr>
             </thead>
             <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
+                {portfolios.map(portfolio =>
+                    <tr key={portfolio.portfolioId}>
+                        <td>{portfolio.portfolioId}</td>
+                        <td>{portfolio.portfolioName}</td>
                     </tr>
                 )}
             </tbody>
@@ -40,19 +43,10 @@ function App() {
 
     return (
         <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
+            <h1 id="tableLabel">Portfolios</h1>
             {contents}
         </div>
     );
-
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
-        }
-    }
 }
 
 export default App;
