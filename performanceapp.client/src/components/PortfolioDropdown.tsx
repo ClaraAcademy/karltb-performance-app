@@ -31,6 +31,10 @@ const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
 
     return (
         <select value={selected?.portfolioID ?? ""} onChange={handleChange} >
+            {/* Placeholder that disappears after choice */}
+            <option value="" disabled hidden>
+                Select a portfolio
+            </option>
             {portfolios.map((p) => (
                 <option key={p.portfolioID} value={p.portfolioID}>
                     {p.portfolioName}
