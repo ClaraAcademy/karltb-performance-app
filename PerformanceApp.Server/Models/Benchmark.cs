@@ -8,5 +8,7 @@ public partial class Benchmark
     public int PortfolioID { get; set; }
     public int BenchmarkID { get; set; }
 
-    public DateTime Created { get; set; }
+    public Portfolio Portfolio { get; set; } = null!;
+
+    public Portfolio BenchmarkPortfolio { get; set; } = null!;
 }

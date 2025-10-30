@@ -9,5 +9,5 @@ public partial class Portfolio
 
     public string PortfolioName { get; set; } = null!;
 
-    public DateTime Created { get; set; }
+    public ICollection<Benchmark> Benchmark { get; set; } = null!;
 }

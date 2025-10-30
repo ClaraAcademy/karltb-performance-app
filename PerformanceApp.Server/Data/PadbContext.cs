@@ -19,6 +19,17 @@ namespace PerformanceApp.Server.Data
             // Set default schema
             modelBuilder.HasDefaultSchema("padb");
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Benchmark>()
+                .HasOne(b => b.BenchmarkPortfolio)
+                .WithMany()
+                .HasForeignKey(b => b.BenchmarkID)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Benchmark>()
+                .HasOne(b => b.Portfolio)
+                .WithMany()
+                .HasForeignKey(b => b.PortfolioID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<PerformanceApp.Server.Models.Portfolio> Portfolio { get; set; } = default!;

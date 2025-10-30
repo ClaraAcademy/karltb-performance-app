@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Server.Data;
 using PerformanceApp.Server.Models;
+using SQLitePCL;
 
 namespace PerformanceApp.Server.Controllers
 {
@@ -25,94 +26,19 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
         {
-            var portfolios = await (from p in _context.Portfolio
-                                    join b in _context.Benchmark
-                                        on p.PortfolioID equals b.PortfolioID
-                                    select p).ToListAsync();
+            var portfolios = await _context.Portfolio
+                .Where(
+                    p => _context.Benchmark.Any(
+                        b => b.PortfolioID == p.PortfolioID
+                    )
+                ).ToListAsync();
 
             if (portfolios == null)
             {
                 return NotFound();
             }
 
-            return portfolios;
-        }
-
-        // GET: api/Portfolios/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Portfolio>> GetPortfolio(int id)
-        {
-            var portfolio = await _context.Portfolio.FindAsync(id);
-
-            if (portfolio == null)
-            {
-                return NotFound();
-            }
-
-            return portfolio;
-        }
-
-        // PUT: api/Portfolios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPortfolio(int id, Portfolio portfolio)
-        {
-            if (id != portfolio.PortfolioID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(portfolio).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PortfolioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Portfolios
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Portfolio>> PostPortfolio(Portfolio portfolio)
-        {
-            _context.Portfolio.Add(portfolio);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPortfolio", new { id = portfolio.PortfolioID }, portfolio);
-        }
-
-        // DELETE: api/Portfolios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePortfolio(int id)
-        {
-            var portfolio = await _context.Portfolio.FindAsync(id);
-            if (portfolio == null)
-            {
-                return NotFound();
-            }
-
-            _context.Portfolio.Remove(portfolio);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PortfolioExists(int id)
-        {
-            return _context.Portfolio.Any(e => e.PortfolioID == id);
+            return Ok(portfolios);
         }
     }
 }
