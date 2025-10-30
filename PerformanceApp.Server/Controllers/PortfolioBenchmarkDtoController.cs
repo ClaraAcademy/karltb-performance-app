@@ -22,14 +22,14 @@ namespace PerformanceApp.Server.Controllers
             var result = await (
                 from bm in _context.Benchmark
                 join p in _context.Portfolio
-                    on bm.PortfolioId equals p.PortfolioId
+                    on bm.PortfolioID equals p.PortfolioID
                 join b in _context.Portfolio
-                    on bm.BenchmarkId equals b.PortfolioId
+                    on bm.BenchmarkID equals b.PortfolioID
                 select new PortfolioBenchmarkDTO
                 {
-                    PortfolioID = p.PortfolioId,
+                    PortfolioID = p.PortfolioID,
                     PortfolioName = p.PortfolioName,
-                    BenchmarkID = b.PortfolioId,
+                    BenchmarkID = b.PortfolioID,
                     BenchmarkName = b.PortfolioName
                 }
             ).ToListAsync();

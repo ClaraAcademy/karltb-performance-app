@@ -27,7 +27,7 @@ namespace PerformanceApp.Server.Controllers
         {
             var portfolios = await (from p in _context.Portfolio
                                     join b in _context.Benchmark
-                                        on p.PortfolioId equals b.PortfolioId
+                                        on p.PortfolioID equals b.PortfolioID
                                     select p).ToListAsync();
 
             if (portfolios == null)
@@ -57,7 +57,7 @@ namespace PerformanceApp.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPortfolio(int id, Portfolio portfolio)
         {
-            if (id != portfolio.PortfolioId)
+            if (id != portfolio.PortfolioID)
             {
                 return BadRequest();
             }
@@ -91,7 +91,7 @@ namespace PerformanceApp.Server.Controllers
             _context.Portfolio.Add(portfolio);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPortfolio", new { id = portfolio.PortfolioId }, portfolio);
+            return CreatedAtAction("GetPortfolio", new { id = portfolio.PortfolioID }, portfolio);
         }
 
         // DELETE: api/Portfolios/5
@@ -112,7 +112,7 @@ namespace PerformanceApp.Server.Controllers
 
         private bool PortfolioExists(int id)
         {
-            return _context.Portfolio.Any(e => e.PortfolioId == id);
+            return _context.Portfolio.Any(e => e.PortfolioID == id);
         }
     }
 }
