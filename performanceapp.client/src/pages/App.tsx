@@ -21,7 +21,9 @@ function App() {
                 )
             }
             <h2 id="tableLabel">Portfolios</h2>
-            <PortfolioTable />
+            <PortfolioTable
+                portfolioID={selectedPortfolio?.portfolioID}
+            />
         </div>
     );
 }
