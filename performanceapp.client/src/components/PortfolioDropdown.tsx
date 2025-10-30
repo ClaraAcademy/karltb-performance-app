@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
+import type { Portfolio } from "../types";
 
-interface Portfolio {
-    portfolioID: number;
-    portfolioName: string;
-}
 
 interface PortfolioDropdownProps {
     onSelect?: (portfolio: Portfolio | null) => void;

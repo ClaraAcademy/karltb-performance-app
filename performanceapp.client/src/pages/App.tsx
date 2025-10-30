@@ -1,12 +1,9 @@
 import { useState } from "react";
 import "./App.css";
-import PortfolioDropdown from "./PortfolioDropdown";
-import PortfolioTable from "./PortfolioTable";
+import PortfolioDropdown from "../components/PortfolioDropdown";
+import PortfolioTable from "../components/PortfolioTable";
+import type { Portfolio } from "../types";
 
-interface Portfolio {
-    portfolioID: number;
-    portfolioName: string;
-}
 
 function App() {
     const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);

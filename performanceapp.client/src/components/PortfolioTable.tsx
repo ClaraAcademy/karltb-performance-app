@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
+import type { PortfolioBenchmarkDTO } from "../types";
 
-interface PortfolioBenchmarkDTO {
-    portfolioID: number;
-    portfolioName: string;
-    benchmarkID: number;
-    benchmarkName: string;
-}
 const PortfolioTable = () => {
     const [portfolioBenchmarkDTO, setPortfolioBenchmarkDTO] = useState<PortfolioBenchmarkDTO[]>([]);
 
