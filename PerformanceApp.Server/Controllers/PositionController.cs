@@ -22,6 +22,99 @@ namespace PerformanceApp.Server.Controllers
             _context = context;
         }
 
+        // GET: /api/position/stocks?portfolioId=123&date=2025-10-31
+        [HttpGet("stocks")]
+        public async Task<ActionResult<IEnumerable<StockPositionDTO>>> GetStockPositions(
+            [FromQuery] int portfolioId,
+            [FromQuery] string date
+        )
+        {
+            var bankday = DateOnly.Parse(date);
+            var sp = await _context.Positions
+                .Where(p => p.Bankday == bankday
+                         && p.PortfolioId == portfolioId
+                         && p.Instrument.InstrumentType.InstrumentTypeName == "Stock")
+                .Select(p => new StockPositionDTO
+                {
+                    PortfolioId = p.PortfolioId,
+                    InstrumentId = p.InstrumentId,
+                    InstrumentName = p.Instrument.InstrumentName,
+                    Bankday = p.Bankday,
+                    Value = p.PositionValues.SingleOrDefault(pv => pv.Bankday == p.Bankday).PositionValue1,
+                    UnitPrice = p.Instrument.InstrumentPrices.SingleOrDefault(ip => ip.Bankday == p.Bankday).Price,
+                    Count = p.Count
+                })
+                .ToListAsync();
+
+            if (sp == null || sp.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(sp);
+        }
+
+        // GET: /api/position/bonds?portfolioId=123&date=2025-10-31
+        [HttpGet("bonds")]
+        public async Task<ActionResult<IEnumerable<StockPositionDTO>>> GetBondPositions(
+            [FromQuery] int portfolioId,
+            [FromQuery] string date
+        )
+        {
+            var bankday = DateOnly.Parse(date);
+            var sp = await _context.Positions
+                .Where(p => p.Bankday == bankday
+                         && p.PortfolioId == portfolioId
+                         && p.Instrument.InstrumentType.InstrumentTypeName == "Bond")
+                .Select(p => new BondPositionDTO
+                {
+                    PortfolioId = p.PortfolioId,
+                    InstrumentId = p.InstrumentId,
+                    InstrumentName = p.Instrument.InstrumentName,
+                    Bankday = p.Bankday,
+                    Value = p.PositionValues.SingleOrDefault(pv => pv.Bankday == p.Bankday).PositionValue1,
+                    UnitPrice = p.Instrument.InstrumentPrices.SingleOrDefault(ip => ip.Bankday == p.Bankday).Price,
+                    Nominal = p.Nominal
+                })
+                .ToListAsync();
+
+            if (sp == null || sp.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(sp);
+        }
+
+        // GET: /api/position/indexes?portfolioId=123&date=2025-10-31
+        [HttpGet("indexes")]
+        public async Task<ActionResult<IEnumerable<StockPositionDTO>>> GetIndexPositions(
+            [FromQuery] int portfolioId,
+            [FromQuery] string date
+        )
+        {
+            var bankday = DateOnly.Parse(date);
+            var sp = await _context.Positions
+                .Where(p => p.Bankday == bankday
+                         && p.PortfolioId == portfolioId
+                         && p.Instrument.InstrumentType.InstrumentTypeName == "Index")
+                .Select(p => new IndexPositionDTO
+                {
+                    PortfolioId = p.PortfolioId,
+                    InstrumentId = p.InstrumentId,
+                    InstrumentName = p.Instrument.InstrumentName,
+                    Bankday = p.Bankday,
+                    Value = p.PositionValues.SingleOrDefault(pv => pv.Bankday == p.Bankday).PositionValue1,
+                    UnitPrice = p.Instrument.InstrumentPrices.SingleOrDefault(ip => ip.Bankday == p.Bankday).Price,
+                    Proportion = p.Proportion
+                })
+                .ToListAsync();
+
+            if (sp == null || sp.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(sp);
+        }
+
         // Get: api/Position
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Position>>> GetPositions()
@@ -54,7 +147,7 @@ namespace PerformanceApp.Server.Controllers
 
             var positions = await _context.Positions
                 .Where(p =>
-                    p.Bankday >= start 
+                    p.Bankday >= start
                     && p.Bankday < end
                 )
                 .OrderBy(p => p.Bankday)
@@ -84,8 +177,8 @@ namespace PerformanceApp.Server.Controllers
 
             var positions = await _context.Positions
                 .Where(p =>
-                    p.Bankday >= start 
-                    && p.Bankday < end 
+                    p.Bankday >= start
+                    && p.Bankday < end
                     && p.PortfolioId == portfolioId
                 )
                 .OrderBy(p => p.Bankday)

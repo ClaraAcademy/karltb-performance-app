@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
-import type { PortfolioBenchmarkDTO } from "../types";
-import "./PortfolioTable.css"
+import type { PortfolioBenchmark } from "../types";
+import "./PortfolioTable.css";
 
 interface PortfolioTableProps {
-    portfolioId: number | undefined
+    portfolioId: number | undefined;
 }
 
 const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioId }) => {
-    const [portfolioBenchmarkDTO, setPortfolioBenchmarkDTO] = useState<PortfolioBenchmarkDTO[]>([]);
+    const [portfolioBenchmark, setPortfolioBenchmarkDTO] = useState<
+        PortfolioBenchmark[]
+    >([]);
 
     useEffect(() => {
-        if (portfolioId === undefined) { return; }
+        if (portfolioId === undefined) {
+            return;
+        }
         fetch(`api/PortfolioBenchmarkDTO/${portfolioId}`)
             .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
@@ -32,12 +36,12 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioId }) => {
                 </tr>
             </thead>
             <tbody>
-                {portfolioBenchmarkDTO.map(pb =>
+                {portfolioBenchmark.map((pb) => (
                     <tr key={pb.portfolioId}>
                         <td>{pb.portfolioName}</td>
                         <td>{pb.benchmarkName}</td>
                     </tr>
-                )}
+                ))}
             </tbody>
         </table>
     );
