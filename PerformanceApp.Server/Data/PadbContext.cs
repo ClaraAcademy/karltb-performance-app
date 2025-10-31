@@ -32,7 +32,8 @@ namespace PerformanceApp.Server.Data
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
-        public DbSet<PerformanceApp.Server.Models.Portfolio> Portfolio { get; set; } = default!;
-        public DbSet<PerformanceApp.Server.Models.Benchmark> Benchmark { get; set; } = default!;
+        public DbSet<Portfolio> Portfolio { get; set; } = default!;
+        public DbSet<Benchmark> Benchmark { get; set; } = default!;
+        public DbSet<DateInfo> DateInfo { get; set; } 
     }
 }

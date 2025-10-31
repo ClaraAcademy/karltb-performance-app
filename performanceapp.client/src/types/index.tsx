@@ -9,3 +9,7 @@ export interface PortfolioBenchmarkDTO {
     benchmarkID: number;
     benchmarkName: string;
 }
+
+export interface DateInfo {
+    bankday: Date;
+}
