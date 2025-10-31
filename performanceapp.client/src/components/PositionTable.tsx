@@ -15,6 +15,7 @@ function PositionTable<T>({
 }: PositionTableProps<T>) {
     const [positions, setPositions] = useState<T[]>([]);
     useEffect(() => {
+        setPositions([])
         if (endpoint == null || portfolioId == null || bankday == null) {
             return;
         }
@@ -31,7 +32,7 @@ function PositionTable<T>({
                 setPositions(data);
             })
             .catch((err) => console.error("Fetch error: ", err));
-    }, [portfolioId, bankday]);
+    }, [portfolioId, bankday, endpoint]);
 
     return (
         <table
