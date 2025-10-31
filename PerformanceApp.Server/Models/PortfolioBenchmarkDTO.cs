@@ -2,8 +2,8 @@ namespace PerformanceApp.Server.Models;
 
 public class PortfolioBenchmarkDTO
 {
-    public int PortfolioID { get; set; }
+    public int PortfolioId { get; set; }
     public string PortfolioName { get; set; } = null!;
-    public int BenchmarkID { get; set; }
+    public int BenchmarkId { get; set; }
     public string BenchmarkName { get; set; } = null!;
 }

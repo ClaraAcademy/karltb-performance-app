@@ -3,15 +3,15 @@ import type { PortfolioBenchmarkDTO } from "../types";
 import "./PortfolioTable.css"
 
 interface PortfolioTableProps {
-    portfolioID: number | undefined
+    portfolioId: number | undefined
 }
 
-const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioID }) => {
+const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioId }) => {
     const [portfolioBenchmarkDTO, setPortfolioBenchmarkDTO] = useState<PortfolioBenchmarkDTO[]>([]);
 
     useEffect(() => {
-        if (portfolioID === undefined) { return; }
-        fetch(`api/PortfolioBenchmarkDTO/${portfolioID}`)
+        if (portfolioId === undefined) { return; }
+        fetch(`api/PortfolioBenchmarkDTO/${portfolioId}`)
             .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
                 return res.json();
@@ -21,7 +21,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioID }) => {
                 setPortfolioBenchmarkDTO(data);
             })
             .catch((err) => console.error("Fetch error:", err));
-    }, [portfolioID]);
+    }, [portfolioId]);
 
     return (
         <table className="table table-striped" aria-labelledby="tableLabel">
@@ -33,7 +33,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioID }) => {
             </thead>
             <tbody>
                 {portfolioBenchmarkDTO.map(pb =>
-                    <tr key={pb.portfolioID}>
+                    <tr key={pb.portfolioId}>
                         <td>{pb.portfolioName}</td>
                         <td>{pb.benchmarkName}</td>
                     </tr>

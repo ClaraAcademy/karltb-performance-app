@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace PerformanceApp.Server.Models;
 
-public partial class PortfolioValue
+public partial class KeyFigureValue
 {
     public int PortfolioId { get; set; }
 
-    public DateOnly Bankday { get; set; }
+    public int KeyFigureId { get; set; }
 
-    public decimal? PortfolioValue1 { get; set; }
+    public decimal? KeyFigureValue1 { get; set; }
 
     public DateTime Created { get; set; }
 
-    public virtual DateInfo BankdayNavigation { get; set; } = null!;
+    public virtual KeyFigureInfo KeyFigure { get; set; } = null!;
 
     public virtual Portfolio Portfolio { get; set; } = null!;
 }

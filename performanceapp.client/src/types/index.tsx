@@ -1,12 +1,12 @@
 export interface Portfolio {
-    portfolioID: number;
+    portfolioId: number;
     portfolioName: string;
 }
 
 export interface PortfolioBenchmarkDTO {
-    portfolioID: number;
+    portfolioId: number;
     portfolioName: string;
-    benchmarkID: number;
+    benchmarkId: number;
     benchmarkName: string;
 }
 

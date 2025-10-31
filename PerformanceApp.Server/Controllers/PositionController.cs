@@ -26,10 +26,10 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Position>>> GetPositions()
         {
-            var positions = await _context.Position
+            var positions = await _context.Positions
                 .OrderBy(p => p.Bankday)
-                .ThenBy(p => p.PortfolioID)
-                .ThenBy(p => p.InstrumentID)
+                .ThenBy(p => p.PortfolioId)
+                .ThenBy(p => p.InstrumentId)
                 .ToListAsync();
 
             if (positions == null)
@@ -44,22 +44,22 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet("{date}")]
         public async Task<ActionResult<IEnumerable<Position>>> GetPositions(string date)
         {
-            if (!DateTime.TryParse(date, out var parsed))
+            if (!DateOnly.TryParse(date, out var parsed))
             {
                 return BadRequest("Invalid date format. Use yyyy-mm-dd");
             }
 
-            var start = parsed.Date;
+            var start = parsed;
             var end = start.AddDays(1);
 
-            var positions = await _context.Position
+            var positions = await _context.Positions
                 .Where(p =>
                     p.Bankday >= start 
                     && p.Bankday < end
                 )
                 .OrderBy(p => p.Bankday)
-                .ThenBy(p => p.PortfolioID)
-                .ThenBy(p => p.InstrumentID)
+                .ThenBy(p => p.PortfolioId)
+                .ThenBy(p => p.InstrumentId)
                 .ToListAsync();
 
             if (positions == null)
@@ -70,26 +70,26 @@ namespace PerformanceApp.Server.Controllers
             return Ok(positions);
         }
 
-        // Get: api/Position/{date}/{portfolioID} (date as yyyy-mm-dd)
-        [HttpGet("{date}/{portfolioID}")]
-        public async Task<ActionResult<IEnumerable<Position>>> GetPositions(string date, int portfolioID)
+        // Get: api/Position/{date}/{portfolioId} (date as yyyy-mm-dd)
+        [HttpGet("{date}/{portfolioId}")]
+        public async Task<ActionResult<IEnumerable<Position>>> GetPositions(string date, int portfolioId)
         {
-            if (!DateTime.TryParse(date, out var parsed))
+            if (!DateOnly.TryParse(date, out var parsed))
             {
                 return BadRequest("Invalid date format. Use yyyy-mm-dd");
             }
 
-            var start = parsed.Date;
+            var start = parsed;
             var end = start.AddDays(1);
 
-            var positions = await _context.Position
+            var positions = await _context.Positions
                 .Where(p =>
                     p.Bankday >= start 
                     && p.Bankday < end 
-                    && p.PortfolioID == portfolioID
+                    && p.PortfolioId == portfolioId
                 )
                 .OrderBy(p => p.Bankday)
-                .ThenBy(p => p.InstrumentID)
+                .ThenBy(p => p.InstrumentId)
                 .ToListAsync();
 
             if (positions == null)

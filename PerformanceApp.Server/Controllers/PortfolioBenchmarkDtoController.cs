@@ -20,13 +20,13 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfoliosBenchmarks()
         {
-            var pbs = await _context.Benchmark.Select(
+            var pbs = await _context.Benchmarks.Select(
                 bm => new PortfolioBenchmarkDTO
                 {
-                    PortfolioID = bm.Portfolio.PortfolioID,
+                    PortfolioId = bm.Portfolio.PortfolioId,
                     PortfolioName = bm.Portfolio.PortfolioName,
-                    BenchmarkID = bm.BenchmarkPortfolio.PortfolioID,
-                    BenchmarkName = bm.BenchmarkPortfolio.PortfolioName
+                    BenchmarkId = bm.BenchmarkNavigation.PortfolioId,
+                    BenchmarkName = bm.BenchmarkNavigation.PortfolioName
                 }
             ).ToListAsync();
 
@@ -42,15 +42,15 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfolioBenchmarks(int id)
         {
-            var pbs = await _context.Benchmark
-            .Where(bm => bm.PortfolioID == id)
+            var pbs = await _context.Benchmarks
+            .Where(bm => bm.PortfolioId == id)
             .Select(
                 bm => new PortfolioBenchmarkDTO
                 {
-                    PortfolioID = bm.Portfolio.PortfolioID,
+                    PortfolioId = bm.Portfolio.PortfolioId,
                     PortfolioName = bm.Portfolio.PortfolioName,
-                    BenchmarkID = bm.BenchmarkPortfolio.PortfolioID,
-                    BenchmarkName = bm.BenchmarkPortfolio.PortfolioName
+                    BenchmarkId = bm.BenchmarkNavigation.PortfolioId,
+                    BenchmarkName = bm.BenchmarkNavigation.PortfolioName
                 }
             ).ToListAsync();
 

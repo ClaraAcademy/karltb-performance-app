@@ -26,7 +26,7 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DateInfo>>> GetDates()
         {
-            var dates = await _context.DateInfo
+            var dates = await _context.DateInfos
                 .Distinct()
                 .OrderBy(d => d.Bankday)
                 .ToListAsync();

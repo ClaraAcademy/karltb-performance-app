@@ -23,20 +23,20 @@ const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = Number(e.target.value);
         const selectedPortfolio = portfolios.find(
-            (p) => p.portfolioID === id
+            (p) => p.portfolioId === id
         ) ?? null;
         setSelected(selectedPortfolio)
         if (onSelect) onSelect(selectedPortfolio);
     }
 
     return (
-        <select value={selected?.portfolioID ?? ""} onChange={handleChange} >
+        <select value={selected?.portfolioId ?? ""} onChange={handleChange} >
             {/* Placeholder that disappears after choice */}
             <option value="" disabled hidden>
                 Select a portfolio
             </option>
             {portfolios.map((p) => (
-                <option key={p.portfolioID} value={p.portfolioID}>
+                <option key={p.portfolioId} value={p.portfolioId}>
                     {p.portfolioName}
                 </option>
             ))}

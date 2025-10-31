@@ -26,10 +26,10 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
         {
-            var portfolios = await _context.Portfolio
+            var portfolios = await _context.Portfolios
                 .Where(
-                    p => _context.Benchmark.Any(
-                        b => b.PortfolioID == p.PortfolioID
+                    p => _context.Benchmarks.Any(
+                        b => b.PortfolioId == p.PortfolioId
                     )
                 ).ToListAsync();
 

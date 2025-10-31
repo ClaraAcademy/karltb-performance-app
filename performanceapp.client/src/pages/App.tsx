@@ -14,7 +14,7 @@ function App() {
             <h1 id="mainHeader">Performance Attribution</h1>
             <PortfolioDropdown onSelect={setSelectedPortfolio} />
             <h2 id="tableLabel">Portfolios</h2>
-            <PortfolioTable portfolioID={selectedPortfolio?.portfolioID} />
+            <PortfolioTable portfolioId={selectedPortfolio?.portfolioId} />
             <h2 id="dateHeader">Dates</h2>
             <DateDropdown />
         </div>

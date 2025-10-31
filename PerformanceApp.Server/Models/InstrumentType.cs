@@ -1,9 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace PerformanceApp.Server.Models;
 
-public class InstrumentType
+public partial class InstrumentType
 {
-    public int InstrumentTypeID { get; set; }
+    public int InstrumentTypeId { get; set; }
+
     public string InstrumentTypeName { get; set; } = null!;
 
-    public ICollection<Instrument> Instruments { get; set; } = null!;
+    public DateTime Created { get; set; }
+
+    public virtual ICollection<Instrument> Instruments { get; set; } = new List<Instrument>();
 }
