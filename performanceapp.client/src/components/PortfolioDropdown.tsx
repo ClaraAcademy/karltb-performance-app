@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Portfolio } from "../types";
-
+import { usePortfolio } from "../contexts/PortfolioContext";
 
 interface PortfolioDropdownProps {
     onSelect?: (portfolio: Portfolio | null) => void;
@@ -8,7 +8,7 @@ interface PortfolioDropdownProps {
 
 const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-    const [selected, setSelected] = useState<Portfolio | null>(null);
+    const { portfolio, setPortfolio } = usePortfolio();
 
     useEffect(() => {
         fetch("api/Portfolios")
@@ -17,20 +17,21 @@ const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
                 console.log("Fetched portfolios:", data);
                 setPortfolios(data);
             })
-            .catch((err) => console.error(err))
-    }, []);
+            .catch((err) => console.error(err));
+    }, [portfolio]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = Number(e.target.value);
-        const selectedPortfolio = portfolios.find(
-            (p) => p.portfolioId === id
-        ) ?? null;
-        setSelected(selectedPortfolio)
-        if (onSelect) onSelect(selectedPortfolio);
-    }
+        const selectedPortfolio =
+            portfolios.find((p) => p.portfolioId === id) ?? null;
+        setPortfolio(selectedPortfolio);
+        if (onSelect) {
+            onSelect(portfolio);
+        }
+    };
 
     return (
-        <select value={selected?.portfolioId ?? ""} onChange={handleChange} >
+        <select value={portfolio?.portfolioId ?? ""} onChange={handleChange}>
             {/* Placeholder that disappears after choice */}
             <option value="" disabled hidden>
                 Select a portfolio

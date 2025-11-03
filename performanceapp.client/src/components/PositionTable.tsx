@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
+import { usePortfolio } from "../contexts/PortfolioContext";
+import { useBankday } from "../contexts/BankdayContext";
 
 interface PositionTableProps<T> {
-    portfolioId: number | undefined;
-    bankday: Date | undefined;
     endpoint: string | undefined;
     columns: { header: string; accessor: (row: T) => React.ReactNode }[];
 }
 
-function PositionTable<T>({
-    portfolioId,
-    bankday,
-    endpoint,
-    columns,
-}: PositionTableProps<T>) {
+function PositionTable<T>({ endpoint, columns }: PositionTableProps<T>) {
+    const { portfolio } = usePortfolio();
+    const { bankday } = useBankday();
     const [positions, setPositions] = useState<T[]>([]);
+
     useEffect(() => {
-        setPositions([])
-        if (endpoint == null || portfolioId == null || bankday == null) {
+        setPositions([]);
+        if (endpoint == null || portfolio == null || bankday == null) {
             return;
         }
+        const portfolioId = portfolio.portfolioId;
         const dateString = bankday ? bankday.toISOString().split("T")[0] : "";
         fetch(
             `api/position/${endpoint}?portfolioId=${portfolioId}&date=${dateString}`,
@@ -32,7 +31,7 @@ function PositionTable<T>({
                 setPositions(data);
             })
             .catch((err) => console.error("Fetch error: ", err));
-    }, [portfolioId, bankday, endpoint]);
+    }, [portfolio, bankday, endpoint]);
 
     return (
         <table

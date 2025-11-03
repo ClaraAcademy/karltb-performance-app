@@ -12,15 +12,8 @@ const stockColumns = [
     { header: "Value", accessor: (p: StockPosition) => formatSEK(p.value) },
 ];
 
-const StockTable = (props: {
-    portfolioId: number | undefined;
-    bankday: Date | undefined;
-}) => (
-    <PositionTable<StockPosition>
-        {...props}
-        endpoint="stocks"
-        columns={stockColumns}
-    />
+const StockTable = () => (
+    <PositionTable<StockPosition> endpoint="stocks" columns={stockColumns} />
 );
 
 export default StockTable;

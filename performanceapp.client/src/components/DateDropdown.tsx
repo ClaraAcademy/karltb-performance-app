@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { DateInfo } from "../types";
+import { useBankday } from "../contexts/BankdayContext";
 
 interface DateDropdownProps {
     onSelect?: (date: Date | null) => void;
@@ -7,7 +8,7 @@ interface DateDropdownProps {
 
 const DateDropdown: React.FC<DateDropdownProps> = ({ onSelect }) => {
     const [dates, setDates] = useState<Date[]>([]);
-    const [selected, setSelected] = useState<Date | null>(null);
+    const { bankday, setBankday } = useBankday();
 
     useEffect(() => {
         fetch("api/DateInfo")
@@ -25,13 +26,13 @@ const DateDropdown: React.FC<DateDropdownProps> = ({ onSelect }) => {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const time = Number(e.target.value);
         const selectedDate = dates.find((d) => d.getTime() === time) ?? null;
-        setSelected(selectedDate);
+        setBankday(selectedDate);
         if (onSelect) onSelect(selectedDate);
     };
 
     return (
         <select
-            value={selected ? selected.getTime() : ""}
+            value={bankday ? bankday.getTime() : ""}
             onChange={handleChange}
         >
             {/* Placeholder that dissapears after choice */}

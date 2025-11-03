@@ -1,31 +1,28 @@
 import { useState, useEffect } from "react";
-import type { PortfolioBenchmark } from "../types";
 import "./PortfolioTable.css";
+import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
+import { usePortfolio } from "../contexts/PortfolioContext";
 
-interface PortfolioTableProps {
-    portfolioId: number | undefined;
-}
-
-const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioId }) => {
-    const [portfolioBenchmark, setPortfolioBenchmarkDTO] = useState<
-        PortfolioBenchmark[]
-    >([]);
+const PortfolioTable = () => {
+    const { portfolio } = usePortfolio();
+    const { portfolioBenchmark, setPortfolioBenchmark } =
+        usePortfolioBenchmark();
 
     useEffect(() => {
-        if (portfolioId === undefined) {
+        if (portfolio == null) {
             return;
         }
-        fetch(`api/PortfolioBenchmarkDTO/${portfolioId}`)
+        fetch(`api/PortfolioBenchmarkDto/${portfolio.portfolioId}`)
             .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
                 return res.json();
             })
             .then((data) => {
                 console.log("Fetched portfolios and benchmarks:", data);
-                setPortfolioBenchmarkDTO(data);
+                setPortfolioBenchmark(data);
             })
             .catch((err) => console.error("Fetch error:", err));
-    }, [portfolioId]);
+    }, [portfolio]);
 
     return (
         <table className="table table-striped" aria-labelledby="tableLabel">
@@ -36,10 +33,10 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ portfolioId }) => {
                 </tr>
             </thead>
             <tbody>
-                {portfolioBenchmark.map((pb) => (
-                    <tr key={pb.portfolioId}>
-                        <td>{pb.portfolioName}</td>
-                        <td>{pb.benchmarkName}</td>
+                {portfolioBenchmark?.map((pb) => (
+                    <tr key={pb?.portfolioId}>
+                        <td>{pb?.portfolioName}</td>
+                        <td>{pb?.benchmarkName}</td>
                     </tr>
                 ))}
             </tbody>
