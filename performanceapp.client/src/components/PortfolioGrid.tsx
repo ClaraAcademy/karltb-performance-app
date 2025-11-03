@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import "./PortfolioTable.css";
+import { useEffect } from "react";
 import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
 import { usePortfolio } from "../contexts/PortfolioContext";
+import PortfolioDropdown from "./PortfolioDropdown";
+import "./PortfolioGrid.css";
 
-const PortfolioTable = () => {
+const PortfolioGrid = () => {
     const { portfolio } = usePortfolio();
     const { portfolioBenchmark, setPortfolioBenchmark } =
         usePortfolioBenchmark();
-
     useEffect(() => {
         if (portfolio == null) {
             return;
@@ -23,24 +23,25 @@ const PortfolioTable = () => {
             })
             .catch((err) => console.error("Fetch error:", err));
     }, [portfolio]);
-
     return (
-        <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Portfolio Name</th>
-                    <th>Benchmark Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {portfolioBenchmark?.map((pb) => (
-                    <tr key={pb?.portfolioId}>
-                        <td>{pb?.portfolioName}</td>
-                        <td>{pb?.benchmarkName}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+        <div className="parent">
+            <div id="div1">
+                <PortfolioDropdown />
+            </div>
+            <div className="labelHeader" id="div2">
+                Selected Portfolio:
+            </div>
+            <div className="labelHeader" id="div3">
+                Selected Benchmark:
+            </div>
+            <div className="labelName" id="div4">
+                {portfolioBenchmark ? portfolioBenchmark[0].portfolioName : ""}
+            </div>
+            <div className="labelName" id="div5">
+                {portfolioBenchmark ? portfolioBenchmark[0].benchmarkName : ""}
+            </div>
+        </div>
     );
 };
-export default PortfolioTable;
+
+export default PortfolioGrid;
