@@ -16,50 +16,51 @@ namespace PerformanceApp.Server.Controllers
             _context = context;
         }
 
+        private ActionResult CheckReturn<T>(List<T>? ps)
+        {
+            if (ps == null || ps.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(ps);
+        }
+
+        private async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarkDTO(int? portfolioId = null)
+        {
+            IQueryable<Benchmark> q = _context.Benchmarks;
+
+            if (portfolioId.HasValue)
+            {
+                q = q.Where(bm => bm.PortfolioId == portfolioId);
+            }
+
+            return await q.Select(
+                bm => new PortfolioBenchmarkDTO
+                {
+                    PortfolioId = bm.Portfolio.PortfolioId,
+                    PortfolioName = bm.Portfolio.PortfolioName,
+                    BenchmarkId = bm.BenchmarkNavigation.PortfolioId,
+                    BenchmarkName = bm.BenchmarkNavigation.PortfolioName
+                }
+            ).ToListAsync();
+        }
+
         // GET: api/PortfolioBenchmarkDTO
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfoliosBenchmarks()
         {
-            var pbs = await _context.Benchmarks.Select(
-                bm => new PortfolioBenchmarkDTO
-                {
-                    PortfolioId = bm.Portfolio.PortfolioId,
-                    PortfolioName = bm.Portfolio.PortfolioName,
-                    BenchmarkId = bm.BenchmarkNavigation.PortfolioId,
-                    BenchmarkName = bm.BenchmarkNavigation.PortfolioName
-                }
-            ).ToListAsync();
-
-            if (pbs == null)
-            {
-                return NotFound();
-            }
-
-            return pbs;
+            return CheckReturn(
+                await GetPortfolioBenchmarkDTO()
+            );
         }
 
-        // GET: api/PortfolioBenchmarkDTO/id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfolioBenchmarks(int id)
+        // GET: api/PortfolioBenchmarkDTO/portfolioId
+        [HttpGet("{portfolioId}")]
+        public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfolioBenchmarks(int portfolioId)
         {
-            var pbs = await _context.Benchmarks
-            .Where(bm => bm.PortfolioId == id)
-            .Select(
-                bm => new PortfolioBenchmarkDTO
-                {
-                    PortfolioId = bm.Portfolio.PortfolioId,
-                    PortfolioName = bm.Portfolio.PortfolioName,
-                    BenchmarkId = bm.BenchmarkNavigation.PortfolioId,
-                    BenchmarkName = bm.BenchmarkNavigation.PortfolioName
-                }
-            ).ToListAsync();
-
-            if (pbs == null)
-            {
-                return NotFound();
-            }
-
-            return pbs;
+            return CheckReturn(
+                await GetPortfolioBenchmarkDTO(portfolioId)
+            );
         }
     }
 }
