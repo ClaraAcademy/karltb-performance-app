@@ -4,6 +4,7 @@ import StockTable from "../components/StockTable";
 import BondTable from "../components/BondTable";
 import PortfolioGrid from "../components/PortfolioGrid";
 import Header from "../components/Header";
+import LineChart from "../components/LineChart";
 
 function App() {
     return (
@@ -16,6 +17,8 @@ function App() {
             <StockTable />
             <h2 id="bondTableHeader">Bonds</h2>
             <BondTable />
+            <h2>Line chart</h2>
+            <LineChart />
         </div>
     );
 }
