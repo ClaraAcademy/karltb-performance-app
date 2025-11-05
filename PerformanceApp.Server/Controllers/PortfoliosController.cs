@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Server.Data;
 using PerformanceApp.Server.Models;
+using PerformanceApp.Server.Services;
 using SQLitePCL;
 
 namespace PerformanceApp.Server.Controllers
@@ -15,25 +16,20 @@ namespace PerformanceApp.Server.Controllers
     [ApiController]
     public class PortfoliosController : ControllerBase
     {
-        private readonly PadbContext _context;
+        private readonly IPortfolioService _service;
 
-        public PortfoliosController(PadbContext context)
+        public PortfoliosController(IPortfolioService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Portfolios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Portfolio>>> GetPortfolios()
+        public async Task<ActionResult<IEnumerable<PortfolioDTO>>> GetPortfolios()
         {
-            var portfolios = await _context.Portfolios
-                .Where(
-                    p => _context.Benchmarks.Any(
-                        b => b.PortfolioId == p.PortfolioId
-                    )
-                ).ToListAsync();
+            var portfolios = await _service.GetPortfolioDTOsAsync();
 
-            if (portfolios == null)
+            if (portfolios == null || portfolios.Count == 0)
             {
                 return NotFound();
             }

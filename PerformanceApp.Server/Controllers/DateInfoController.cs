@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Server.Data;
 using PerformanceApp.Server.Models;
+using PerformanceApp.Server.Services;
 using SQLitePCL;
 
 namespace PerformanceApp.Server.Controllers
@@ -15,28 +16,24 @@ namespace PerformanceApp.Server.Controllers
     [ApiController]
     public class DateInfoController : ControllerBase
     {
-        private readonly PadbContext _context;
+        private readonly IDateInfoService _service;
 
-        public DateInfoController(PadbContext context)
+        public DateInfoController(IDateInfoService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/DateInfo
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DateInfo>>> GetDates()
+        public async Task<ActionResult<IEnumerable<BankdayDTO>>> GetDates()
         {
-            var dates = await _context.DateInfos
-                .Distinct()
-                .OrderBy(d => d.Bankday)
-                .ToListAsync();
+            var bankdayDtos = await _service.GetBankdayDTOsAsync();
 
-            if (dates == null)
+            if (bankdayDtos == null || bankdayDtos.Count == 0)
             {
                 return NotFound();
             }
-
-            return Ok(dates);
+            return Ok(bankdayDtos);
         }
 
     }
