@@ -11,7 +11,7 @@ namespace PerformanceApp.Server.Services;
 
 public interface ISvgService
 {
-    Task<string> GetLineChart(int portfolioId, int? width, int? height, int? border);
+    Task<string> GetLineChart(int portfolioId, int? width, int? height);
 }
 
 public class SvgService(IPortfolioService portfolioService) : ISvgService
@@ -19,7 +19,6 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
     private readonly IPortfolioService _portfolioService = portfolioService;
     private readonly int DefaultWidth = 800;
     private readonly int DefaultHeight = 500;
-    private readonly int DefaultBorder = 30;
 
     private DataPoint2 MapToDataPoint2(PortfolioBenchmarkCumulativeDayPerformanceDTO dto)
         => new DataPoint2
@@ -29,7 +28,7 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
             y2 = (float)dto.BenchmarkValue
         };
 
-    public async Task<string> GetLineChart(int portfolioId, int? width = null, int? height = null, int? border = null)
+    public async Task<string> GetLineChart(int portfolioId, int? width = null, int? height = null)
     {
         var dtos = await _portfolioService
             .GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
@@ -41,8 +40,7 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
         return new SVG(
             dataPoints,
             width ?? DefaultWidth,
-            height ?? DefaultHeight,
-            border ?? DefaultBorder
+            height ?? DefaultHeight
         ).ToString();
     }
 }

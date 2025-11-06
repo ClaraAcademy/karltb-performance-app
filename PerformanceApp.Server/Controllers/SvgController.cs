@@ -23,16 +23,15 @@ namespace PerformanceApp.Server.Controllers
         private readonly ISvgService _service = service;
 
 
-        // Get: /api/svg?portfolioId={portfolioID}&width={width}&height={height}&border={border}
+        // Get: /api/svg?portfolioId={portfolioID}&width={width}&height={height}
         [HttpGet]
         public async Task<ActionResult<string>> GetCumulativePerformanceGraph(
             [FromQuery] int portfolioId,
             [FromQuery] int? width = null,
-            [FromQuery] int? height = null,
-            [FromQuery] int? border = null
+            [FromQuery] int? height = null
         )
         {
-            var svg = await _service.GetLineChart(portfolioId, width, height, border);
+            var svg = await _service.GetLineChart(portfolioId, width, height);
 
             if (svg == null)
             {

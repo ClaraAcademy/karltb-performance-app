@@ -5,6 +5,8 @@ using System.Globalization;
 using Microsoft.Data.SqlClient;
 using System.Xml.Xsl;
 using System.Runtime.CompilerServices;
+using Microsoft.SqlServer.Server;
+using System.Reflection.Emit;
 
 namespace PerformanceApp.Server.Models;
 
@@ -13,24 +15,25 @@ public class SVG
     private readonly XNamespace SvgNamespace = "http://www.w3.org/2000/svg";
     private readonly int Width;
     private readonly int Height;
-    private readonly int Border;
+    private readonly int hMargin = 50;
+    private readonly int vMargin = 50;
     private readonly int HalfHeight;
-    private readonly int TickOffset = 5;
-    private readonly int LabelOffset = 20;
     private readonly float MinY;
     private readonly float MaxY;
     private readonly List<DataPoint2> DataPoints;
+    private static readonly int TickHeight = 10;
+    private static readonly int TickOffset = TickHeight / 2;
+    private static readonly int LabelOffset = 10;
 
     private readonly XElement _schema;
 
     private float PairwiseMin(DataPoint2 d) => Math.Min(d.y1, d.y2);
     private float PairwiseMax(DataPoint2 d) => Math.Max(d.y1, d.y2);
 
-    public SVG(List<DataPoint2> dataPoints, int width, int height, int border)
+    public SVG(List<DataPoint2> dataPoints, int width, int height)
     {
         Width = width;
         Height = height;
-        Border = border;
         HalfHeight = Height / 2;
         DataPoints = dataPoints;
         MinY = dataPoints.Min(PairwiseMin);
@@ -73,18 +76,19 @@ public class SVG
     private List<XElement> GetXTicksAndLabels(int numTicks)
     {
         List<XElement> result = [];
+        float y = ScaleY(0f);
         for (int i = 0; i < numTicks; i++)
         {
             int index = (int)Math.Floor(i * (DataPoints.Count - 1f) / (numTicks - 1f));
             string label = DataPoints[index].x.ToString();
-            float x = Border + i * (Width - 2f * Border) / (numTicks - 1f);
+            float x = hMargin + i * (Width - 2f * hMargin) / (numTicks - 1f);
 
             // Skip origin tick
             if (i > 0)
             {
-                result.Add(GetTick(x, HalfHeight - TickOffset, x, HalfHeight + TickOffset));
+                result.Add(GetTick(x, y - TickOffset, x, y + TickOffset));
             }
-            result.Add(GetLabel(x, HalfHeight + LabelOffset, label));
+            result.Add(GetLabel(x, y + LabelOffset, label, "start", 45));
         }
         return result;
     }
@@ -100,9 +104,9 @@ public class SVG
             // Skip origin tick
             if (i > 0)
             {
-                result.Add(GetTick(Border - TickOffset, yPos, Border + TickOffset, yPos));
+                result.Add(GetTick(vMargin - TickOffset, yPos, vMargin + TickOffset, yPos));
             }
-            result.Add(GetLabel(Border - 0, yPos + 0, FormatPercentage(yVal)));
+            result.Add(GetLabel(vMargin - LabelOffset - 5, yPos + 0, FormatPercentage(yVal)));
         }
         return result;
 
@@ -117,12 +121,13 @@ public class SVG
             new XAttribute("stroke", "black")
         );
 
-    private XElement GetLabel(float x, float y, string labelText)
+    private XElement GetLabel(float x, float y, string labelText, string anchor = "middle", int angle = 0)
         => new(SvgNamespace + "text",
             new XAttribute("x", FormatDecimal(x)),
             new XAttribute("y", FormatDecimal(y)),
             new XAttribute("font-size", "12"),
-            new XAttribute("text-anchor", "middle"),
+            new XAttribute("text-anchor", anchor),
+            angle != 0 ? new XAttribute("transform", $"rotate({angle} {FormatDecimal(x)},{FormatDecimal(y)})") : null,
             labelText
         );
 
@@ -148,9 +153,9 @@ public class SVG
             new XAttribute("stroke-width", width)
         );
 
-    private float ScaleX(float x) => Border + x * (Width - 2 * Border) / DataPoints.Count;
-    private float ScaleY(float y) => HalfHeight - y * (HalfHeight - Border) / Math.Max(Math.Abs(MinY), Math.Abs(MaxY));
+    private float ScaleX(float x) => hMargin + x * (Width - 2 * hMargin) / DataPoints.Count;
+    private float ScaleY(float y) => vMargin + (MaxY - y) * (Height - 2 * vMargin) / (MaxY - MinY);
     private static string FormatDecimal(float x) => x.ToString("F2", CultureInfo.InvariantCulture);
-    private static string FormatPercentage(float x) => x.ToString("P2", CultureInfo.InvariantCulture);
+    private static string FormatPercentage(float x) => x.ToString("P0", CultureInfo.InvariantCulture);
     private string MapToPoint(float x, float y) => $"{FormatDecimal(x)},{FormatDecimal(y)}";
 }
