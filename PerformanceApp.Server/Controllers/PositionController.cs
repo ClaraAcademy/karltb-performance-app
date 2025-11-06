@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Server.Data;
-using PerformanceApp.Server.Models;
+using PerformanceApp.Server.DTOs;
 using PerformanceApp.Server.Services;
 using SQLitePCL;
 

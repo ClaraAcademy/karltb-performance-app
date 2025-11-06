@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PerformanceApp.Server.Models;
+namespace PerformanceApp.Server.DTOs;
 
 public partial class PortfolioCumulativeDayPerformanceDTO
 {

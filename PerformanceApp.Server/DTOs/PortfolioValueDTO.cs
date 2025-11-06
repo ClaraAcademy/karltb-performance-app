@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PerformanceApp.Server.Models;
+namespace PerformanceApp.Server.DTOs;
 
-public partial class PortfolioDayPerformanceDTO
+public partial class PortfolioValueDTO
 {
-    public int PortfolioId { get; set; }
-
     public DateOnly Bankday { get; set; }
 
     public decimal Value { get; set; }

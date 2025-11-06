@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using PerformanceApp.Server.Models;
+using PerformanceApp.Server.DTOs;
 using PerformanceApp.Server.Repositories;
 
 namespace PerformanceApp.Server.Services
