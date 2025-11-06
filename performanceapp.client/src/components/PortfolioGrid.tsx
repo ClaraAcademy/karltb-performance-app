@@ -12,7 +12,7 @@ const PortfolioGrid = () => {
         if (portfolio == null) {
             return;
         }
-        fetch(`api/PortfolioBenchmarkDto/${portfolio.portfolioId}`)
+        fetch(`api/PortfolioBenchmark?portfolioId=${portfolio.portfolioId}`)
             .then((res) => {
                 if (!res.ok) throw new Error(res.statusText);
                 return res.json();

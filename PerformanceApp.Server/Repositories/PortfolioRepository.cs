@@ -7,6 +7,7 @@ namespace PerformanceApp.Server.Repositories
     public interface IPortfolioRepository
     {
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
+        Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync();
     }
     public class PortfolioRepository : IPortfolioRepository
     {
@@ -18,13 +19,14 @@ namespace PerformanceApp.Server.Repositories
         }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
-        {
-            return await _context.Portfolios
+            => await _context.Portfolios
                 .Where(
                     p => _context.Benchmarks
-                        .Select(b => b.PortfolioId)
-                        .Contains(p.PortfolioId)
+                            .Select(b => b.PortfolioId)
+                            .Contains(p.PortfolioId)
                 ).ToListAsync();
-        }
+        public async Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync()
+            => await _context.Portfolios.ToListAsync();
+
     }
 }

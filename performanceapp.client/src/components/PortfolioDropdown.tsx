@@ -11,7 +11,7 @@ const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
     const { portfolio, setPortfolio } = usePortfolio();
 
     useEffect(() => {
-        fetch("api/Portfolios")
+        fetch("api/Portfolio")
             .then((res) => res.json())
             .then((data) => {
                 console.log("Fetched portfolios:", data);
