@@ -79,7 +79,11 @@ public class SVG
             string label = DataPoints[index].x.ToString();
             float x = Border + i * (Width - 2f * Border) / (numTicks - 1f);
 
-            result.Add(GetTick(x, HalfHeight - TickOffset, x, HalfHeight + TickOffset));
+            // Skip origin tick
+            if (i > 0)
+            {
+                result.Add(GetTick(x, HalfHeight - TickOffset, x, HalfHeight + TickOffset));
+            }
             result.Add(GetLabel(x, HalfHeight + LabelOffset, label));
         }
         return result;
@@ -93,7 +97,11 @@ public class SVG
             float yVal = MinY + i * (MaxY - MinY) / numTicks;
             float yPos = ScaleY(yVal);
 
-            result.Add(GetTick(Border - TickOffset, yPos, Border + TickOffset, yPos));
+            // Skip origin tick
+            if (i > 0)
+            {
+                result.Add(GetTick(Border - TickOffset, yPos, Border + TickOffset, yPos));
+            }
             result.Add(GetLabel(Border - 0, yPos + 0, FormatPercentage(yVal)));
         }
         return result;
