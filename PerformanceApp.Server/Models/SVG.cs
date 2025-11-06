@@ -143,14 +143,15 @@ public class SVG
             new XAttribute("stroke-width", width)
         );
 
-    private XElement GetPortfolioLine(List<string> portfolioPoints) => GetSvgPolyline(portfolioPoints, "blue", 1);
-    private XElement GetBenchmarkLine(List<string> benchmarkPoints) => GetSvgPolyline(benchmarkPoints, "red", 1);
-    private XElement GetSvgPolyline(List<string> points, string color, int width = 1)
+    private XElement GetPortfolioLine(List<string> portfolioPoints) => GetSvgPolyline(portfolioPoints, color: "blue", dotted: false);
+    private XElement GetBenchmarkLine(List<string> benchmarkPoints) => GetSvgPolyline(benchmarkPoints, color: "red", dotted: true);
+    private XElement GetSvgPolyline(List<string> points, string color, bool dotted = false)
         => new(SvgNamespace + "polyline",
             new XAttribute("points", string.Join(" ", points)),
             new XAttribute("fill", "none"),
             new XAttribute("stroke", color),
-            new XAttribute("stroke-width", width)
+            new XAttribute("stroke-width", 1),
+            dotted ? new XAttribute("stroke-dasharray", MapToPoint(1, 2)) : null
         );
 
     private float ScaleX(float x) => hMargin + x * (Width - 2 * hMargin) / DataPoints.Count;
