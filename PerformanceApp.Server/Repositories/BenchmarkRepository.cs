@@ -9,14 +9,9 @@ namespace PerformanceApp.Server.Repositories
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync();
     }
 
-    public class BenchmarkRepository : IBenchmarkRepository
+    public class BenchmarkRepository(PadbContext context) : IBenchmarkRepository
     {
-        private readonly PadbContext _context;
-
-        public BenchmarkRepository(PadbContext context)
-        {
-            _context = context;
-        }
+        private readonly PadbContext _context = context;
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync()
             => await _context.Benchmarks

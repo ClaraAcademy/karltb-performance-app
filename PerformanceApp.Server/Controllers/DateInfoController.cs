@@ -14,14 +14,9 @@ namespace PerformanceApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DateInfoController : ControllerBase
+    public class DateInfoController(IDateInfoService service) : ControllerBase
     {
-        private readonly IDateInfoService _service;
-
-        public DateInfoController(IDateInfoService service)
-        {
-            _service = service;
-        }
+        private readonly IDateInfoService _service = service;
 
         // GET: api/DateInfo
         [HttpGet]

@@ -8,14 +8,9 @@ namespace PerformanceApp.Server.Services
         Task<List<BankdayDTO>> GetBankdayDTOsAsync();
     }
 
-    public class DateInfoService : IDateInfoService
+    public class DateInfoService(IDateInfoRepository repo) : IDateInfoService
     {
-        private readonly IDateInfoRepository _repo;
-
-        public DateInfoService(IDateInfoRepository repo)
-        {
-            _repo = repo;
-        }
+        private readonly IDateInfoRepository _repo = repo;
 
         public async Task<List<BankdayDTO>> GetBankdayDTOsAsync()
         {

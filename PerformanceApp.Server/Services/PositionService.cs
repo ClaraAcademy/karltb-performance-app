@@ -11,14 +11,9 @@ namespace PerformanceApp.Server.Services
         Task<List<IndexPositionDTO>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId);
     }
 
-    public class PositionService : IPositionService
+    public class PositionService(IPositionRepository repo) : IPositionService
     {
-        private readonly IPositionRepository _repo;
-
-        public PositionService(IPositionRepository repo)
-        {
-            _repo = repo;
-        }
+        private readonly IPositionRepository _repo = repo;
 
         private static decimal? GetPositionValue(Position p)
             => p.PositionValues?.SingleOrDefault(pv => pv.Bankday == p.Bankday)?.PositionValue1;

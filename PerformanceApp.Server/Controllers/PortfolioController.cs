@@ -14,14 +14,9 @@ namespace PerformanceApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PortfolioController : ControllerBase
+    public class PortfolioController(IPortfolioService service) : ControllerBase
     {
-        private readonly IPortfolioService _service;
-
-        public PortfolioController(IPortfolioService service)
-        {
-            _service = service;
-        }
+        private readonly IPortfolioService _service = service;
 
         private ActionResult CheckReturn<T>(List<T>? ps)
         => ps == null || ps.Count == 0 ? NotFound() : Ok(ps);

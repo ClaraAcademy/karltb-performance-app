@@ -11,14 +11,9 @@ namespace PerformanceApp.Server.Repositories
         Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId);
     }
 
-    public class PositionRepository : IPositionRepository
+    public class PositionRepository(PadbContext context) : IPositionRepository
     {
-        private readonly PadbContext _context;
-
-        public PositionRepository(PadbContext context)
-        {
-            _context = context;
-        }
+        private readonly PadbContext _context = context;
 
         private async Task<IEnumerable<Position>> GetPositionsAsync(
             string instrumentType,

@@ -9,14 +9,9 @@ namespace PerformanceApp.Server.Repositories
         Task<IEnumerable<DateInfo>> GetDateInfosAsync();
     }
 
-    public class DateInfoRepository : IDateInfoRepository
+    public class DateInfoRepository(PadbContext context) : IDateInfoRepository
     {
-        private readonly PadbContext _context;
-
-        public DateInfoRepository(PadbContext context)
-        {
-            _context = context;
-        }
+        private readonly PadbContext _context = context;
 
         public async Task<IEnumerable<DateInfo>> GetDateInfosAsync()
         {
