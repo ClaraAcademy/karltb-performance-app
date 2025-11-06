@@ -1,22 +1,24 @@
 using PerformanceApp.Server.Models;
 using PerformanceApp.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using System.IO.Compression;
 
 namespace PerformanceApp.Server.Repositories
 {
     public interface IPortfolioRepository
     {
+        Task<Portfolio> GetPortfolioAsync(int portfolioId);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
         Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync();
     }
-    public class PortfolioRepository : IPortfolioRepository
+    public class PortfolioRepository(PadbContext context) : IPortfolioRepository
     {
-        private readonly PadbContext _context;
+        private readonly PadbContext _context = context;
 
-        public PortfolioRepository(PadbContext context)
-        {
-            _context = context;
-        }
+        public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
+            => await _context.Portfolios
+                .Include(p => p.PortfolioCumulativeDayPerformances)
+                .SingleAsync(p => p.PortfolioId == portfolioId);
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
             => await _context.Portfolios
@@ -26,7 +28,8 @@ namespace PerformanceApp.Server.Repositories
                             .Contains(p.PortfolioId)
                 ).ToListAsync();
         public async Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync()
-            => await _context.Portfolios.ToListAsync();
+            => await _context.Portfolios
+                .ToListAsync();
 
     }
 }

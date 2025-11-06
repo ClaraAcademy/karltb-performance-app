@@ -12,8 +12,7 @@ const LineChart = () => {
             return;
         }
         const portfolioId = portfolioBenchmark[0].portfolioId;
-        const benchmarkId = portfolioBenchmark[0].benchmarkId;
-        fetch(`api/Svg?portfolioId=${portfolioId}&benchmarkId=${benchmarkId}`)
+        fetch(`api/svg?portfolioId=${portfolioId}`)
             .then((res) => res.text())
             .then((data) => setSvg("data:image/svg+xml;base64," + btoa(data)))
             .catch((err) => console.error(err));

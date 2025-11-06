@@ -20,6 +20,7 @@ builder.Services.AddScoped<IBenchmarkRepository, BenchmarkRepository>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
 builder.Services.AddScoped<IDateInfoService, DateInfoService>();
+builder.Services.AddScoped<ISvgService, SvgService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

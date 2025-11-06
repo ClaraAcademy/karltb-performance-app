@@ -18,65 +18,27 @@ namespace PerformanceApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SvgController : ControllerBase
+    public class SvgController(ISvgService service) : ControllerBase
     {
-        private readonly PadbContext _context;
+        private readonly ISvgService _service = service;
 
-        public SvgController(PadbContext context)
-        {
-            _context = context;
-        }
 
-        private ActionResult CheckReturn<T>(T? res)
-        {
-            if (res == null)
-            {
-                return NotFound();
-            }
-            return Ok(res);
-        }
-        private IQueryable<PortfolioCumulativeDayPerformanceDTO> GetPortfolioPerformance(int portfolioId)
-        {
-            return _context.PortfolioCumulativeDayPerformances
-                .Where(pv => pv.Portfolio.PortfolioId == portfolioId)
-                .OrderBy(pv => pv.BankdayNavigation.Bankday)
-                .Select(
-                    pv => new PortfolioCumulativeDayPerformanceDTO
-                    {
-                        Bankday = pv.BankdayNavigation.Bankday,
-                        Value = pv.CumulativeDayPerformance ?? 0
-                    }
-                );
-        }
-
+        // Get: /api/svg?portfolioId={portfolioID}&width={width}&height={height}&border={border}
         [HttpGet]
-        // Get: /api/svg?portfolioId={portfolioID}&benchmarkId={benchmarkId}
         public async Task<ActionResult<string>> GetCumulativePerformanceGraph(
             [FromQuery] int portfolioId,
-            [FromQuery] int benchmarkId
+            [FromQuery] int? width = null,
+            [FromQuery] int? height = null,
+            [FromQuery] int? border = null
         )
         {
-            var portfolioPerformance = GetPortfolioPerformance(portfolioId);
-            var benchmarkPerformance = GetPortfolioPerformance(benchmarkId);
+            var svg = await _service.GetLineChart(portfolioId, width, height, border);
 
-            var p = await portfolioPerformance
-                .Join(benchmarkPerformance,
-                    pp => pp.Bankday,
-                    bp => bp.Bankday,
-                    (pp, bp) => new PortfolioBenchmarkCumulativeDayPerformanceDTO
-                    {
-                        Bankday = pp.Bankday,
-                        PortfolioValue = pp.Value,
-                        BenchmarkValue = bp.Value
-                    }
-                ).ToListAsync();
-
-            if (p == null || p.Count == 0)
+            if (svg == null)
             {
                 return NotFound();
             }
 
-            var svg = Plot.CreateSVG(p);
             return Content(svg, "image/svg+xml");
         }
     }
