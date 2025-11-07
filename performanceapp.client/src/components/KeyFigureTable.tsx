@@ -55,9 +55,9 @@ function KeyFigureTable() {
                 {portfolioBenchmarkKeyFigures.map(
                     (kf: PortfolioBenchmarkKeyFigure) => (
                         <tr key={kf.keyFigureId}>
-                            <td key={kf.keyFigureId}>{kf.keyFigureName}</td>
-                            <td key={kf.portfolioId}>{formatPercent(kf.portfolioValue)}</td>
-                            <td key={kf.benchmarkId}>{formatPercent(kf.benchmarkValue)}</td>
+                            <td>{kf.keyFigureName}</td>
+                            <td>{formatPercent(kf.portfolioValue)}</td>
+                            <td>{formatPercent(kf.benchmarkValue)}</td>
                         </tr>
                     ),
                 )}
