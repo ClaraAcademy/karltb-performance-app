@@ -3,7 +3,6 @@
     grid-template-columns: 1fr 1fr 2fr;
     grid-template-rows: repeat(2, 1fr);
     gap: 10px;
-    padding: 20px;
 }
 
 .subGridWrapper {
@@ -19,8 +18,7 @@
 
 .cell {
     background-color: rgb(33 ,31 ,94, 0.2);
-    border-radius: 5px;
-    padding: 5px;
+    /* padding: 5px; */
     display: grid;
     align-items: center; /* vertical alignment */
     justify-items: center; /* horizontal alignment */

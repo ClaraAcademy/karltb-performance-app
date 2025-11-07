@@ -51,10 +51,10 @@ const PortfolioGrid = () => {
                 <DateDropdown />
             </div>
             <div className="cell portfolioInfo" id="portfolioLabel">
-                {getPortfolioInfo("Selected Portfolio:", portfolioName)}
+                {getPortfolioInfo("Selected Portfolio", portfolioName)}
             </div>
             <div className="cell portfolioInfo" id="benchmarkLabel">
-                {getPortfolioInfo("Selected Benchmark:", benchmarkName)}
+                {getPortfolioInfo("Selected Benchmark", benchmarkName)}
             </div>
         </div>
     );

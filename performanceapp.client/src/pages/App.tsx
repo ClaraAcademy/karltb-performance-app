@@ -10,15 +10,17 @@ function App() {
     return (
         <div>
             <Header />
-            <PortfolioGrid />
-            <h2 id="stockTableHeader">Stocks</h2>
-            <StockTable />
-            <h2 id="bondTableHeader">Bonds</h2>
-            <BondTable />
-            <h2>Line chart</h2>
-            <LineChart />
-            <h2>Key Figures</h2>
-            <KeyFigureTable />
+            <div className="mainContent">
+                <PortfolioGrid />
+                <h2 id="stockTableHeader">Stocks</h2>
+                <StockTable />
+                <h2 id="bondTableHeader">Bonds</h2>
+                <BondTable />
+                <h2>Line chart</h2>
+                <LineChart />
+                <h2>Key Figures</h2>
+                <KeyFigureTable />
+            </div>
         </div>
     );
 }
