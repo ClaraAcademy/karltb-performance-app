@@ -1,32 +1,48 @@
-.parent {
+.gridWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+}
+
+.subGridWrapper {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    align-items: center;
-    text-align: left;
-    background-color: lightblue;
-    padding: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
 }
 
 .labelHeader {
     font-weight: bold;
 }
 
-#div1 {
-    grid-area: 1 / 1 / 3 / 2;
+.cell {
+    background-color: aliceblue;
+    /* color: #fff; */
+    border-radius: 5px;
+    padding: 5px;
+    display: grid;
+    align-items: center; /* vertical alignment */
+    justify-items: center; /* horizontal alignment */
 }
-#div2 {
-    grid-area: 1 / 2 / 2 / 3;
+
+#portfolioDropdown {
+    grid-column: 1;
+    grid-row: 1 / 3;
 }
-#div3 {
-    grid-area: 2 / 2 / 3 / 3;
+
+#dateDropdown {
+    grid-column: 2;
+    grid-row: 1 / 3;
 }
-#div4 {
-    grid-area: 1 / 3 / 2 / 4;
+
+#portfolioInfo {
+    grid-column: 3;
+    grid-row: 1;
 }
-#div5 {
-    grid-area: 2 / 3 / 3 / 4;
+
+#benchmarkInfo {
+    grid-column: 3;
+    grid-row: 2;
 }

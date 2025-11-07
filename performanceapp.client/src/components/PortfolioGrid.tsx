@@ -3,6 +3,7 @@ import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
 import { usePortfolio } from "../contexts/PortfolioContext";
 import PortfolioDropdown from "./PortfolioDropdown";
 import "./PortfolioGrid.css";
+import DateDropdown from "./DateDropdown";
 
 const PortfolioGrid = () => {
     const { portfolio } = usePortfolio();
@@ -23,22 +24,37 @@ const PortfolioGrid = () => {
             })
             .catch((err) => console.error("Fetch error:", err));
     }, [portfolio]);
+
+    const portfolioName = portfolioBenchmark
+        ? portfolioBenchmark[0].portfolioName
+        : "";
+
+    const benchmarkName = portfolioBenchmark
+        ? portfolioBenchmark[0].benchmarkName
+        : "";
+
+    function getPortfolioInfo(header: string, name: string) {
+        return (
+            <div className="subGridWrapper">
+                <div className="labelHeader">{header}</div>
+                <div className="labelName">{name}</div>
+            </div>
+        );
+    }
+
     return (
-        <div className="parent">
-            <div id="div1">
+        <div className="gridWrapper">
+            <div className="cell" id="portfolioDropdown">
                 <PortfolioDropdown />
             </div>
-            <div className="labelHeader" id="div2">
-                Selected Portfolio:
+            <div className="cell" id="dateDropdown">
+                <DateDropdown />
             </div>
-            <div className="labelHeader" id="div3">
-                Selected Benchmark:
+            <div className="cell portfolioInfo" id="portfolioLabel">
+                {getPortfolioInfo("Selected Portfolio:", portfolioName)}
             </div>
-            <div className="labelName" id="div4">
-                {portfolioBenchmark ? portfolioBenchmark[0].portfolioName : ""}
-            </div>
-            <div className="labelName" id="div5">
-                {portfolioBenchmark ? portfolioBenchmark[0].benchmarkName : ""}
+            <div className="cell portfolioInfo" id="benchmarkLabel">
+                {getPortfolioInfo("Selected Benchmark:", benchmarkName)}
             </div>
         </div>
     );

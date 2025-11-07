@@ -42,7 +42,7 @@ function KeyFigureTable() {
         >
             <thead>
                 <tr>
-                    <th key="keyFigureName">Key-Figure Name</th>
+                    <th key="keyFigureName">Key Figure</th>
                     <th key={portfolioBenchmark![0].portfolioId}>
                         {portfolioBenchmark![0].portfolioName}
                     </th>
