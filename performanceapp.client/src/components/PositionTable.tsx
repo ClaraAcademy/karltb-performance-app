@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { usePortfolio } from "../contexts/PortfolioContext";
 import { useBankday } from "../contexts/BankdayContext";
+import "./Table.css"
 
 interface PositionTableProps<T> {
     endpoint: string | undefined;
-    columns: { header: string; accessor: (row: T) => React.ReactNode }[];
+    columns: {
+        header: string;
+        className: string;
+        accessor: (row: T) => React.ReactNode;
+    }[];
 }
 
 function PositionTable<T>({ endpoint, columns }: PositionTableProps<T>) {
@@ -49,7 +54,9 @@ function PositionTable<T>({ endpoint, columns }: PositionTableProps<T>) {
                 {positions.map((row: T, idx) => (
                     <tr key={idx}>
                         {columns.map((col, cidx) => (
-                            <td key={cidx}>{col.accessor(row)}</td>
+                            <td key={cidx} className={col.className}>
+                                {col.accessor(row)}
+                            </td>
                         ))}
                     </tr>
                 ))}

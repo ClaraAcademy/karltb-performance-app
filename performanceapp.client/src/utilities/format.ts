@@ -14,7 +14,7 @@ export const formatInt = (value: number) =>
 
 export const formatPercent = (value: number | null): string => {
     if (value == null) {
-        return "N/A";
+        return "";
     }
 
     return new Intl.NumberFormat("sv-SE", {

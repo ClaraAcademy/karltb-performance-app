@@ -1,0 +1,15 @@
+.tdText{
+    text-align: left;
+}
+
+.tdNumber {
+    text-align: right;
+}
+
+.tdInvalid {
+    text-align: center;
+}
+
+th {
+    text-align: center;
+}

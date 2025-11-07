@@ -3,13 +3,26 @@ import type { StockPosition } from "../types";
 import { formatSEK, formatInt } from "../utilities/format";
 
 const stockColumns = [
-    { header: "Name", accessor: (p: StockPosition) => p.instrumentName },
-    { header: "Count", accessor: (p: StockPosition) => formatInt(p.count) },
+    {
+        header: "Name",
+        className: "tdText",
+        accessor: (p: StockPosition) => p.instrumentName,
+    },
+    {
+        header: "Count",
+        className: "tdNumber",
+        accessor: (p: StockPosition) => formatInt(p.count),
+    },
     {
         header: "Daily Price",
+        className: "tdNumber",
         accessor: (p: StockPosition) => formatSEK(p.unitPrice),
     },
-    { header: "Value", accessor: (p: StockPosition) => formatSEK(p.value) },
+    {
+        header: "Value",
+        className: "tdNumber",
+        accessor: (p: StockPosition) => formatSEK(p.value),
+    },
 ];
 
 const StockTable = () => (
