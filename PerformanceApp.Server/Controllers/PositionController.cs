@@ -20,7 +20,7 @@ namespace PerformanceApp.Server.Controllers
         private readonly IPositionService _service = service;
 
         private ActionResult CheckReturn<T>(List<T>? ps)
-            => ps == null || ps.Count == 0 ? NotFound() : Ok(ps);
+            => ps == null ? NotFound() : Ok(ps);
 
         // GET: /api/position/stocks&portfolioId=123&date=2025-10-31
         [HttpGet("stocks")]
