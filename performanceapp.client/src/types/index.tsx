@@ -10,6 +10,17 @@ export interface PortfolioBenchmark {
     benchmarkName: string;
 }
 
+export interface PortfolioBenchmarkKeyFigure {
+    keyFigureId: number;
+    keyFigureName: string;
+    portfolioId: number;
+    portfolioName: string;
+    portfolioValue: number | null;
+    benchmarkId: number;
+    benchmarkName: string;
+    benchmarkValue: number | null;
+}
+
 export interface DateInfo {
     bankday: Date;
 }

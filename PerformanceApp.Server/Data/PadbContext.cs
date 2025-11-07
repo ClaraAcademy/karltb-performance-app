@@ -78,7 +78,7 @@ public partial class PadbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Benchmark_BenchmarkID");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.BenchmarkPortfolios)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.BenchmarkPortfolios)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_Benchmark_PortfolioID");
         });
@@ -234,7 +234,7 @@ public partial class PadbContext : DbContext
                 .HasColumnType("decimal(24, 16)")
                 .HasColumnName("KeyFigureValue");
 
-            entity.HasOne(d => d.KeyFigure).WithMany(p => p.KeyFigureValues)
+            entity.HasOne(d => d.KeyFigureInfo).WithMany(p => p.KeyFigureValues)
                 .HasForeignKey(d => d.KeyFigureId)
                 .HasConstraintName("FK_KeyFigureValue_KeyFigureID");
 

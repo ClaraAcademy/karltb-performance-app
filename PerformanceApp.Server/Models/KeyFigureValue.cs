@@ -13,7 +13,7 @@ public partial class KeyFigureValue
 
     public DateTime Created { get; set; }
 
-    public virtual KeyFigureInfo KeyFigure { get; set; } = null!;
+    public virtual KeyFigureInfo KeyFigureInfo { get; set; } = null!;
 
     public virtual Portfolio Portfolio { get; set; } = null!;
 }

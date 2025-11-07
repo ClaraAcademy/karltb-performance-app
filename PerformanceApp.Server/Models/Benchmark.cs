@@ -13,5 +13,5 @@ public partial class Benchmark
 
     public virtual Portfolio BenchmarkNavigation { get; set; } = null!;
 
-    public virtual Portfolio Portfolio { get; set; } = null!;
+    public virtual Portfolio PortfolioNavigation { get; set; } = null!;
 }

@@ -5,6 +5,7 @@ import BondTable from "../components/BondTable";
 import PortfolioGrid from "../components/PortfolioGrid";
 import Header from "../components/Header";
 import LineChart from "../components/LineChart";
+import KeyFigureTable from "../components/KeyFigureTable";
 
 function App() {
     return (
@@ -19,6 +20,8 @@ function App() {
             <BondTable />
             <h2>Line chart</h2>
             <LineChart />
+            <h2>Key Figures</h2>
+            <KeyFigureTable />
         </div>
     );
 }
