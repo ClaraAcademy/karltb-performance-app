@@ -24,6 +24,8 @@ public class SVG
     private static readonly int TickHeight = 10;
     private static readonly int TickOffset = TickHeight / 2;
     private static readonly int LabelOffset = 10;
+    private static readonly string PortfolioColor = "#211f5e";
+    private static readonly string BenchmarkColor = "#ec646b";
 
     private readonly XElement _schema;
 
@@ -143,15 +145,15 @@ public class SVG
             new XAttribute("stroke-width", width)
         );
 
-    private XElement GetPortfolioLine(List<string> portfolioPoints) => GetSvgPolyline(portfolioPoints, color: "blue", dotted: false);
-    private XElement GetBenchmarkLine(List<string> benchmarkPoints) => GetSvgPolyline(benchmarkPoints, color: "red", dotted: true);
+    private XElement GetPortfolioLine(List<string> portfolioPoints) => GetSvgPolyline(portfolioPoints, color: PortfolioColor, dotted: false);
+    private XElement GetBenchmarkLine(List<string> benchmarkPoints) => GetSvgPolyline(benchmarkPoints, color: BenchmarkColor, dotted: true);
     private XElement GetSvgPolyline(List<string> points, string color, bool dotted = false)
         => new(SvgNamespace + "polyline",
             new XAttribute("points", string.Join(" ", points)),
             new XAttribute("fill", "none"),
             new XAttribute("stroke", color),
-            new XAttribute("stroke-width", 1),
-            dotted ? new XAttribute("stroke-dasharray", MapToPoint(1, 2)) : null
+            new XAttribute("stroke-width", 2),
+            dotted ? new XAttribute("stroke-dasharray", MapToPoint(2, 2)) : null
         );
 
     private float ScaleX(float x) => hMargin + x * (Width - 2 * hMargin) / DataPoints.Count;

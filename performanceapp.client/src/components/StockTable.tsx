@@ -6,7 +6,7 @@ const stockColumns = [
     { header: "Name", accessor: (p: StockPosition) => p.instrumentName },
     { header: "Count", accessor: (p: StockPosition) => formatInt(p.count) },
     {
-        header: "Unit Price",
+        header: "Daily Price",
         accessor: (p: StockPosition) => formatSEK(p.unitPrice),
     },
     { header: "Value", accessor: (p: StockPosition) => formatSEK(p.value) },

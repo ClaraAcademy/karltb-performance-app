@@ -1,6 +1,6 @@
 import PositionTable from "./PositionTable";
 import type { BondPosition } from "../types";
-import { formatSEK } from "../utilities/format";
+import { formatPercent, formatSEK } from "../utilities/format";
 
 const stockColumns = [
     { header: "Name", accessor: (p: BondPosition) => p.instrumentName },
@@ -9,8 +9,8 @@ const stockColumns = [
         accessor: (p: BondPosition) => formatSEK(p.nominal),
     },
     {
-        header: "Price (%)",
-        accessor: (p: BondPosition) => formatSEK(p.unitPrice),
+        header: "Daily Price (%)",
+        accessor: (p: BondPosition) => formatPercent(p.unitPrice),
     },
     { header: "Value", accessor: (p: BondPosition) => formatSEK(p.value) },
 ];
