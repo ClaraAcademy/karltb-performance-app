@@ -9,7 +9,7 @@ const stockColumns = [
         accessor: (p: BondPosition) => formatSEK(p.nominal),
     },
     {
-        header: "Unit Price",
+        header: "Price (%)",
         accessor: (p: BondPosition) => formatSEK(p.unitPrice),
     },
     { header: "Value", accessor: (p: BondPosition) => formatSEK(p.value) },

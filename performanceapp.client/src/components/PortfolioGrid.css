@@ -18,8 +18,7 @@
 }
 
 .cell {
-    background-color: aliceblue;
-    /* color: #fff; */
+    background-color: lightgray;
     border-radius: 5px;
     padding: 5px;
     display: grid;
