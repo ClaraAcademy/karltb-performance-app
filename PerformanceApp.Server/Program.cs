@@ -5,8 +5,12 @@ using PerformanceApp.Server.Models;
 using PerformanceApp.Server.Repositories;
 using PerformanceApp.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<PadbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PadbContext") ?? throw new InvalidOperationException("Connection string 'PadbContext' not found.")));
+builder.Services.AddDbContext<PadbContext>(
+    options => options.UseSqlServer(
+        builder.Configuration.GetConnectionString("PadbContext") 
+        ?? throw new InvalidOperationException("Connection string 'PadbContext' not found.")
+    )
+);
 
 // Add services to the container.
 
