@@ -13,6 +13,8 @@ namespace PerformanceApp.Server.DTOs;
 public class SVG
 {
     private readonly XNamespace SvgNamespace = "http://www.w3.org/2000/svg";
+    private static readonly int DefaultWidth = 800;
+    private static readonly int DefaultHeight = 500;
     private readonly int Width;
     private readonly int Height;
     private readonly int hMargin = 50;
@@ -42,6 +44,8 @@ public class SVG
         MaxY = dataPoints.Max(PairwiseMax);
         _schema = GetSvg();
     }
+    public SVG(List<DataPoint2> dataPoints, int width) : this(dataPoints, width, DefaultHeight) { }
+    public SVG(List<DataPoint2> dataPoints) : this(dataPoints, DefaultWidth, DefaultHeight) { }
 
     public override string ToString()
     {
