@@ -29,5 +29,5 @@ public partial class Position
 
     public virtual Portfolio? Portfolio { get; set; }
 
-    public virtual ICollection<PositionValue> PositionValues { get; set; } = new List<PositionValue>();
+    public virtual ICollection<PositionValue> PositionValues { get; set; } = [];
 }

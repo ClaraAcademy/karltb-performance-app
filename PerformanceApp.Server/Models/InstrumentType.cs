@@ -11,5 +11,5 @@ public partial class InstrumentType
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<Instrument> Instruments { get; set; } = new List<Instrument>();
+    public virtual ICollection<Instrument> Instruments { get; set; } = [];
 }
