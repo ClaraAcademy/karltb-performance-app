@@ -25,9 +25,9 @@ public partial class Position
 
     public virtual DateInfo? BankdayNavigation { get; set; }
 
-    public virtual Instrument? Instrument { get; set; }
+    public virtual Instrument? InstrumentNavigation { get; set; }
 
-    public virtual Portfolio? Portfolio { get; set; }
+    public virtual Portfolio? PortfolioNavigation { get; set; }
 
-    public virtual ICollection<PositionValue> PositionValues { get; set; } = [];
+    public virtual ICollection<PositionValue> PositionValuesNavigation { get; set; } = [];
 }

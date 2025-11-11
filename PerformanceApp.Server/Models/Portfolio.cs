@@ -11,23 +11,23 @@ public partial class Portfolio
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<Benchmark> BenchmarkBenchmarkNavigations { get; set; } = [];
+    public virtual ICollection<Benchmark> BenchmarkBenchmarksNavigation { get; set; } = [];
 
-    public virtual ICollection<Benchmark> BenchmarkPortfolios { get; set; } = [];
+    public virtual ICollection<Benchmark> BenchmarkPortfoliosNavigation { get; set; } = [];
 
-    public virtual ICollection<KeyFigureValue> KeyFigureValues { get; set; } =[];
+    public virtual ICollection<KeyFigureValue> KeyFigureValuesNavigation { get; set; } =[];
 
-    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioValue> PortfolioValues { get; set; } = [];
+    public virtual ICollection<PortfolioValue> PortfolioValuesNavigation { get; set; } = [];
 
-    public virtual ICollection<Position> Positions { get; set; } = [];
+    public virtual ICollection<Position> PositionsNavigation { get; set; } = [];
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = [];
+    public virtual ICollection<Transaction> TransactionsNavigation { get; set; } = [];
 }

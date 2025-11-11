@@ -1,16 +1,26 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Server.Data;
 using PerformanceApp.Server.Models;
 using PerformanceApp.Server.Repositories;
 using PerformanceApp.Server.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PadbContext>(
     options => options.UseSqlServer(
-        builder.Configuration.GetConnectionString("PadbContext") 
+        builder.Configuration.GetConnectionString("PadbContext")
         ?? throw new InvalidOperationException("Connection string 'PadbContext' not found.")
     )
 );
+
+// Add Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<PadbContext>()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 
@@ -47,7 +57,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseDefaultFiles();
-//app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -59,6 +68,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

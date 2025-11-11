@@ -19,5 +19,5 @@ public partial class PortfolioHalfYearPerformance
 
     public virtual DateInfo PeriodStartNavigation { get; set; } = null!;
 
-    public virtual Portfolio Portfolio { get; set; } = null!;
+    public virtual Portfolio PortfolioNavigation { get; set; } = null!;
 }

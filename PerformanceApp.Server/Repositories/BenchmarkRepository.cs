@@ -16,19 +16,19 @@ namespace PerformanceApp.Server.Repositories
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync()
             => await _context.Benchmarks
-                .Include(b => b.PortfolioNavigation)
-                .Include(b => b.BenchmarkNavigation)
+                .Include(b => b.PortfolioPortfolioNavigation)
+                .Include(b => b.BenchmarkPortfolioNavigation)
                 .ToListAsync();
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId)
             => await _context.Benchmarks
-                .Include(bm => bm.PortfolioNavigation)
-                    .ThenInclude(p => p.KeyFigureValues)
-                        .ThenInclude(kfv => kfv.KeyFigureInfo)
-                .Include(bm => bm.BenchmarkNavigation)
-                    .ThenInclude(b => b.KeyFigureValues)
-                        .ThenInclude(kfv => kfv.KeyFigureInfo)
-                .Where(bm => bm.PortfolioNavigation.PortfolioId == portfolioId)
+                .Include(bm => bm.PortfolioPortfolioNavigation)
+                    .ThenInclude(p => p.KeyFigureValuesNavigation)
+                        .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
+                .Include(bm => bm.BenchmarkPortfolioNavigation)
+                    .ThenInclude(b => b.KeyFigureValuesNavigation)
+                        .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
+                .Where(bm => bm.PortfolioPortfolioNavigation.PortfolioId == portfolioId)
                 .ToListAsync();
 
     }

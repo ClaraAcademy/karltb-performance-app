@@ -21,14 +21,14 @@ namespace PerformanceApp.Server.Repositories
             int portfolioId
         )
             => await _context.Positions
-                .Include(p => p.Instrument!)
-                    .ThenInclude(i => i.InstrumentType)
-                .Include(p => p.Instrument!)
-                    .ThenInclude(i => i.InstrumentPrices)
-                .Include(p => p.PositionValues)
+                .Include(p => p.InstrumentNavigation!)
+                    .ThenInclude(i => i.InstrumentTypeNavigation)
+                .Include(p => p.InstrumentNavigation!)
+                    .ThenInclude(i => i.InstrumentPricesNavigation)
+                .Include(p => p.PositionValuesNavigation)
                 .Where(p => p.Bankday == bankday)
                 .Where(p => p.PortfolioId == portfolioId)
-                .Where(p => p.Instrument!.InstrumentType!.InstrumentTypeName == instrumentType)
+                .Where(p => p.InstrumentNavigation!.InstrumentTypeNavigation!.InstrumentTypeName == instrumentType)
                 .ToListAsync();
 
         public async Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId)

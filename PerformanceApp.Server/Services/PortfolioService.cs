@@ -33,10 +33,10 @@ namespace PerformanceApp.Server.Services
         private static PortfolioBenchmarkDTO MapToPortfolioBenchmarkDTO(Benchmark b)
             => new PortfolioBenchmarkDTO
             {
-                PortfolioId = b.PortfolioNavigation.PortfolioId,
-                PortfolioName = b.PortfolioNavigation.PortfolioName,
-                BenchmarkId = b.BenchmarkNavigation.PortfolioId,
-                BenchmarkName = b.BenchmarkNavigation.PortfolioName
+                PortfolioId = b.PortfolioPortfolioNavigation.PortfolioId,
+                PortfolioName = b.PortfolioPortfolioNavigation.PortfolioName,
+                BenchmarkId = b.BenchmarkPortfolioNavigation.PortfolioId,
+                BenchmarkName = b.BenchmarkPortfolioNavigation.PortfolioName
             };
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync()
@@ -59,13 +59,13 @@ namespace PerformanceApp.Server.Services
 
         public async Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync()
             => (await _portfolioRepository.GetAllPortfoliosAsync())
-                    .SelectMany(p => p.PortfolioCumulativeDayPerformances)
+                    .SelectMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
                     .Select(MapToPortfolioCumulativeDayPerformanceDTO)
                     .ToList();
 
         public async Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
             => (await _portfolioRepository.GetPortfolioAsync(portfolioId))
-                    .PortfolioCumulativeDayPerformances
+                    .PortfolioCumulativeDayPerformancesNavigation
                     .Select(MapToPortfolioCumulativeDayPerformanceDTO)
                     .ToList();
 

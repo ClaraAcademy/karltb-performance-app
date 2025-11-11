@@ -11,5 +11,5 @@ public partial class KeyFigureInfo
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<KeyFigureValue> KeyFigureValues { get; set; } = [];
+    public virtual ICollection<KeyFigureValue> KeyFigureValuesNavigation { get; set; } = [];
 }

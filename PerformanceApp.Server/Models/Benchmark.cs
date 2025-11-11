@@ -11,7 +11,7 @@ public partial class Benchmark
 
     public DateTime Created { get; set; }
 
-    public virtual Portfolio BenchmarkNavigation { get; set; } = null!;
+    public virtual Portfolio BenchmarkPortfolioNavigation { get; set; } = null!;
 
-    public virtual Portfolio PortfolioNavigation { get; set; } = null!;
+    public virtual Portfolio PortfolioPortfolioNavigation { get; set; } = null!;
 }

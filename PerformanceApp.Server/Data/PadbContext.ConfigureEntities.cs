@@ -17,12 +17,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.BenchmarkId).HasColumnName("BenchmarkID");
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
 
-            entity.HasOne(d => d.BenchmarkNavigation).WithMany(p => p.BenchmarkBenchmarkNavigations)
+            entity.HasOne(d => d.BenchmarkPortfolioNavigation).WithMany(p => p.BenchmarkBenchmarksNavigation)
                 .HasForeignKey(d => d.BenchmarkId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Benchmark_BenchmarkID");
 
-            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.BenchmarkPortfolios)
+            entity.HasOne(d => d.PortfolioPortfolioNavigation).WithMany(p => p.BenchmarkPortfoliosNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_Benchmark_PortfolioID");
         });
@@ -54,7 +54,7 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.InstrumentName).HasMaxLength(100);
             entity.Property(e => e.InstrumentTypeId).HasColumnName("InstrumentTypeID");
 
-            entity.HasOne(d => d.InstrumentType).WithMany(p => p.Instruments)
+            entity.HasOne(d => d.InstrumentTypeNavigation).WithMany(p => p.InstrumentsNavigation)
                 .HasForeignKey(d => d.InstrumentTypeId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Instrument_InstrumentTypeID");
@@ -72,12 +72,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.DayPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentDayPerformances)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentDayPerformancesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentDayPerformance_Bankday");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.InstrumentDayPerformances)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentDayPerformancesNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .HasConstraintName("FK_InstrumentDayPerformance_InstrumentID");
         });
@@ -95,16 +95,16 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.HalfYearPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.InstrumentHalfYearPerformances)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentHalfYearPerformancesNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .HasConstraintName("FK_InstrumentHalfYearPerformance_InstrumentID");
 
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodEndNavigations)
+            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodEndsNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentHalfYearPerformance_PeriodEnd");
 
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodStartNavigations)
+            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodStartsNavigation)
                 .HasForeignKey(d => d.PeriodStart)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentHalfYearPerformance_PeriodStart");
@@ -123,16 +123,16 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.MonthPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.InstrumentMonthPerformances)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentMonthPerformancesNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .HasConstraintName("FK_InstrumentMonthPerformance_InstrumentID");
 
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodEndNavigations)
+            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodEndsNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentMonthPerformance_PeriodEnd");
 
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodStartNavigations)
+            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodStartsNavigation)
                 .HasForeignKey(d => d.PeriodStart)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentMonthPerformance_PeriodStart");
@@ -151,12 +151,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Price).HasColumnType("decimal(19, 4)");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentPrices)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentPricesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_InstrumentPrice_Bankday");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.InstrumentPrices)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentPricesNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .HasConstraintName("FK_InstrumentPrice_InstrumentID");
         });
@@ -205,11 +205,11 @@ public partial class PadbContext : DbContext
                 .HasColumnType("decimal(24, 16)")
                 .HasColumnName("KeyFigureValue");
 
-            entity.HasOne(d => d.KeyFigureInfo).WithMany(p => p.KeyFigureValues)
+            entity.HasOne(d => d.KeyFigureInfoNavigation).WithMany(p => p.KeyFigureValuesNavigation)
                 .HasForeignKey(d => d.KeyFigureId)
                 .HasConstraintName("FK_KeyFigureValue_KeyFigureID");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.KeyFigureValues)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.KeyFigureValuesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_KeyFigureValue_PortfolioID");
         });
@@ -241,12 +241,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.CumulativeDayPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioCumulativeDayPerformances)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioCumulativeDayPerformance_Bankday");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.PortfolioCumulativeDayPerformances)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_PortfolioCumulativeDayPerformance_PortfolioID");
         });
@@ -264,12 +264,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.DayPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioDayPerformances)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioDayPerformancesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioDayPerformance_Bankday");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.PortfolioDayPerformances)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioDayPerformancesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_PortfolioDayPerformance_PortfolioID");
         });
@@ -287,17 +287,17 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.HalfYearPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodEndNavigations)
+            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodEndsNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioHalfYearPerformance_PeriodEnd");
 
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodStartNavigations)
+            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodStartsNavigation)
                 .HasForeignKey(d => d.PeriodStart)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioHalfYearPerformance_PeriodStart");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.PortfolioHalfYearPerformances)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioHalfYearPerformancesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_PortfolioHalfYearPerformance_PortfolioID");
         });
@@ -315,17 +315,17 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.MonthPerformance).HasColumnType("decimal(24, 16)");
 
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodEndNavigations)
+            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodEndsNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioMonthPerformance_PeriodEnd");
 
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodStartNavigations)
+            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodStartsNavigation)
                 .HasForeignKey(d => d.PeriodStart)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioMonthPerformance_PeriodStart");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.PortfolioMonthPerformances)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioMonthPerformancesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_PortfolioMonthPerformance_PortfolioID");
         });
@@ -345,12 +345,12 @@ public partial class PadbContext : DbContext
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("PortfolioValue");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioValues)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioValuesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PortfolioValue_Bankday");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.PortfolioValues)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioValuesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .HasConstraintName("FK_PortfolioValue_PortfolioID");
         });
@@ -370,16 +370,16 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
             entity.Property(e => e.Proportion).HasColumnType("decimal(5, 4)");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.Positions)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PositionsNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .HasConstraintName("FK_Position_Bankday");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.Positions)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.PositionsNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Position_InstrumentID");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.Positions)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PositionsNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Position_PortfolioID");
@@ -400,12 +400,12 @@ public partial class PadbContext : DbContext
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("PositionValue");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PositionValues)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PositionValuesNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PositionValue_Bankday");
 
-            entity.HasOne(d => d.Position).WithMany(p => p.PositionValues)
+            entity.HasOne(d => d.PositionNavigation).WithMany(p => p.PositionValuesNavigation)
                 .HasForeignKey(d => d.PositionId)
                 .HasConstraintName("FK_PositionValue_PositionID");
         });
@@ -441,21 +441,21 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.Proportion).HasColumnType("decimal(5, 4)");
             entity.Property(e => e.TransactionTypeId).HasColumnName("TransactionTypeID");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.Transactions)
+            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.TransactionsNavigation)
                 .HasForeignKey(d => d.Bankday)
                 .HasConstraintName("FK_Transaction_Bankday");
 
-            entity.HasOne(d => d.Instrument).WithMany(p => p.Transactions)
+            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.TransactionsNavigation)
                 .HasForeignKey(d => d.InstrumentId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Transaction_InstrumentID");
 
-            entity.HasOne(d => d.Portfolio).WithMany(p => p.Transactions)
+            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.TransactionsNavigation)
                 .HasForeignKey(d => d.PortfolioId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Transaction_PortfolioID");
 
-            entity.HasOne(d => d.TransactionType).WithMany(p => p.Transactions)
+            entity.HasOne(d => d.TransactionTypeNavigation).WithMany(p => p.TransactionsNavigation)
                 .HasForeignKey(d => d.TransactionTypeId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Transaction_TransactionTypeID");

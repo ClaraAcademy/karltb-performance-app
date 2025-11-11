@@ -15,5 +15,5 @@ public partial class PositionValue
 
     public virtual DateInfo BankdayNavigation { get; set; } = null!;
 
-    public virtual Position Position { get; set; } = null!;
+    public virtual Position PositionNavigation { get; set; } = null!;
 }

@@ -17,13 +17,13 @@ namespace PerformanceApp.Server.Services
         private readonly IPositionRepository _repo = repo;
 
         private static decimal? GetPositionValue(Position p)
-            => p.PositionValues?.SingleOrDefault(pv => pv.Bankday == p.Bankday)?.PositionValue1;
+            => p.PositionValuesNavigation?.SingleOrDefault(pv => pv.Bankday == p.Bankday)?.PositionValue1;
 
         private static decimal? GetInstrumentUnitPrice(Position p)
-            => p.Instrument?.InstrumentPrices?.SingleOrDefault(ip => ip.Bankday == p.Bankday)?.Price;
+            => p.InstrumentNavigation?.InstrumentPricesNavigation?.SingleOrDefault(ip => ip.Bankday == p.Bankday)?.Price;
 
         private static string? GetInstrumentName(Position p)
-            => p.Instrument?.InstrumentName;
+            => p.InstrumentNavigation?.InstrumentName;
 
         private static TBase MapCommonFields<TBase>(Position p, TBase dto)
             where TBase : PositionDTO

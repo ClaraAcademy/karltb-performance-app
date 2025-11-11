@@ -15,7 +15,7 @@ public partial class InstrumentMonthPerformance
 
     public DateTime Created { get; set; }
 
-    public virtual Instrument Instrument { get; set; } = null!;
+    public virtual Instrument InstrumentNavigation { get; set; } = null!;
 
     public virtual DateInfo PeriodEndNavigation { get; set; } = null!;
 

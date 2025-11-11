@@ -17,7 +17,7 @@ namespace PerformanceApp.Server.Repositories
 
         public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
             => await _context.Portfolios
-                .Include(p => p.PortfolioCumulativeDayPerformances)
+                .Include(p => p.PortfolioCumulativeDayPerformancesNavigation)
                 .SingleAsync(p => p.PortfolioId == portfolioId);
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()

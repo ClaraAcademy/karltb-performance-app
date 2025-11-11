@@ -27,9 +27,9 @@ public partial class Transaction
 
     public virtual DateInfo? BankdayNavigation { get; set; }
 
-    public virtual Instrument? Instrument { get; set; }
+    public virtual Instrument? InstrumentNavigation { get; set; }
 
-    public virtual Portfolio? Portfolio { get; set; }
+    public virtual Portfolio? PortfolioNavigation { get; set; }
 
-    public virtual TransactionType? TransactionType { get; set; }
+    public virtual TransactionType? TransactionTypeNavigation { get; set; }
 }

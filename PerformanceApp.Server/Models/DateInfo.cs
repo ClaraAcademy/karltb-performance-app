@@ -9,35 +9,35 @@ public partial class DateInfo
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<InstrumentDayPerformance> InstrumentDayPerformances { get; set; } = [];
+    public virtual ICollection<InstrumentDayPerformance> InstrumentDayPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodEndNavigations { get; set; } = [];
+    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodEndsNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodStartNavigations { get; set; } = [];
+    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodStartsNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodEndNavigations { get; set; } = [];
+    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodEndsNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodStartNavigations { get; set; } = [];
+    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodStartsNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentPrice> InstrumentPrices { get; set; } = [];
+    public virtual ICollection<InstrumentPrice> InstrumentPricesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformances { get; set; } = [];
+    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformancesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodEndNavigations { get; set; } = [];
+    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodEndsNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodStartNavigations { get; set; } = [];
+    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodStartsNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodEndNavigations { get; set; } = [];
+    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodEndsNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodStartNavigations { get; set; } = [];
+    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodStartsNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioValue> PortfolioValues { get; set; } = [];
+    public virtual ICollection<PortfolioValue> PortfolioValuesNavigation { get; set; } = [];
 
-    public virtual ICollection<PositionValue> PositionValues { get; set; } = [];
+    public virtual ICollection<PositionValue> PositionValuesNavigation { get; set; } = [];
 
-    public virtual ICollection<Position> Positions { get; set; } = [];
+    public virtual ICollection<Position> PositionsNavigation { get; set; } = [];
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = [];
+    public virtual ICollection<Transaction> TransactionsNavigation { get; set; } = [];
 }

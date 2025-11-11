@@ -15,5 +15,5 @@ public partial class InstrumentPrice
 
     public virtual DateInfo BankdayNavigation { get; set; } = null!;
 
-    public virtual Instrument Instrument { get; set; } = null!;
+    public virtual Instrument InstrumentNavigation { get; set; } = null!;
 }

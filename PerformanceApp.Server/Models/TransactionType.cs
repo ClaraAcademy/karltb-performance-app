@@ -9,5 +9,5 @@ public partial class TransactionType
 
     public string? TransactionTypeName { get; set; }
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = [];
+    public virtual ICollection<Transaction> TransactionsNavigation { get; set; } = [];
 }

@@ -18,7 +18,7 @@ namespace PerformanceApp.Server.Repositories
 
         private IQueryable<KeyFigureValue> BaseKeyFigureValuesQuery()
             => _context.KeyFigureValues
-                .Include(kfv => kfv.Portfolio)
+                .Include(kfv => kfv.PortfolioNavigation)
                 .AsQueryable();
 
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync()
@@ -26,7 +26,7 @@ namespace PerformanceApp.Server.Repositories
                 .ToListAsync();
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId)
             => await BaseKeyFigureValuesQuery()
-                .Include(k => k.Portfolio)
+                .Include(k => k.PortfolioNavigation)
                 .ToListAsync();
         public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
             => await _context.KeyFigureInfos
