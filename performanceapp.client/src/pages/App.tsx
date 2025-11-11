@@ -5,6 +5,7 @@ import PortfolioGrid from "../components/PortfolioGrid";
 import Header from "../components/Header";
 import LineChart from "../components/LineChart";
 import KeyFigureTable from "../components/KeyFigureTable";
+import Report from "../components/Report";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                 <LineChart />
                 <h2>Key Figures</h2>
                 <KeyFigureTable />
+                <Report />
             </div>
         </div>
     );
