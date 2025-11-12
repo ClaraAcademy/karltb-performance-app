@@ -6,8 +6,6 @@ using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seed;
 
-
-
 public class Seeder(PadbContext context, UserManager<ApplicationUser> userManager)
 {
     private readonly PadbContext _context = context;
@@ -61,28 +59,24 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
 
         _context.SaveChanges();
     }
+    private Benchmark MapToBenchmark((string, string) pair)
+    {
+        var portfolio = _portfolioRepository.GetPortfolio(pair.Item1)!;
+        var benchmark = _portfolioRepository.GetPortfolio(pair.Item2)!;
+
+        return new Benchmark { PortfolioId = portfolio.PortfolioId, BenchmarkId = benchmark.PortfolioId };
+    }
 
     private void SeedBenchmarks()
     {
-        var mappingsRaw = new List<(string, string)>
-        {
-            ("Portfolio A", "Benchmark A"),
-            ("Portfolio B", "Benchmark B")
-        };
-        (Portfolio, Portfolio) ToPortfolios((string, string) pair) => (
-            _portfolioRepository.GetPortfolio(pair.Item1)!,
-            _portfolioRepository.GetPortfolio(pair.Item2)!
-        );
-        Benchmark ToBenchmark((Portfolio, Portfolio) pair)
-            => new Benchmark { PortfolioId = pair.Item1.PortfolioId, BenchmarkId = pair.Item2.PortfolioId };
+        List<string> portfolios = ["Portfolio A", "Portfolio B"];
+        List<string> benchmarks = ["Benchmark A", "Benchmark B"];
 
-
-        var mappings = mappingsRaw.Select(ToPortfolios)
-            .Select(ToBenchmark)
+        var benchmarkMappings = portfolios.Zip(benchmarks)
+            .Select(MapToBenchmark)
             .ToList();
 
-
-        _benchmarkRepository.AddBenchmarkMappings(mappings);
+        _benchmarkRepository.AddBenchmarkMappings(benchmarkMappings);
 
         _context.SaveChanges();
     }
