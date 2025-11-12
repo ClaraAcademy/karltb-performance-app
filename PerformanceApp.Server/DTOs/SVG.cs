@@ -1,4 +1,3 @@
-using PerformanceApp.Server.Models;
 using PerformanceApp.Server.Controllers;
 using System.Xml.Linq;
 using System.Globalization;

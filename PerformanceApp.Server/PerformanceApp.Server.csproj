@@ -33,6 +33,7 @@
     <ProjectReference Include="..\performanceapp.client\performanceapp.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\PerformanceApp.Data\PerformanceApp.Data.csproj" />
   </ItemGroup>
 
 </Project>

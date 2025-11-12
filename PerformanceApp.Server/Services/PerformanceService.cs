@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PerformanceApp.Server.DTOs;
-using PerformanceApp.Server.Models;
-using PerformanceApp.Server.Repositories;
+using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Repositories;
 namespace PerformanceApp.Server.Services
 {
     public interface IPerformanceService

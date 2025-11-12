@@ -1,5 +1,5 @@
 using PerformanceApp.Server.DTOs;
-using PerformanceApp.Server.Repositories;
+using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Server.Services
 {

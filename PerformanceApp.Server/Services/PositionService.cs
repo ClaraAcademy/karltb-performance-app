@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
-using PerformanceApp.Server.Models;
+using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Repositories;
 using PerformanceApp.Server.DTOs;
-using PerformanceApp.Server.Repositories;
 
 namespace PerformanceApp.Server.Services
 {

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Identity.Client.AppConfig;
 using NuGet.Common;
-using PerformanceApp.Server.Data;
 using PerformanceApp.Server.DTOs;
 using SQLitePCL;
 using PerformanceApp.Server.Services;
