@@ -13,7 +13,7 @@ public static class DependencyInjection
     private static string GetConnectionString(IConfiguration configuration)
     {
         string message = $"Connection string ${ContextName} not found.";
-        return configuration.GetConnectionString(ContextName) 
+        return configuration.GetConnectionString(ContextName)
             ?? throw new InvalidOperationException(message);
     }
 
@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IBenchmarkRepository, BenchmarkRepository>();
         services.AddScoped<IPerformanceRepository, PerformanceRepository>();
         services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
+        services.AddScoped<IKeyFigureInfoRepository, KeyFigureInfoRepository>();
     }
 
     private const string ContextName = "PadbContext";

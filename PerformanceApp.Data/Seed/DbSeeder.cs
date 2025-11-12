@@ -13,6 +13,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly BenchmarkRepository _benchmarkRepository = new(context);
     private readonly TransactionTypeRepository _transactionTypeRepository = new(context);
+    private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -94,12 +95,34 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         _context.SaveChanges();
     }
 
+    KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { KeyFigureName = name };
+
+    private void SeedKeyFigures()
+    {
+        var raw = new List<string>
+        {
+            "Standard Deviation",
+            "Tracking Error",
+            "Annualised Cumulative Return",
+            "Information Ratio",
+            "Half-Year Performance"
+        };
+
+        var keyFigureInfos = raw.Select(MapToKeyFigureInfo)
+            .ToList();
+
+        _keyFigureInfoRepository.AddKeyFigureInfos(keyFigureInfos);
+
+        _context.SaveChanges();
+    }
+
     public void Seed()
     {
         SeedUsers();
         SeedPortfolios();
         SeedBenchmarks();
         SeedTransactionTypes();
+        SeedKeyFigures();
     }
 
 }
