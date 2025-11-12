@@ -6,10 +6,14 @@ using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seed;
 
+
+
 public class Seeder(PadbContext context, UserManager<ApplicationUser> userManager)
 {
     private readonly PadbContext _context = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly PortfolioRepository _portfolioRepository = new(context);
+    private readonly BenchmarkRepository _benchmarkRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -52,7 +56,32 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
             MapToPortfolio("Benchmark B", userB!),
         };
 
-        new PortfolioRepository(_context).AddPortfolios(portfolios);
+        _portfolioRepository.AddPortfolios(portfolios);
+
+        _context.SaveChanges();
+    }
+
+    private void SeedBenchmarks()
+    {
+        var mappingsRaw = new List<(string, string)>
+        {
+            ("Portfolio A", "Benchmark A"),
+            ("Portfolio B", "Benchmark B")
+        };
+        (Portfolio, Portfolio) ToPortfolios((string, string) pair) => (
+            _portfolioRepository.GetPortfolio(pair.Item1)!,
+            _portfolioRepository.GetPortfolio(pair.Item2)!
+        );
+        Benchmark ToBenchmark((Portfolio, Portfolio) pair)
+            => new Benchmark { PortfolioId = pair.Item1.PortfolioId, BenchmarkId = pair.Item2.PortfolioId };
+
+
+        var mappings = mappingsRaw.Select(ToPortfolios)
+            .Select(ToBenchmark)
+            .ToList();
+
+
+        _benchmarkRepository.AddBenchmarkMappings(mappings);
 
         _context.SaveChanges();
     }
@@ -61,6 +90,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     {
         SeedUsers();
         SeedPortfolios();
+        SeedBenchmarks();
     }
 
 }

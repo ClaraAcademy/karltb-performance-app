@@ -1,11 +1,14 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace PerformanceApp.Data.Repositories
 {
     public interface IBenchmarkRepository
     {
+        EntityEntry<Benchmark>? AddBenchmarkMapping(Benchmark benchmark);
+        List<EntityEntry<Benchmark>?> AddBenchmarkMappings(List<Benchmark> benchmark);
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync();
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId);
     }
@@ -13,6 +16,26 @@ namespace PerformanceApp.Data.Repositories
     public class BenchmarkRepository(PadbContext context) : IBenchmarkRepository
     {
         private readonly PadbContext _context = context;
+
+        private static bool Equal(Benchmark lhs, Benchmark rhs)
+        {
+            return lhs.PortfolioId == rhs.PortfolioId && lhs.BenchmarkId == lhs.BenchmarkId;
+        }
+
+        private bool Exists(Benchmark benchmark)
+        {
+            return _context.Benchmarks.Any(b => Equal(b, benchmark));
+        }
+        public EntityEntry<Benchmark>? AddBenchmarkMapping(Benchmark benchmark)
+        {
+            if (Exists(benchmark))
+            {
+                return null;
+            }
+            return _context.Add(benchmark);
+        }
+        public List<EntityEntry<Benchmark>?> AddBenchmarkMappings(List<Benchmark> benchmarks)
+            => benchmarks.Select(AddBenchmarkMapping).ToList();
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync()
             => await _context.Benchmarks

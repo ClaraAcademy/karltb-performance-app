@@ -10,6 +10,8 @@ namespace PerformanceApp.Data.Repositories
     {
         EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio);
         List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolio);
+        Portfolio? GetPortfolio(string name);
+        Task<Portfolio?> GetPortfolioAsync(string name);
         Task<Portfolio> GetPortfolioAsync(int portfolioId);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
         Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync();
@@ -22,8 +24,14 @@ namespace PerformanceApp.Data.Repositories
         private bool Exists(Portfolio portfolio)
             => _context.Portfolios.Any(p => Equal(p, portfolio));
 
+        public Portfolio? GetPortfolio(string name) => GetPortfolioAsync(name).Result;
+        public async Task<Portfolio?> GetPortfolioAsync(string name)
+            => await _context.Portfolios.SingleOrDefaultAsync(p => p.PortfolioName == name);
+
         public EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio)
-            => Exists(portfolio) ? null : _context.Portfolios.Add(portfolio);
+            => Exists(portfolio) ? null
+                                 : _context.Portfolios.Add(portfolio);
+
         public List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolios)
             => portfolios.Select(AddPortfolio).ToList();
 
