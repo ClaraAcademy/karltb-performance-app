@@ -13,7 +13,7 @@ namespace PerformanceApp.Data;
 public class Program
 {
     private const string ContextName = "PadbContext";
-    static async Task Main()
+    static void Main()
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -35,7 +35,7 @@ public class Program
             var userManager = scope.ServiceProvider
                 .GetRequiredService<UserManager<ApplicationUser>>();
 
-            await new Seeder(context, userManager).Seed();
+            new Seeder(context, userManager).Seed();
         }
 
 

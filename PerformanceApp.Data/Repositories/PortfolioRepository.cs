@@ -2,11 +2,14 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace PerformanceApp.Data.Repositories
 {
     public interface IPortfolioRepository
     {
+        EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio);
+        List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolio);
         Task<Portfolio> GetPortfolioAsync(int portfolioId);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
         Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync();
@@ -14,6 +17,15 @@ namespace PerformanceApp.Data.Repositories
     public class PortfolioRepository(PadbContext context) : IPortfolioRepository
     {
         private readonly PadbContext _context = context;
+        private static bool Equal(Portfolio lhs, Portfolio rhs)
+            => lhs.PortfolioName == rhs.PortfolioName && lhs.UserID == rhs.UserID;
+        private bool Exists(Portfolio portfolio)
+            => _context.Portfolios.Any(p => Equal(p, portfolio));
+
+        public EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio)
+            => Exists(portfolio) ? null : _context.Portfolios.Add(portfolio);
+        public List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolios)
+            => portfolios.Select(AddPortfolio).ToList();
 
         public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
             => await _context.Portfolios
