@@ -4,32 +4,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using PerformanceApp.Server.Data;
-using PerformanceApp.Server.Models;
-using PerformanceApp.Server.Repositories;
+using PerformanceApp.Data.Context;
+using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Repositories;
 using PerformanceApp.Server.Services;
+using PerformanceApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<PadbContext>(
-    options => options.UseSqlServer(
-        builder.Configuration.GetConnectionString("PadbContext")
-        ?? throw new InvalidOperationException("Connection string 'PadbContext' not found.")
-    )
-);
 
-// Add Identity
+// Add services from PerformanceApp.Data
+builder.Services.AddDataServices(builder.Configuration);
+
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<PadbContext>()
-    .AddDefaultTokenProviders();
-
-// Add services to the container.
-
-// Register repositories
-builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
-builder.Services.AddScoped<IPositionRepository, PositionRepository>();
-builder.Services.AddScoped<IDateInfoRepository, DateInfoRepository>();
-builder.Services.AddScoped<IBenchmarkRepository, BenchmarkRepository>();
-builder.Services.AddScoped<IPerformanceRepository, PerformanceRepository>();
+   .AddEntityFrameworkStores<PadbContext>()
+   .AddDefaultTokenProviders();
 
 // Register services
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
