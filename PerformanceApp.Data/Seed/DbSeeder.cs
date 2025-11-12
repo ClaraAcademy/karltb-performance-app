@@ -80,14 +80,14 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
 
         _context.SaveChanges();
     }
+    TransactionType MapToTransactionType(string name) => new TransactionType { TransactionTypeName = name };
 
     private void SeedTransactionTypes()
     {
-        TransactionType Map(string name) => new TransactionType { TransactionTypeName = name };
-
         var raw = new List<string> { "Buy", "Sell" };
 
-        var transactionTypes = raw.Select(Map).ToList();
+        var transactionTypes = raw.Select(MapToTransactionType)
+            .ToList();
 
         _transactionTypeRepository.AddTransactionTypes(transactionTypes);
 
