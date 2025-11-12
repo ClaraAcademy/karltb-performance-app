@@ -14,6 +14,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly BenchmarkRepository _benchmarkRepository = new(context);
+    private readonly TransactionTypeRepository _transactionTypeRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -86,11 +87,25 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         _context.SaveChanges();
     }
 
+    private void SeedTransactionTypes()
+    {
+        TransactionType Map(string name) => new TransactionType { TransactionTypeName = name };
+
+        var raw = new List<string> { "Buy", "Sell" };
+
+        var transactionTypes = raw.Select(Map).ToList();
+
+        _transactionTypeRepository.AddTransactionTypes(transactionTypes);
+
+        _context.SaveChanges();
+    }
+
     public void Seed()
     {
         SeedUsers();
         SeedPortfolios();
         SeedBenchmarks();
+        SeedTransactionTypes();
     }
 
 }
