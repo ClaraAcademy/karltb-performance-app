@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Server.Models;
 
 namespace PerformanceApp.Server.Data;
 
-public partial class PadbContext : DbContext
+public partial class PadbContext
 {
     private static void ConfigureBenchmark(ModelBuilder modelBuilder)
     {
@@ -226,6 +227,12 @@ public partial class PadbContext : DbContext
             entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.PortfolioName).HasMaxLength(100);
+
+            entity.HasOne(p => p.User)
+                .WithMany(u => u.PortfoliosNavigation)
+                .HasForeignKey(p => p.UserID)
+                .HasConstraintName("FK_Portfolio_UserID");
+
         });
     }
 

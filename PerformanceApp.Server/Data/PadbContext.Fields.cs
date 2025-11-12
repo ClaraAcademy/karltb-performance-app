@@ -3,7 +3,7 @@ using PerformanceApp.Server.Models;
 
 namespace PerformanceApp.Server.Data;
 
-public partial class PadbContext : DbContext
+public partial class PadbContext
 {
     public virtual DbSet<Benchmark> Benchmarks { get; set; }
     public virtual DbSet<DateInfo> DateInfos { get; set; }

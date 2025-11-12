@@ -11,11 +11,15 @@ public partial class Portfolio
 
     public DateTime Created { get; set; }
 
+    public string? UserID { get; set; }
+
+    public virtual ApplicationUser? User { get; set; }
+
     public virtual ICollection<Benchmark> BenchmarkBenchmarksNavigation { get; set; } = [];
 
     public virtual ICollection<Benchmark> BenchmarkPortfoliosNavigation { get; set; } = [];
 
-    public virtual ICollection<KeyFigureValue> KeyFigureValuesNavigation { get; set; } =[];
+    public virtual ICollection<KeyFigureValue> KeyFigureValuesNavigation { get; set; } = [];
 
     public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformancesNavigation { get; set; } = [];
 

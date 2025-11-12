@@ -3,13 +3,17 @@ using PerformanceApp.Server.Models;
 
 namespace PerformanceApp.Server.Data;
 
-public partial class PadbContext : DbContext
+public partial class PadbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Initialize Identity
+        base.OnModelCreating(modelBuilder);
+
+        // Initialize models
         ConfigureBenchmark(modelBuilder);
         ConfigureDateInfo(modelBuilder);
         ConfigureInstrument(modelBuilder);
