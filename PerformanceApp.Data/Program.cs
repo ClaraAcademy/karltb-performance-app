@@ -30,10 +30,12 @@ public class Program
         {
             var context = scope.ServiceProvider
                 .GetRequiredService<PadbContext>();
-            context.Database.EnsureCreated();
 
-            var userManager = scope.ServiceProvider
-                .GetRequiredService<UserManager<ApplicationUser>>();
+            context.Database.EnsureCreated();
+            SqlExecutor.ExecuteFilesInDirectory(context, SqlPaths.Functions).GetAwaiter();
+            SqlExecutor.ExecuteFilesInDirectory(context, SqlPaths.StoredProcedures).GetAwaiter();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             new Seeder(context, userManager).Seed();
         }

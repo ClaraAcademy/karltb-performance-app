@@ -1,0 +1,19 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+USE padb;
+GO
+
+CREATE OR ALTER PROCEDURE padb.uspAddKeyFigureName
+    @KeyFigureName NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRANSACTION;
+        INSERT INTO padb.KeyFigureInfo(KeyFigureName)
+        VALUES (@KeyFigureName);
+    COMMIT;
+END
+GO

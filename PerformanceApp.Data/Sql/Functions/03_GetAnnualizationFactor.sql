@@ -1,0 +1,17 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+USE padb;
+GO
+
+CREATE OR ALTER FUNCTION padb.ufnGetAnnualizationFactor()
+RETURNS DECIMAL(24,8)
+AS
+BEGIN
+    DECLARE @factor DECIMAL(24,8);
+    SELECT @factor = 252.0 / (COUNT(*) - 1) 
+    FROM padb.DateInfo;
+    RETURN @factor;
+END
+GO
