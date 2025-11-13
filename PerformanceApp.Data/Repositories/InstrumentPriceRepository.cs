@@ -23,7 +23,7 @@ public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRe
 
     private bool Exists(InstrumentPrice instrumentPrice)
     {
-        return _context.InstrumentPrices.Any(ip => Equal(ip, instrumentPrice));
+        return _context.InstrumentPrices.AsEnumerable().Any(ip => Equal(ip, instrumentPrice));
     }
     public EntityEntry<InstrumentPrice>? AddInstrumentPrice(InstrumentPrice instrumentPrice)
     {

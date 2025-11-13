@@ -21,7 +21,10 @@ public class InstrumentTypeRepository(PadbContext context) : IInstrumentTypeRepo
     private readonly PadbContext _context = context;
 
     private static bool Equal(InstrumentType lhs, InstrumentType rhs) => lhs.InstrumentTypeName == rhs.InstrumentTypeName;
-    private bool Exists(InstrumentType instrumentType) => _context.InstrumentTypes.Any(it => Equal(it, instrumentType));
+    private bool Exists(InstrumentType instrumentType)
+    {
+        return _context.InstrumentTypes.AsEnumerable().Any(it => Equal(it, instrumentType));
+    }
 
     public EntityEntry<InstrumentType>? AddInstrumentType(InstrumentType instrumentType)
     {

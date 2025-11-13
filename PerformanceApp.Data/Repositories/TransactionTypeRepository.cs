@@ -21,7 +21,7 @@ public class TransactionTypeRepository(PadbContext context) : ITransactionTypeRe
     }
     private bool Exists(TransactionType transactionType)
     {
-        return _context.TransactionTypes.Any(tT => Equal(tT, transactionType));
+        return _context.TransactionTypes.AsEnumerable().Any(tT => Equal(tT, transactionType));
     }
     public EntityEntry<TransactionType>? AddTransactionType(TransactionType transactionType)
     {

@@ -24,7 +24,7 @@ namespace PerformanceApp.Data.Repositories
 
         private bool Exists(Benchmark benchmark)
         {
-            return _context.Benchmarks.Any(b => Equal(b, benchmark));
+            return _context.Benchmarks.AsEnumerable().Any(b => Equal(b, benchmark));
         }
         public EntityEntry<Benchmark>? AddBenchmarkMapping(Benchmark benchmark)
         {

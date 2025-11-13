@@ -29,7 +29,10 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
             && lhs.InstrumentTypeId == rhs.InstrumentTypeId;
     }
 
-    private bool Exists(Instrument instrument) => _context.Instruments.Any(i => Equal(i, instrument));
+    private bool Exists(Instrument instrument)
+    {
+        return _context.Instruments.AsEnumerable().Any(i => Equal(i, instrument));
+    }
 
     public EntityEntry<Instrument>? AddInstrument(Instrument instrument)
     {

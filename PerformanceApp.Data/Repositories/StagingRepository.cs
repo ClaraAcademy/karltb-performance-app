@@ -24,7 +24,10 @@ public class StagingRepository(PadbContext context) : IStagingRepository
             && lhs.InstrumentType == rhs.InstrumentType;
     }
 
-    private bool Exists(Staging staging) => _context.Stagings.Any(s => Equal(s, staging));
+    private bool Exists(Staging staging)
+    {
+        return _context.Stagings.AsEnumerable().Any(s => Equal(s, staging));
+    }
 
     public EntityEntry<Staging>? AddStaging(Staging staging) => Exists(staging) ? null : _context.Stagings.Add(staging);
     public List<EntityEntry<Staging>?> AddStagings(List<Staging> stagings) => stagings.Select(AddStaging).ToList();

@@ -18,7 +18,10 @@ namespace PerformanceApp.Data.Repositories
         private readonly PadbContext _context = context;
 
         private static bool Equal(DateInfo lhs, DateInfo rhs) => lhs.Bankday == rhs.Bankday;
-        private bool Exists(DateInfo dateInfo) => _context.DateInfos.Any(di => Equal(di, dateInfo));
+        private bool Exists(DateInfo dateInfo)
+        {
+            return _context.DateInfos.AsEnumerable().Any(di => Equal(di, dateInfo));
+        } 
 
         public EntityEntry<DateInfo>? AddDateInfo(DateInfo dateInfo)
         {

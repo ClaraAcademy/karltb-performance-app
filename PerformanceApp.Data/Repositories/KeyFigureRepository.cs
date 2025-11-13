@@ -19,7 +19,7 @@ public class KeyFigureInfoRepository(PadbContext context) : IKeyFigureInfoReposi
     }
     private bool Exists(KeyFigureInfo keyFigureInfo)
     {
-        return _context.KeyFigureInfos.Any(kfi => Equal(kfi, keyFigureInfo));
+        return _context.KeyFigureInfos.AsEnumerable().Any(kfi => Equal(kfi, keyFigureInfo));
     }
 
     public EntityEntry<KeyFigureInfo>? AddKeyFigureInfo(KeyFigureInfo keyFigureInfo)

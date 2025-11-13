@@ -22,7 +22,9 @@ namespace PerformanceApp.Data.Repositories
         private static bool Equal(Portfolio lhs, Portfolio rhs)
             => lhs.PortfolioName == rhs.PortfolioName && lhs.UserID == rhs.UserID;
         private bool Exists(Portfolio portfolio)
-            => _context.Portfolios.Any(p => Equal(p, portfolio));
+        {
+            return _context.Portfolios.AsEnumerable().Any(p => Equal(p, portfolio));
+        }
 
         public Portfolio? GetPortfolio(string name) => GetPortfolioAsync(name).Result;
         public async Task<Portfolio?> GetPortfolioAsync(string name)
