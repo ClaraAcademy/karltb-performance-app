@@ -62,14 +62,14 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
     {
         return _context.Instruments
             .Where(i => i.InstrumentName != null)
-            .Where(i => names.Contains(i.InstrumentName))
+            .Where(i => names.Contains(i.InstrumentName!))
             .ToList();
     }
     public async Task<List<Instrument>> GetInstrumentsAsync(List<string> names)
     {
         return await _context.Instruments
             .Where(i => i.InstrumentName != null)
-            .Where(i => names.Contains(i.InstrumentName))
+            .Where(i => names.Contains(i.InstrumentName!))
             .ToListAsync();
     }
 
