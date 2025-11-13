@@ -16,6 +16,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private readonly TransactionTypeRepository _transactionTypeRepository = new(context);
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
     private readonly StagingRepository _stagingRepository = new(context);
+    private readonly DateInfoRepository _dateInfoRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -124,6 +125,21 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         var stagings = ExcelReader.ReadExcel(file);
 
         _stagingRepository.AddStagings(stagings);
+
+        _context.SaveChanges();
+    }
+
+    DateInfo MapToDateInfo(DateOnly bankday) => new DateInfo { Bankday = bankday };
+
+    public void SeedDateInfos()
+    {
+        var dateInfos = _stagingRepository.GetStagings()
+            .Select(s => s.Bankday)
+            .OfType<DateOnly>()
+            .Select(MapToDateInfo)
+            .ToList();
+
+        _dateInfoRepository.AddDateInfos(dateInfos);
 
         _context.SaveChanges();
     }
