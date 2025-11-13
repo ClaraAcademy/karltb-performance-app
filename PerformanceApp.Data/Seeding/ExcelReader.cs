@@ -2,7 +2,7 @@ using System.Data;
 using ClosedXML.Excel;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Data.Seed;
+namespace PerformanceApp.Data.Seeding;
 
 public static class ExcelReader
 {

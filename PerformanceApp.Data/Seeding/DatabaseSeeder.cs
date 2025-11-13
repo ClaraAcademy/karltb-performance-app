@@ -6,9 +6,9 @@ using PerformanceApp.Data.Repositories;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.EntityFrameworkCore;
 
-namespace PerformanceApp.Data.Seed;
+namespace PerformanceApp.Data.Seeding;
 
-public class Seeder(PadbContext context, UserManager<ApplicationUser> userManager)
+public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> userManager)
 {
     private readonly FileInfo DefaultFile = new(@"C:\Data\Priser - portföljberäkning.xlsx");
     private readonly PadbContext _context = context;
@@ -30,8 +30,8 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     {
         var usernamesPasswords = new List<(string, string)>
         {
-            ("User A", "Password A"),
-            ("User B", "Password B")
+            ("UserA", "Password123!"),
+            ("UserB", "Password123!")
         };
 
         foreach ((var username, var password) in usernamesPasswords)
@@ -48,13 +48,13 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         _context.SaveChanges();
     }
 
-    private ApplicationUser GetUser(string username) => _userManager.FindByNameAsync(username).Result!;
+    private ApplicationUser GetUser(string username) => _userManager.FindByNameAsync(username).Result;
     private static Portfolio MapToPortfolio(string name, ApplicationUser user) => new Portfolio { PortfolioName = name, UserID = user!.Id };
 
     private void SeedPortfolios()
     {
-        var userA = GetUser("User A");
-        var userB = GetUser("User B");
+        var userA = GetUser("UserA");
+        var userB = GetUser("UserB");
 
         var portfolios = new List<Portfolio>
         {
@@ -206,7 +206,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
                 (s, i) => new InstrumentPrice
                 {
                     InstrumentId = i.InstrumentId,
-                    Price = s.Price.Value
+                    Price = s.Price!.Value
                 }
             ).ToList();
 
@@ -281,11 +281,11 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private List<FormattableString> GetDailyQueries(DateOnly bankday)
     {
         return [
-            $@"EXEC [padb].[uspUpdatePositions] @Bankday = ${bankday};",
-            $@"EXEC [padb].[uspUpdatePortfolioValue] @Bankday = ${bankday};",
-            $@"EXEC [padb].[uspUpdateInstrumentDayPerformance] @Bankday = ${bankday};",
-            $@"EXEC [padb].[uspUpdatePortfolioDayPerformance] @Bankday = ${bankday};",
-            $@"EXEC [padb].[uspUpdatePortfolioCumulativeDayPerformance] @Bankday = ${bankday};"
+            $@"EXEC [padb].[uspUpdatePositions] @Bankday = {bankday};",
+            $@"EXEC [padb].[uspUpdatePortfolioValue] @Bankday = {bankday};",
+            $@"EXEC [padb].[uspUpdateInstrumentDayPerformance] @Bankday = {bankday};",
+            $@"EXEC [padb].[uspUpdatePortfolioDayPerformance] @Bankday = {bankday};",
+            $@"EXEC [padb].[uspUpdatePortfolioCumulativeDayPerformance] @Bankday = {bankday};"
         ];
     }
 

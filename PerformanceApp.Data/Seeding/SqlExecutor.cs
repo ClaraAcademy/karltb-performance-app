@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace PerformanceApp.Data.Seed;
+namespace PerformanceApp.Data.Seeding;
 
 public static class SqlExecutor
 {
@@ -10,7 +10,8 @@ public static class SqlExecutor
         var exists = Directory.Exists(folderPath);
         if (!exists)
         {
-            Console.Error.Write($"Directory ${folderPath} does not exist! Exiting...");
+            Console.Error.WriteLine($"Directory {folderPath} does not exist! Exiting...");
+            return;
         }
 
         var files = Directory.GetFiles(folderPath, "*.sql")
@@ -24,7 +25,7 @@ public static class SqlExecutor
             var blank = string.IsNullOrWhiteSpace(contents);
             if (blank)
             {
-                Console.Error.Write($"File ${file} is blank.");
+                Console.Error.Write($"File {file} is blank.");
                 continue;
             }
             await context.Database.ExecuteSqlRawAsync(contents);

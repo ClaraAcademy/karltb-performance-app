@@ -5,8 +5,10 @@ namespace PerformanceApp.Data.Context;
 
 public partial class PadbContext
 {
+    /*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
+        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:PadbContext");
+        */
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

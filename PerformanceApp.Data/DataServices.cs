@@ -1,28 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Context;
-using Microsoft.AspNetCore.Identity;
 
 namespace PerformanceApp.Data;
 
-public static class DependencyInjection
+public static class DataServices
 {
-    private static string GetConnectionString(IConfiguration configuration)
+    private static void SetupIdentity(this IServiceCollection services)
     {
-        string message = $"Connection string ${ContextName} not found.";
-        return configuration.GetConnectionString(ContextName)
-            ?? throw new InvalidOperationException(message);
-    }
-
-    private static void SetupSql(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddDbContext<PadbContext>(
-            options => options.UseSqlServer(GetConnectionString(configuration))
-        );
-
+        services.AddIdentityCore<ApplicationUser>()
+            .AddEntityFrameworkStores<PadbContext>();
     }
 
     private static void AddRepositories(this IServiceCollection services)
@@ -40,12 +30,18 @@ public static class DependencyInjection
         services.AddScoped<IInstrumentPriceRepository, InstrumentPriceRepository>();
     }
 
-    private const string ContextName = "PadbContext";
     public static IServiceCollection AddDataServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.SetupSql(configuration);
+        services.AddDbContext<PadbContext>(
+            options => options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException($"Connection string PadbContext not found")
+            )
+        );
 
         services.AddRepositories();
+
+        services.SetupIdentity();
 
         return services;
     }
