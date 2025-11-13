@@ -8,12 +8,14 @@ namespace PerformanceApp.Data.Seed;
 
 public class Seeder(PadbContext context, UserManager<ApplicationUser> userManager)
 {
+    private readonly FileInfo DefaultFile = new(@"C:\Data\Priser - portföljberäkning.xlsx");
     private readonly PadbContext _context = context;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly BenchmarkRepository _benchmarkRepository = new(context);
     private readonly TransactionTypeRepository _transactionTypeRepository = new(context);
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
+    private readonly StagingRepository _stagingRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -116,6 +118,16 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         _context.SaveChanges();
     }
 
+    public void SeedStagings(string? filepath = null)
+    {
+        var file = new FileInfo(filepath ?? DefaultFile.FullName);
+        var stagings = ExcelReader.ReadExcel(file);
+
+        _stagingRepository.AddStagings(stagings);
+
+        _context.SaveChanges();
+    }
+
     public void Seed()
     {
         SeedUsers();
@@ -123,6 +135,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         SeedBenchmarks();
         SeedTransactionTypes();
         SeedKeyFigures();
+        SeedStagings();
     }
 
 }
