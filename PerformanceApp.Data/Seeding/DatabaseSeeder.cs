@@ -48,7 +48,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         _context.SaveChanges();
     }
 
-    private ApplicationUser GetUser(string username) => _userManager.FindByNameAsync(username).Result;
+    private ApplicationUser GetUser(string username) => _userManager.FindByNameAsync(username).GetAwaiter().GetResult()!;
     private static Portfolio MapToPortfolio(string name, ApplicationUser user) => new Portfolio { PortfolioName = name, UserID = user!.Id };
 
     private void SeedPortfolios()
