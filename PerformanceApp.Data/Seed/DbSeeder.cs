@@ -19,6 +19,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
+    private readonly InstrumentPriceRepository _instrumentPriceRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -186,6 +187,28 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
             ).ToList();
 
         _instrumentRepository.AddInstruments(instruments);
+
+        _context.SaveChanges();
+    }
+
+    public void SeedInstrumentPrices()
+    {
+        var instruments = _instrumentRepository.GetInstruments();
+
+        var instrumentPrices = _stagingRepository.GetStagings()
+            .Where(s => s.Price != null)
+            .Join(
+                instruments,
+                s => s.InstrumentName,
+                i => i.InstrumentName,
+                (s, i) => new InstrumentPrice
+                {
+                    InstrumentId = i.InstrumentId,
+                    Price = s.Price.Value
+                }
+            ).ToList();
+
+        _instrumentPriceRepository.AddInstrumentPrices(instrumentPrices);
 
         _context.SaveChanges();
     }
