@@ -35,6 +35,8 @@ public static class DependencyInjection
         services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
         services.AddScoped<IKeyFigureInfoRepository, KeyFigureInfoRepository>();
         services.AddScoped<IStagingRepository, StagingRepository>();
+        services.AddScoped<IInstrumentTypeRepository, InstrumentTypeRepository>();
+        services.AddScoped<IInstrumentRepository, InstrumentRepository>();
     }
 
     private const string ContextName = "PadbContext";
