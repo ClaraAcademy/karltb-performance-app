@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Repositories
     {
         EntityEntry<DateInfo>? AddDateInfo(DateInfo dateInfo);
         List<EntityEntry<DateInfo>?> AddDateInfos(List<DateInfo> dateInfos);
+        IEnumerable<DateInfo> GetDateInfos();
         Task<IEnumerable<DateInfo>> GetDateInfosAsync();
     }
 
@@ -26,6 +27,11 @@ namespace PerformanceApp.Data.Repositories
         public List<EntityEntry<DateInfo>?> AddDateInfos(List<DateInfo> dateInfos)
         {
             return dateInfos.Select(AddDateInfo).ToList();
+        }
+
+        public IEnumerable<DateInfo> GetDateInfos()
+        {
+            return _context.DateInfos.ToList();
         }
 
         public async Task<IEnumerable<DateInfo>> GetDateInfosAsync()
