@@ -18,6 +18,7 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
     private readonly StagingRepository _stagingRepository = new(context);
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
+    private readonly InstrumentRepository _instrumentRepository = new(context);
     private static ApplicationUser ToUser(string username) => new() { UserName = username };
 
     private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
@@ -159,14 +160,53 @@ public class Seeder(PadbContext context, UserManager<ApplicationUser> userManage
         _context.SaveChanges();
     }
 
+    public void SeedInstruments()
+    {
+        var stagings = _stagingRepository.GetStagings();
+
+        var instrumentTypeNames = stagings
+            .Select(s => s.InstrumentType)
+            .OfType<string>()
+            .Distinct()
+            .ToList();
+
+        var instrumentTypes = _instrumentTypeRepository.GetInstrumentTypes(instrumentTypeNames);
+        var instruments = stagings
+            .Select(s => new { s.InstrumentName, s.InstrumentType })
+            .Distinct()
+            .Join(
+                instrumentTypes,
+                s => s.InstrumentType,
+                it => it.InstrumentTypeName,
+                (s, it) => new Instrument
+                {
+                    InstrumentName = s.InstrumentName,
+                    InstrumentTypeId = it.InstrumentTypeId
+                }
+            ).ToList();
+
+        _instrumentRepository.AddInstruments(instruments);
+
+        _context.SaveChanges();
+    }
+
+    public void SeedBaseData()
+    {
+        SeedStagings();
+        SeedDateInfos();
+        SeedInstrumentTypes();
+        SeedInstruments();
+    }
+
     public void Seed()
     {
+        SeedBaseData();
+
         SeedUsers();
         SeedPortfolios();
         SeedBenchmarks();
         SeedTransactionTypes();
         SeedKeyFigures();
-        SeedStagings();
     }
 
 }

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -8,6 +9,10 @@ public interface IInstrumentTypeRepository
 {
     EntityEntry<InstrumentType>? AddInstrumentType(InstrumentType instrumentType);
     List<EntityEntry<InstrumentType>?> AddInstrumentTypes(List<InstrumentType> instrumentTypes);
+    InstrumentType GetInstrumentType(string name);
+    Task<InstrumentType> GetInstrumentTypeAsync(string name);
+    List<InstrumentType> GetInstrumentTypes(List<string> names);
+    Task<List<InstrumentType>> GetInstrumentTypesAsync(List<string> names);
 
 }
 
@@ -25,5 +30,21 @@ public class InstrumentTypeRepository(PadbContext context) : IInstrumentTypeRepo
     public List<EntityEntry<InstrumentType>?> AddInstrumentTypes(List<InstrumentType> instrumentTypes)
     {
         return instrumentTypes.Select(AddInstrumentType).ToList();
+    }
+    public InstrumentType GetInstrumentType(string name)
+    {
+        return _context.InstrumentTypes.Single(it => it.InstrumentTypeName == name);
+    }
+    public async Task<InstrumentType> GetInstrumentTypeAsync(string name)
+    {
+        return await _context.InstrumentTypes.SingleAsync(it => it.InstrumentTypeName == name);
+    }
+    public List<InstrumentType> GetInstrumentTypes(List<string> names)
+    {
+        return _context.InstrumentTypes.Where(it => names.Contains(it.InstrumentTypeName)).ToList();
+    }
+    public async Task<List<InstrumentType>> GetInstrumentTypesAsync(List<string> names)
+    {
+        return await _context.InstrumentTypes.Where(it => names.Contains(it.InstrumentTypeName)).ToListAsync();
     }
 }
