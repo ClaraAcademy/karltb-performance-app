@@ -13,6 +13,7 @@ public static class SqlExecutor
             Console.Error.WriteLine($"Directory {folderPath} does not exist! Exiting...");
             return;
         }
+        Console.Error.WriteLine($"Executing files in directory: {folderPath}");
 
         var files = Directory.GetFiles(folderPath, "*.sql")
             .OrderBy(Path.GetFileName)
