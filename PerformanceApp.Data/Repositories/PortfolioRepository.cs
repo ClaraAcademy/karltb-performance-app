@@ -1,15 +1,15 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System.IO.Compression;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace PerformanceApp.Data.Repositories
 {
     public interface IPortfolioRepository
     {
-        EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio);
-        List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolio);
+        void AddPortfolio(Portfolio portfolio);
+        Task AddPortfolioAsync(Portfolio portfolio);
+        void AddPortfolios(List<Portfolio> portfolios);
+        Task AddPortfoliosAsync(List<Portfolio> portfolios);
         Portfolio? GetPortfolio(string name);
         Task<Portfolio?> GetPortfolioAsync(string name);
         Task<Portfolio> GetPortfolioAsync(int portfolioId);
@@ -19,12 +19,6 @@ namespace PerformanceApp.Data.Repositories
     public class PortfolioRepository(PadbContext context) : IPortfolioRepository
     {
         private readonly PadbContext _context = context;
-        private static bool Equal(Portfolio lhs, Portfolio rhs)
-            => lhs.PortfolioName == rhs.PortfolioName && lhs.UserID == rhs.UserID;
-        private bool Exists(Portfolio portfolio)
-        {
-            return _context.Portfolios.AsEnumerable().Any(p => Equal(p, portfolio));
-        }
 
         public Portfolio? GetPortfolio(string name)
         {
@@ -36,12 +30,28 @@ namespace PerformanceApp.Data.Repositories
             return await _context.Portfolios.SingleOrDefaultAsync(p => p.PortfolioName == name);
         }
 
-        public EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio)
-            => Exists(portfolio) ? null
-                                 : _context.Portfolios.Add(portfolio);
+        public void AddPortfolio(Portfolio portfolio)
+        {
+            _context.Portfolios.Add(portfolio);
+            _context.SaveChanges();
+        }
+        public async Task AddPortfolioAsync(Portfolio portfolio)
+        {
+            await _context.Portfolios.AddAsync(portfolio);
+            await _context.SaveChangesAsync();
+        }
 
-        public List<EntityEntry<Portfolio>?> AddPortfolios(List<Portfolio> portfolios)
-            => portfolios.Select(AddPortfolio).ToList();
+        public void AddPortfolios(List<Portfolio> portfolios)
+        {
+            _context.Portfolios.AddRange(portfolios);
+            _context.SaveChanges();
+        }
+
+        public async Task AddPortfoliosAsync(List<Portfolio> portfolios)
+        {
+            await _context.Portfolios.AddRangeAsync(portfolios);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
             => await _context.Portfolios

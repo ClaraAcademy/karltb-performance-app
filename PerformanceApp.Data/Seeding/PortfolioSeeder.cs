@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -12,25 +13,26 @@ public class PortfolioSeeder(PadbContext context, UserManager<ApplicationUser> u
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
+    private record Dto(string PortfolioName, ApplicationUser User);
 
-    private ApplicationUser GetUser(string username) => _userManager.FindByNameAsync(username).GetAwaiter().GetResult()!;
-    private static Portfolio MapToPortfolio(string name, ApplicationUser user) => new Portfolio { PortfolioName = name, UserID = user!.Id };
+    private async Task<ApplicationUser?> GetUser(string username) => await _userManager.FindByNameAsync(username);
+    private static Portfolio MapToPortfolio(Dto dto) => new Portfolio { PortfolioName = dto.PortfolioName, UserID = dto.User.Id };
 
-    public void Seed()
+    public async Task Seed()
     {
-        var userA = GetUser("UserA");
-        var userB = GetUser("UserB");
+        var userA = (await GetUser("UserA"))!;
+        var userB = (await GetUser("UserB"))!;
 
-        var portfolios = new List<Portfolio>
+        var dtos = new List<Dto>
         {
-            MapToPortfolio("Portfolio A", userA!),
-            MapToPortfolio("Benchmark A", userA!),
-            MapToPortfolio("Portfolio B", userB!),
-            MapToPortfolio("Benchmark B", userB!),
+            new ("Portfolio A", userA),
+            new ("Benchmark A", userA),
+            new ("Portfolio B", userB),
+            new ("Benchmark B", userB)
         };
 
-        _portfolioRepository.AddPortfolios(portfolios);
+        var portfolios = dtos.Select(MapToPortfolio).ToList();
 
-        _context.SaveChanges();
+        await _portfolioRepository.AddPortfoliosAsync(portfolios);
     }
 }

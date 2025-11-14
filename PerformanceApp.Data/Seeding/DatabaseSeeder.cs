@@ -33,7 +33,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         await SeedBaseData();
 
         _userSeeder.Seed();
-        _portfolioSeeder.Seed();
+        await _portfolioSeeder.Seed();
         await _benchmarkSeeder.Seed();
         _transactionTypeSeeder.Seed();
         await _keyFigureSeeder.Seed();
