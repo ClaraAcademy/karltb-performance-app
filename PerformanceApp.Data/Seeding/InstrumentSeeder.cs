@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
@@ -11,9 +12,37 @@ public class InstrumentSeeder(PadbContext context)
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
 
-    public void Seed()
+    private class Key
     {
-        var stagings = _stagingRepository.GetStagings();
+        public required string InstrumentName { get; set; }
+        public required string InstrumentTypeName { get; set; }
+    }
+
+    private static Key? MapToKey(Staging staging)
+    {
+        string? instrument = staging.InstrumentName;
+        string? instrumentType = staging.InstrumentType;
+
+        if (instrument == null || instrumentType == null)
+        {
+            return null;
+        }
+
+        return new Key { InstrumentName = instrument, InstrumentTypeName = instrumentType };
+    }
+
+    private static Instrument MapToInstrument(Key key, InstrumentType instrumentType)
+    {
+        return new Instrument
+        {
+            InstrumentName = key.InstrumentName,
+            InstrumentTypeId = instrumentType.InstrumentTypeId
+        };
+    }
+
+    public async Task Seed()
+    {
+        var stagings = await _stagingRepository.GetStagingsAsync();
 
         var instrumentTypeNames = stagings
             .Select(s => s.InstrumentType)
@@ -21,23 +50,14 @@ public class InstrumentSeeder(PadbContext context)
             .Distinct()
             .ToList();
 
-        var instrumentTypes = _instrumentTypeRepository.GetInstrumentTypes(instrumentTypeNames);
-        var instruments = stagings
-            .Select(s => new { s.InstrumentName, s.InstrumentType })
-            .Distinct()
-            .Join(
-                instrumentTypes,
-                s => s.InstrumentType,
-                it => it.InstrumentTypeName,
-                (s, it) => new Instrument
-                {
-                    InstrumentName = s.InstrumentName,
-                    InstrumentTypeId = it.InstrumentTypeId
-                }
-            ).ToList();
+        var instrumentTypes = await _instrumentTypeRepository.GetInstrumentTypesAsync(instrumentTypeNames);
 
-        _instrumentRepository.AddInstruments(instruments);
+        var keys = stagings.Select(MapToKey).OfType<Key>().Distinct();
 
-        _context.SaveChanges();
+        var instruments = keys
+            .Join(instrumentTypes, k => k.InstrumentTypeName, it => it.InstrumentTypeName, MapToInstrument)
+            .ToList();
+
+        await _instrumentRepository.AddInstrumentsAsync(instruments);
     }
 }

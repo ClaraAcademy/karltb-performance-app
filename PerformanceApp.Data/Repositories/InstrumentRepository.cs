@@ -8,8 +8,10 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IInstrumentRepository
 {
-    EntityEntry<Instrument>? AddInstrument(Instrument instrument);
-    List<EntityEntry<Instrument>?> AddInstruments(List<Instrument> instruments);
+    void AddInstrument(Instrument instrument);
+    Task AddInstrumentAsync(Instrument instrument);
+    void AddInstruments(List<Instrument> instruments);
+    Task AddInstrumentsAsync(List<Instrument> instruments);
     Instrument GetInstrument(string name);
     Task<Instrument> GetInstrumentAsync(string name);
     List<Instrument> GetInstruments();
@@ -22,25 +24,25 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
 {
     private readonly PadbContext _context = context;
 
-    private static bool Equal(Instrument lhs, Instrument rhs)
+    public void AddInstrument(Instrument instrument)
     {
-        return lhs.InstrumentId == rhs.InstrumentId
-            && lhs.InstrumentName == rhs.InstrumentName
-            && lhs.InstrumentTypeId == rhs.InstrumentTypeId;
+        _context.Instruments.Add(instrument);
+        _context.SaveChanges();
     }
-
-    private bool Exists(Instrument instrument)
+    public async Task AddInstrumentAsync(Instrument instrument)
     {
-        return _context.Instruments.AsEnumerable().Any(i => Equal(i, instrument));
+        await _context.Instruments.AddAsync(instrument);
+        await _context.SaveChangesAsync();
     }
-
-    public EntityEntry<Instrument>? AddInstrument(Instrument instrument)
+    public void AddInstruments(List<Instrument> instruments)
     {
-        return Exists(instrument) ? null : _context.Instruments.Add(instrument);
+        _context.Instruments.AddRange(instruments);
+        _context.SaveChanges();
     }
-    public List<EntityEntry<Instrument>?> AddInstruments(List<Instrument> instruments)
+    public async Task AddInstrumentsAsync(List<Instrument> instruments)
     {
-        return instruments.Select(AddInstrument).ToList();
+        await _context.Instruments.AddRangeAsync(instruments);
+        await _context.SaveChangesAsync();
     }
 
     public Instrument GetInstrument(string name)
