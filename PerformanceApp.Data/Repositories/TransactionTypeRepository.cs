@@ -6,33 +6,36 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface ITransactionTypeRepository
 {
-    EntityEntry<TransactionType>? AddTransactionType(TransactionType transactionType);
-    List<EntityEntry<TransactionType>?> AddTransactionTypes(List<TransactionType> transactionType);
-
+    void AddTransactionType(TransactionType transactionType);
+    Task AddTransactionTypeAsync(TransactionType transactionType);
+    void AddTransactionTypes(List<TransactionType> transactionTypes);
+    Task AddTransactionTypesAsync(List<TransactionType> transactionTypes);
 }
 
 public class TransactionTypeRepository(PadbContext context) : ITransactionTypeRepository
 {
     private readonly PadbContext _context = context;
 
-    private bool Equal(TransactionType lhs, TransactionType rhs)
+    public void AddTransactionType(TransactionType transactionType)
     {
-        return lhs.TransactionTypeName == rhs.TransactionTypeName;
+        _context.TransactionTypes.Add(transactionType);
+        _context.SaveChanges();
     }
-    private bool Exists(TransactionType transactionType)
+
+    public void AddTransactionTypes(List<TransactionType> transactionTypes)
     {
-        return _context.TransactionTypes.AsEnumerable().Any(tT => Equal(tT, transactionType));
+        _context.TransactionTypes.AddRange(transactionTypes);
+        _context.SaveChanges();
     }
-    public EntityEntry<TransactionType>? AddTransactionType(TransactionType transactionType)
+    public async Task AddTransactionTypeAsync(TransactionType transactionType)
     {
-        if (Exists(transactionType))
-        {
-            return null;
-        }
-        return _context.TransactionTypes.Add(transactionType);
+        await _context.TransactionTypes.AddAsync(transactionType);
+        await _context.SaveChangesAsync();
     }
-    public List<EntityEntry<TransactionType>?> AddTransactionTypes(List<TransactionType> transactionType)
+
+    public async Task AddTransactionTypesAsync(List<TransactionType> transactionTypes)
     {
-        return transactionType.Select(AddTransactionType).ToList();
+        await _context.TransactionTypes.AddRangeAsync(transactionTypes);
+        await _context.SaveChangesAsync();
     }
 }

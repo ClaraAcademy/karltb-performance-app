@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
@@ -12,15 +13,14 @@ public class TransactionTypeSeeder(PadbContext context)
 
     TransactionType MapToTransactionType(string name) => new TransactionType { TransactionTypeName = name };
 
-    public void Seed()
+    public async Task Seed()
     {
         var raw = new List<string> { "Buy", "Sell" };
 
-        var transactionTypes = raw.Select(MapToTransactionType)
+        var transactionTypes = raw
+            .Select(MapToTransactionType)
             .ToList();
 
-        _transactionTypeRepository.AddTransactionTypes(transactionTypes);
-
-        _context.SaveChanges();
+        await _transactionTypeRepository.AddTransactionTypesAsync(transactionTypes);
     }
 }
