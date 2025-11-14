@@ -61,83 +61,52 @@ public partial class PadbContext
                 .HasConstraintName("FK_Instrument_InstrumentTypeID");
         });
     }
-    private static void ConfigureInstrumentDayPerformance(ModelBuilder modelBuilder)
+
+    private static void ConfigureInstrumentPerformance(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<InstrumentDayPerformance>(entity =>
+        modelBuilder.Entity<InstrumentPerformance>(entity =>
         {
-            entity.HasKey(e => new { e.InstrumentId, e.Bankday });
+            entity.HasKey(e => new { e.InstrumentId, e.PeriodStart, e.PeriodEnd, e.TypeId });
 
-            entity.ToTable("InstrumentDayPerformance", "padb");
+            entity.ToTable("InstrumentPerformance", "padb");
 
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.DayPerformance).HasColumnType("decimal(24, 16)");
+            entity.Property(e => e.InstrumentId)
+                .HasColumnName("InstrumentID");
+            entity.Property(e => e.TypeId)
+                .HasColumnName("TypeID");
+            entity.Property(e => e.PeriodStart)
+                .HasColumnName("PeriodStart");
+            entity.Property(e => e.PeriodEnd)
+                .HasColumnName("PeriodEnd");
+            entity.Property(e => e.Value)
+                .HasColumnType("decimal(24, 16)")
+                .HasColumnName("Value");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnName("Created");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentDayPerformancesNavigation)
-                .HasForeignKey(d => d.Bankday)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InstrumentDayPerformance_Bankday");
-
-            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentDayPerformancesNavigation)
+            entity.HasOne(d => d.InstrumentNavigation)
+                .WithMany(p => p.InstrumentPerformancesNavigation)
                 .HasForeignKey(d => d.InstrumentId)
-                .HasConstraintName("FK_InstrumentDayPerformance_InstrumentID");
-        });
-    }
-
-    private static void ConfigureInstrumentHalfYearPerformance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<InstrumentHalfYearPerformance>(entity =>
-        {
-            entity.HasKey(e => new { e.InstrumentId, e.PeriodStart, e.PeriodEnd });
-
-            entity.ToTable("InstrumentHalfYearPerformance", "padb");
-
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.HalfYearPerformance).HasColumnType("decimal(24, 16)");
-
-            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentHalfYearPerformancesNavigation)
-                .HasForeignKey(d => d.InstrumentId)
-                .HasConstraintName("FK_InstrumentHalfYearPerformance_InstrumentID");
-
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodEndsNavigation)
-                .HasForeignKey(d => d.PeriodEnd)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InstrumentHalfYearPerformance_PeriodEnd");
-
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentHalfYearPerformancePeriodStartsNavigation)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_InstrumentPerformance_InstrumentID");
+            entity.HasOne(d => d.PerformanceTypeInfoNavigation)
+                .WithMany(p => p.InstrumentPerformancesNavigation)
+                .HasForeignKey(d => d.TypeId)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_InstrumentPerformance_TypeID");
+            entity.HasOne(d => d.PeriodStartNavigation)
+                .WithMany(p => p.InstrumentPerformancesPeriodStartNavigation)
                 .HasForeignKey(d => d.PeriodStart)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InstrumentHalfYearPerformance_PeriodStart");
-        });
-    }
-
-    private static void ConfigureInstrumentMonthPerformance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<InstrumentMonthPerformance>(entity =>
-        {
-            entity.HasKey(e => new { e.InstrumentId, e.PeriodStart, e.PeriodEnd });
-
-            entity.ToTable("InstrumentMonthPerformance", "padb");
-
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.MonthPerformance).HasColumnType("decimal(24, 16)");
-
-            entity.HasOne(d => d.InstrumentNavigation).WithMany(p => p.InstrumentMonthPerformancesNavigation)
-                .HasForeignKey(d => d.InstrumentId)
-                .HasConstraintName("FK_InstrumentMonthPerformance_InstrumentID");
-
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodEndsNavigation)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_InstrumentPerformance_PeriodStart");
+            entity.HasOne(d => d.PeriodEndNavigation)
+                .WithMany(p => p.InstrumentPerformancesPeriodEndNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InstrumentMonthPerformance_PeriodEnd");
-
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.InstrumentMonthPerformancePeriodStartsNavigation)
-                .HasForeignKey(d => d.PeriodStart)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InstrumentMonthPerformance_PeriodStart");
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_InstrumentPerformance_PeriodEnd");
         });
+
     }
 
     private static void ConfigureInstrumentPrice(ModelBuilder modelBuilder)
@@ -215,6 +184,25 @@ public partial class PadbContext
                 .HasConstraintName("FK_KeyFigureValue_PortfolioID");
         });
     }
+    private static void ConfigurePerformanceTypeInfo(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PerformanceTypeInfo>(entity =>
+        {
+            entity.ToTable("PerformanceTypeInfo", "padb");
+
+            entity.HasKey(e => e.Id);
+
+            entity.HasIndex(e => e.Name, "UQ_PerformanceTypeInfo_Name").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnName("ID");
+            entity.Property(e => e.Name)
+                .HasColumnName("Name");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+        });
+    }
 
     private static void ConfigurePortfolio(ModelBuilder modelBuilder)
     {
@@ -236,105 +224,49 @@ public partial class PadbContext
         });
     }
 
-    private static void ConfigurePortfolioCumulativeDayPerformance(ModelBuilder modelBuilder)
+    private static void ConfigurePortfolioPerformance(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PortfolioCumulativeDayPerformance>(entity =>
+        modelBuilder.Entity<PortfolioPerformance>(entity =>
         {
-            entity.HasKey(e => new { e.PortfolioId, e.Bankday });
+            entity.HasKey(e => new { e.PortfolioId, e.PeriodStart, e.PeriodEnd, e.TypeId });
 
-            entity.ToTable("PortfolioCumulativeDayPerformance", "padb");
+            entity.ToTable("PortfolioPerformance", "padb");
 
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.CumulativeDayPerformance).HasColumnType("decimal(24, 16)");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.TypeId)
+                .HasColumnName("TypeID");
+            entity.Property(e => e.PeriodStart)
+                .HasColumnName("PeriodStart");
+            entity.Property(e => e.PeriodEnd)
+                .HasColumnName("PeriodEnd");
+            entity.Property(e => e.Value)
+                .HasColumnType("decimal(24, 16)")
+                .HasColumnName("Value");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnName("Created");
 
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
-                .HasForeignKey(d => d.Bankday)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioCumulativeDayPerformance_Bankday");
-
-            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
+            entity.HasOne(d => d.PortfolioNavigation)
+                .WithMany(p => p.PortfolioPerformancesNavigation)
                 .HasForeignKey(d => d.PortfolioId)
-                .HasConstraintName("FK_PortfolioCumulativeDayPerformance_PortfolioID");
-        });
-    }
-
-    private static void ConfigurePortfolioDayPerformance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<PortfolioDayPerformance>(entity =>
-        {
-            entity.HasKey(e => new { e.PortfolioId, e.Bankday });
-
-            entity.ToTable("PortfolioDayPerformance", "padb");
-
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.DayPerformance).HasColumnType("decimal(24, 16)");
-
-            entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PortfolioDayPerformancesNavigation)
-                .HasForeignKey(d => d.Bankday)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioDayPerformance_Bankday");
-
-            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioDayPerformancesNavigation)
-                .HasForeignKey(d => d.PortfolioId)
-                .HasConstraintName("FK_PortfolioDayPerformance_PortfolioID");
-        });
-    }
-
-    private static void ConfigurePortfolioHalfYearPerformance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<PortfolioHalfYearPerformance>(entity =>
-        {
-            entity.HasKey(e => new { e.PortfolioId, e.PeriodStart, e.PeriodEnd });
-
-            entity.ToTable("PortfolioHalfYearPerformance", "padb");
-
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.HalfYearPerformance).HasColumnType("decimal(24, 16)");
-
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodEndsNavigation)
-                .HasForeignKey(d => d.PeriodEnd)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioHalfYearPerformance_PeriodEnd");
-
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioHalfYearPerformancePeriodStartsNavigation)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_PortfolioPerformance_PortfolioID");
+            entity.HasOne(d => d.PerformanceTypeInfoNavigation)
+                .WithMany(p => p.PortfolioPerformancesNavigation)
+                .HasForeignKey(d => d.TypeId)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_PortfolioPerformance_TypeID");
+            entity.HasOne(d => d.PeriodStartNavigation)
+                .WithMany(p => p.PortfolioPerformancesPeriodStartNavigation)
                 .HasForeignKey(d => d.PeriodStart)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioHalfYearPerformance_PeriodStart");
-
-            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioHalfYearPerformancesNavigation)
-                .HasForeignKey(d => d.PortfolioId)
-                .HasConstraintName("FK_PortfolioHalfYearPerformance_PortfolioID");
-        });
-    }
-
-    private static void ConfigurePortfolioMonthPerformance(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<PortfolioMonthPerformance>(entity =>
-        {
-            entity.HasKey(e => new { e.PortfolioId, e.PeriodStart, e.PeriodEnd });
-
-            entity.ToTable("PortfolioMonthPerformance", "padb");
-
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.MonthPerformance).HasColumnType("decimal(24, 16)");
-
-            entity.HasOne(d => d.PeriodEndNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodEndsNavigation)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_PortfolioPerformance_PeriodStart");
+            entity.HasOne(d => d.PeriodEndNavigation)
+                .WithMany(p => p.PortfolioPerformancesPeriodEndNavigation)
                 .HasForeignKey(d => d.PeriodEnd)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioMonthPerformance_PeriodEnd");
-
-            entity.HasOne(d => d.PeriodStartNavigation).WithMany(p => p.PortfolioMonthPerformancePeriodStartsNavigation)
-                .HasForeignKey(d => d.PeriodStart)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PortfolioMonthPerformance_PeriodStart");
-
-            entity.HasOne(d => d.PortfolioNavigation).WithMany(p => p.PortfolioMonthPerformancesNavigation)
-                .HasForeignKey(d => d.PortfolioId)
-                .HasConstraintName("FK_PortfolioMonthPerformance_PortfolioID");
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .HasConstraintName("FK_PortfolioPerformance_PeriodEnd");
         });
     }
 

@@ -13,11 +13,7 @@ public partial class Instrument
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<InstrumentDayPerformance> InstrumentDayPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancesNavigation { get; set; } = [];
+    public virtual ICollection<InstrumentPerformance> InstrumentPerformancesNavigation { get; set; } = [];
 
     public virtual ICollection<InstrumentPrice> InstrumentPricesNavigation { get; set; } = [];
 

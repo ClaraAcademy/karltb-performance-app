@@ -21,13 +21,7 @@ public partial class Portfolio
 
     public virtual ICollection<KeyFigureValue> KeyFigureValuesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancesNavigation { get; set; } = [];
+    public virtual ICollection<PortfolioPerformance> PortfolioPerformancesNavigation { get; set; } = [];
 
     public virtual ICollection<PortfolioValue> PortfolioValuesNavigation { get; set; } = [];
 

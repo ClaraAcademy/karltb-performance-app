@@ -17,20 +17,16 @@ public partial class PadbContext
 
         // Initialize models
         ConfigureBenchmark(modelBuilder);
+        ConfigurePerformanceTypeInfo(modelBuilder);
         ConfigureDateInfo(modelBuilder);
         ConfigureInstrument(modelBuilder);
-        ConfigureInstrumentDayPerformance(modelBuilder);
-        ConfigureInstrumentHalfYearPerformance(modelBuilder);
-        ConfigureInstrumentMonthPerformance(modelBuilder);
+        ConfigureInstrumentPerformance(modelBuilder);
         ConfigureInstrumentPrice(modelBuilder);
         ConfigureInstrumentType(modelBuilder);
         ConfigureKeyFigureInfo(modelBuilder);
         ConfigureKeyFigureValue(modelBuilder);
         ConfigurePortfolio(modelBuilder);
-        ConfigurePortfolioCumulativeDayPerformance(modelBuilder);
-        ConfigurePortfolioDayPerformance(modelBuilder);
-        ConfigurePortfolioHalfYearPerformance(modelBuilder);
-        ConfigurePortfolioMonthPerformance(modelBuilder);
+        ConfigurePortfolioPerformance(modelBuilder);
         ConfigurePortfolioValue(modelBuilder);
         ConfigurePosition(modelBuilder);
         ConfigurePositionValue(modelBuilder);

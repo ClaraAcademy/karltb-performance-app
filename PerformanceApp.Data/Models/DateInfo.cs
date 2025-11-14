@@ -9,29 +9,15 @@ public partial class DateInfo
 
     public DateTime Created { get; set; }
 
-    public virtual ICollection<InstrumentDayPerformance> InstrumentDayPerformancesNavigation { get; set; } = [];
+    public virtual ICollection<InstrumentPerformance> InstrumentPerformancesPeriodStartNavigation { get; set; } = [];
 
-    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodEndsNavigation { get; set; } = [];
-
-    public virtual ICollection<InstrumentHalfYearPerformance> InstrumentHalfYearPerformancePeriodStartsNavigation { get; set; } = [];
-
-    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodEndsNavigation { get; set; } = [];
-
-    public virtual ICollection<InstrumentMonthPerformance> InstrumentMonthPerformancePeriodStartsNavigation { get; set; } = [];
+    public virtual ICollection<InstrumentPerformance> InstrumentPerformancesPeriodEndNavigation { get; set; } = [];
 
     public virtual ICollection<InstrumentPrice> InstrumentPricesNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioCumulativeDayPerformance> PortfolioCumulativeDayPerformancesNavigation { get; set; } = [];
+    public virtual ICollection<PortfolioPerformance> PortfolioPerformancesPeriodStartNavigation { get; set; } = [];
 
-    public virtual ICollection<PortfolioDayPerformance> PortfolioDayPerformancesNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodEndsNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioHalfYearPerformance> PortfolioHalfYearPerformancePeriodStartsNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodEndsNavigation { get; set; } = [];
-
-    public virtual ICollection<PortfolioMonthPerformance> PortfolioMonthPerformancePeriodStartsNavigation { get; set; } = [];
+    public virtual ICollection<PortfolioPerformance> PortfolioPerformancesPeriodEndNavigation { get; set; } = [];
 
     public virtual ICollection<PortfolioValue> PortfolioValuesNavigation { get; set; } = [];
 
