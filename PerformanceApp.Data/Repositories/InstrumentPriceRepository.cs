@@ -6,31 +6,38 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IInstrumentPriceRepository
 {
-    EntityEntry<InstrumentPrice>? AddInstrumentPrice(InstrumentPrice instrumentPrice);
-    List<EntityEntry<InstrumentPrice>?> AddInstrumentPrices(List<InstrumentPrice> instrumentPrices);
+    void AddInstrumentPrice(InstrumentPrice instrumentPrice);
+    Task AddInstrumentPriceAsync(InstrumentPrice instrumentPrice);
+    void AddInstrumentPrices(List<InstrumentPrice> instrumentPrices);
+    Task AddInstrumentPricesAsync(List<InstrumentPrice> instrumentPrices);
 }
 
 public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRepository
 {
     private readonly PadbContext _context = context;
 
-    private static bool Equal(InstrumentPrice lhs, InstrumentPrice rhs)
+    public void AddInstrumentPrice(InstrumentPrice instrumentPrice)
     {
-        return lhs.InstrumentId == rhs.InstrumentId
-            && lhs.Bankday == rhs.Bankday
-            && lhs.Price == rhs.Price;
+        _context.InstrumentPrices.Add(instrumentPrice);
+        _context.SaveChanges();
     }
 
-    private bool Exists(InstrumentPrice instrumentPrice)
+    public async Task AddInstrumentPriceAsync(InstrumentPrice instrumentPrice)
     {
-        return _context.InstrumentPrices.AsEnumerable().Any(ip => Equal(ip, instrumentPrice));
+        await _context.InstrumentPrices.AddAsync(instrumentPrice);
+        await _context.SaveChangesAsync();
     }
-    public EntityEntry<InstrumentPrice>? AddInstrumentPrice(InstrumentPrice instrumentPrice)
+
+    public void AddInstrumentPrices(List<InstrumentPrice> instrumentPrices)
     {
-        return Exists(instrumentPrice) ? null : _context.InstrumentPrices.Add(instrumentPrice);
+        _context.InstrumentPrices.AddRange(instrumentPrices);
+        _context.SaveChanges();
     }
-    public List<EntityEntry<InstrumentPrice>?> AddInstrumentPrices(List<InstrumentPrice> instrumentPrices)
+
+    public async Task AddInstrumentPricesAsync(List<InstrumentPrice> instrumentPrices)
     {
-        return instrumentPrices.Select(AddInstrumentPrice).ToList();
+        await _context.InstrumentPrices.AddRangeAsync(instrumentPrices);
+        await _context.SaveChangesAsync();
+
     }
 }

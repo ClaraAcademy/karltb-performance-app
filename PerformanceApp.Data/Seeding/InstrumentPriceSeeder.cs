@@ -6,30 +6,35 @@ namespace PerformanceApp.Data.Seeding;
 
 public class InstrumentPriceSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly StagingRepository _stagingRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
     private readonly InstrumentPriceRepository _instrumentPriceRepository = new(context);
 
-    public void Seed()
-    {
-        var instruments = _instrumentRepository.GetInstruments();
+    private static bool HasPrice(Staging staging) => staging.Price.HasValue;
 
-        var instrumentPrices = _stagingRepository.GetStagings()
-            .Where(s => s.Price != null)
+    private static InstrumentPrice MapToInstrumentPrice(Staging staging, Instrument instrument)
+    {
+        return new InstrumentPrice
+        {
+            InstrumentId = instrument.InstrumentId,
+            Price = staging.Price!.Value
+        };
+    }
+
+    public async void Seed()
+    {
+        var instruments = await _instrumentRepository.GetInstrumentsAsync();
+        var stagings = await _stagingRepository.GetStagingsAsync();
+
+        var instrumentPrices = stagings
+            .Where(HasPrice)
             .Join(
                 instruments,
                 s => s.InstrumentName,
                 i => i.InstrumentName,
-                (s, i) => new InstrumentPrice
-                {
-                    InstrumentId = i.InstrumentId,
-                    Price = s.Price!.Value
-                }
+                MapToInstrumentPrice
             ).ToList();
 
-        _instrumentPriceRepository.AddInstrumentPrices(instrumentPrices);
-
-        _context.SaveChanges();
+        await _instrumentPriceRepository.AddInstrumentPricesAsync(instrumentPrices);
     }
 }
