@@ -7,7 +7,6 @@ namespace PerformanceApp.Data.Seeding;
 
 public class InstrumentSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly StagingRepository _stagingRepository = new(context);
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
