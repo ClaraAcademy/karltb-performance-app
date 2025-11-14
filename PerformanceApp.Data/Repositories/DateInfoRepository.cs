@@ -7,8 +7,10 @@ namespace PerformanceApp.Data.Repositories
 {
     public interface IDateInfoRepository
     {
-        EntityEntry<DateInfo>? AddDateInfo(DateInfo dateInfo);
-        List<EntityEntry<DateInfo>?> AddDateInfos(List<DateInfo> dateInfos);
+        void AddDateInfo(DateInfo dateInfo);
+        Task AddDateInfoAsync(DateInfo dateInfo);
+        void AddDateInfos(List<DateInfo> dateInfos);
+        Task AddDateInfosAsync(List<DateInfo> dateInfos);
         IEnumerable<DateInfo> GetDateInfos();
         Task<IEnumerable<DateInfo>> GetDateInfosAsync();
     }
@@ -17,19 +19,25 @@ namespace PerformanceApp.Data.Repositories
     {
         private readonly PadbContext _context = context;
 
-        private static bool Equal(DateInfo lhs, DateInfo rhs) => lhs.Bankday == rhs.Bankday;
-        private bool Exists(DateInfo dateInfo)
+        public void AddDateInfo(DateInfo dateInfo)
         {
-            return _context.DateInfos.AsEnumerable().Any(di => Equal(di, dateInfo));
-        } 
-
-        public EntityEntry<DateInfo>? AddDateInfo(DateInfo dateInfo)
-        {
-            return Exists(dateInfo) ? null : _context.DateInfos.Add(dateInfo);
+            _context.DateInfos.Add(dateInfo);
+            _context.SaveChanges();
         }
-        public List<EntityEntry<DateInfo>?> AddDateInfos(List<DateInfo> dateInfos)
+        public async Task AddDateInfoAsync(DateInfo dateInfo)
         {
-            return dateInfos.Select(AddDateInfo).ToList();
+            await _context.DateInfos.AddAsync(dateInfo);
+            await _context.SaveChangesAsync();
+        }
+        public void AddDateInfos(List<DateInfo> dateInfos)
+        {
+            _context.DateInfos.AddRange(dateInfos);
+            _context.SaveChanges();
+        }
+        public async Task AddDateInfosAsync(List<DateInfo> dateInfos)
+        {
+            await _context.DateInfos.AddRangeAsync(dateInfos);
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<DateInfo> GetDateInfos()

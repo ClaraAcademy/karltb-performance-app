@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
@@ -7,22 +8,18 @@ namespace PerformanceApp.Data.Seeding;
 
 public class DateInfoSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly StagingRepository _stagingRepository = new(context);
     private readonly DateInfoRepository _dateInfoRepository = new(context);
 
-    DateInfo MapToDateInfo(DateOnly bankday) => new DateInfo { Bankday = bankday };
+    private DateInfo MapToDateInfo(DateOnly bankday) => new DateInfo { Bankday = bankday };
+    private DateOnly? GetBankday(Staging staging) => staging.Bankday;
 
-    public void Seed()
+    public async Task Seed()
     {
-        var dateInfos = _stagingRepository.GetStagings()
-            .Select(s => s.Bankday)
-            .OfType<DateOnly>()
-            .Select(MapToDateInfo)
-            .ToList();
+        var stagings = await _stagingRepository.GetStagingsAsync();
+        var bankdays = stagings.Select(GetBankday).OfType<DateOnly>();
+        var dateInfos = bankdays.Select(MapToDateInfo).ToList();
 
-        _dateInfoRepository.AddDateInfos(dateInfos);
-
-        _context.SaveChanges();
+        await _dateInfoRepository.AddDateInfosAsync(dateInfos);
     }
 }
