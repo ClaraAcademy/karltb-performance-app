@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -10,6 +11,8 @@ public interface IInstrumentPriceRepository
     Task AddInstrumentPriceAsync(InstrumentPrice instrumentPrice);
     void AddInstrumentPrices(List<InstrumentPrice> instrumentPrices);
     Task AddInstrumentPricesAsync(List<InstrumentPrice> instrumentPrices);
+    Task<IEnumerable<InstrumentPrice>> GetInstrumentPricesAsync();
+    IEnumerable<InstrumentPrice> GetInstrumentPrices();
 }
 
 public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRepository
@@ -38,6 +41,14 @@ public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRe
     {
         await _context.InstrumentPrices.AddRangeAsync(instrumentPrices);
         await _context.SaveChangesAsync();
-
     }
+    public async Task<IEnumerable<InstrumentPrice>> GetInstrumentPricesAsync()
+    {
+        return await _context.InstrumentPrices.ToListAsync();
+    }
+    public IEnumerable<InstrumentPrice> GetInstrumentPrices()
+    {
+        return _context.InstrumentPrices.ToList();
+    }
+
 }

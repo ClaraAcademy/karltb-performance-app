@@ -10,6 +10,12 @@ public class InstrumentPriceSeeder(PadbContext context)
     private readonly InstrumentRepository _instrumentRepository = new(context);
     private readonly InstrumentPriceRepository _instrumentPriceRepository = new(context);
 
+    private async Task<bool> IsPopulated()
+    {
+        var instrumentPrices = await _instrumentPriceRepository.GetInstrumentPricesAsync();
+
+        return instrumentPrices.Any();
+    }
     private static bool HasPrice(Staging staging) => staging.Price.HasValue;
 
     private static InstrumentPrice MapToInstrumentPrice(Staging staging, Instrument instrument)
@@ -25,6 +31,13 @@ public class InstrumentPriceSeeder(PadbContext context)
 
     public async Task Seed()
     {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
         var instruments = await _instrumentRepository.GetInstrumentsAsync();
         var stagings = await _stagingRepository.GetStagingsAsync();
 
