@@ -60,9 +60,7 @@ public class PositionSeeder(PadbContext context)
 
         foreach (var q in queries)
         {
-            await _context.Database.ExecuteSqlInterpolatedAsync(q);
+            await SqlExecutor.ExecuteQueryAsync(_context, q);
         }
-
-        await _context.SaveChangesAsync();
     }
 }

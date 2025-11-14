@@ -1,8 +1,6 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -47,15 +45,13 @@ public class PerformanceSeeder(PadbContext context)
         {
             foreach (var query in GetDailyQueries(bankday))
             {
-                await _context.Database.ExecuteSqlInterpolatedAsync(query);
-                await _context.SaveChangesAsync();
+                await SqlExecutor.ExecuteQueryAsync(_context, query);
             }
         }
 
         foreach (var query in GetPerformanceQueries())
         {
-            await _context.Database.ExecuteSqlInterpolatedAsync(query);
-            await _context.SaveChangesAsync();
+            await SqlExecutor.ExecuteQueryAsync(_context, query);
         }
     }
 }

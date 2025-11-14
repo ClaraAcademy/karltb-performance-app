@@ -1,12 +1,18 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PerformanceApp.Data.Context;
 
 namespace PerformanceApp.Data.Seeding;
 
 public static class SqlExecutor
 {
     private static readonly string BatchSeparator = "GO";
+    public static async Task ExecuteQueryAsync(PadbContext context, FormattableString query)
+    {
+        await context.Database.ExecuteSqlInterpolatedAsync(query);
+        await context.SaveChangesAsync();
+    }
     private static List<string> GetFilesInDirectory(string folderPath)
     {
         return Directory.GetFiles(folderPath, "*.sql")
