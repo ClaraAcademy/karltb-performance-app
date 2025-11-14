@@ -1,6 +1,8 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
+using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace PerformanceApp.Data.Seeding;
 
@@ -8,7 +10,7 @@ public class PerformanceSeeder(PadbContext context)
 {
     private readonly PadbContext _context = context;
     private readonly DateInfoRepository _dateInfoRepository = new(context);
-    private List<FormattableString> GetDailyQueries(DateOnly bankday)
+    private static List<FormattableString> GetDailyQueries(DateOnly bankday)
     {
         return [
             $@"EXEC [padb].[uspUpdatePositions] @Bankday = {bankday};",
@@ -19,7 +21,7 @@ public class PerformanceSeeder(PadbContext context)
         ];
     }
 
-    private List<FormattableString> GetPerformanceQueries()
+    private static List<FormattableString> GetPerformanceQueries()
     {
         return [
             $@"EXEC padb.uspUpdatePortfolioMonthPerformance;",
@@ -32,10 +34,13 @@ public class PerformanceSeeder(PadbContext context)
         ];
     }
 
-    public void Seed()
+    private static DateOnly GetBankday(DateInfo dateInfo) => dateInfo.Bankday;
+
+    public async Task Seed()
     {
-        var bankdays = _dateInfoRepository.GetDateInfos()
-            .Select(di => di.Bankday)
+        var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
+        var bankdays = dateInfos
+            .Select(GetBankday)
             .OrderBy(d => d)
             .ToList();
 
@@ -43,15 +48,15 @@ public class PerformanceSeeder(PadbContext context)
         {
             foreach (var query in GetDailyQueries(bankday))
             {
-                _context.Database.ExecuteSqlInterpolated(query);
-                _context.SaveChanges();
+                await _context.Database.ExecuteSqlInterpolatedAsync(query);
+                await _context.SaveChangesAsync();
             }
         }
 
         foreach (var query in GetPerformanceQueries())
         {
-            _context.Database.ExecuteSqlInterpolated(query);
-            _context.SaveChanges();
+            await _context.Database.ExecuteSqlInterpolatedAsync(query);
+            await _context.SaveChangesAsync();
         }
     }
 }
