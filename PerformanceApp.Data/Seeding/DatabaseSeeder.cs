@@ -19,7 +19,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
     private readonly TransactionTypeSeeder _transactionTypeSeeder = new(context);
     private readonly UserSeeder _userSeeder = new(userManager);
 
-    public void SeedBaseData()
+    public async Task SeedBaseData()
     {
         _stagingSeeder.Seed();
         _dateInfoSeeder.Seed();
@@ -28,13 +28,13 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         _instrumentPriceSeeder.Seed();
     }
 
-    public void Seed()
+    public async Task Seed()
     {
-        SeedBaseData();
+        await SeedBaseData();
 
         _userSeeder.Seed();
         _portfolioSeeder.Seed();
-        _benchmarkSeeder.Seed();
+        await _benchmarkSeeder.Seed();
         _transactionTypeSeeder.Seed();
         _keyFigureSeeder.Seed();
         _positionSeeder.Seed();

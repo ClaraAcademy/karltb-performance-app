@@ -26,9 +26,15 @@ namespace PerformanceApp.Data.Repositories
             return _context.Portfolios.AsEnumerable().Any(p => Equal(p, portfolio));
         }
 
-        public Portfolio? GetPortfolio(string name) => GetPortfolioAsync(name).Result;
+        public Portfolio? GetPortfolio(string name)
+        {
+            return _context.Portfolios.SingleOrDefault(p => p.PortfolioName == name);
+        }
+
         public async Task<Portfolio?> GetPortfolioAsync(string name)
-            => await _context.Portfolios.SingleOrDefaultAsync(p => p.PortfolioName == name);
+        {
+            return await _context.Portfolios.SingleOrDefaultAsync(p => p.PortfolioName == name);
+        }
 
         public EntityEntry<Portfolio>? AddPortfolio(Portfolio portfolio)
             => Exists(portfolio) ? null

@@ -1,14 +1,13 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace PerformanceApp.Data.Repositories
 {
     public interface IBenchmarkRepository
     {
-        EntityEntry<Benchmark>? AddBenchmarkMapping(Benchmark benchmark);
-        List<EntityEntry<Benchmark>?> AddBenchmarkMappings(List<Benchmark> benchmark);
+        Task AddBenchmarkMappingAsync(Benchmark benchmark);
+        Task AddBenchmarkMappingsAsync(List<Benchmark> benchmarks);
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync();
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId);
     }
@@ -17,25 +16,17 @@ namespace PerformanceApp.Data.Repositories
     {
         private readonly PadbContext _context = context;
 
-        private static bool Equal(Benchmark lhs, Benchmark rhs)
+        public async Task AddBenchmarkMappingAsync(Benchmark benchmark)
         {
-            return lhs.PortfolioId == rhs.PortfolioId && lhs.BenchmarkId == lhs.BenchmarkId;
+            await _context.Benchmarks.AddAsync(benchmark);
+            await _context.SaveChangesAsync();
         }
 
-        private bool Exists(Benchmark benchmark)
+        public async Task AddBenchmarkMappingsAsync(List<Benchmark> benchmarks)
         {
-            return _context.Benchmarks.AsEnumerable().Any(b => Equal(b, benchmark));
+            await _context.Benchmarks.AddRangeAsync(benchmarks);
+            await _context.SaveChangesAsync();
         }
-        public EntityEntry<Benchmark>? AddBenchmarkMapping(Benchmark benchmark)
-        {
-            if (Exists(benchmark))
-            {
-                return null;
-            }
-            return _context.Add(benchmark);
-        }
-        public List<EntityEntry<Benchmark>?> AddBenchmarkMappings(List<Benchmark> benchmarks)
-            => benchmarks.Select(AddBenchmarkMapping).ToList();
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync()
             => await _context.Benchmarks
