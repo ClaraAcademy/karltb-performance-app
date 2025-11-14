@@ -26,7 +26,7 @@ namespace PerformanceApp.Server.Services
             => new PortfolioDTO { PortfolioId = p.PortfolioId, PortfolioName = p.PortfolioName };
 
         public async Task<List<PortfolioDTO>> GetPortfolioDTOsAsync()
-            => (await _portfolioRepository.GetPortfoliosAsync())
+            => (await _portfolioRepository.GetProperPortfoliosAsync())
                 .Select(MapToPortfolioDTO)
                 .ToList();
 
@@ -58,7 +58,7 @@ namespace PerformanceApp.Server.Services
             };
 
         public async Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync()
-            => (await _portfolioRepository.GetAllPortfoliosAsync())
+            => (await _portfolioRepository.GetPortfoliosAsync())
                     .SelectMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
                     .Select(MapToPortfolioCumulativeDayPerformanceDTO)
                     .ToList();

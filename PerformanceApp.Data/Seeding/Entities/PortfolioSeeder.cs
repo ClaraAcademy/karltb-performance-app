@@ -1,5 +1,3 @@
-
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -14,6 +12,13 @@ public class PortfolioSeeder(PadbContext context, UserManager<ApplicationUser> u
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
+    private async Task<bool> IsPopulated()
+    {
+        var portfolios = await _portfolioRepository.GetPortfoliosAsync();
+
+        return portfolios.Any();
+    }
+
     private record Dto(string PortfolioName, ApplicationUser User);
 
     private async Task<ApplicationUser?> GetUser(string username) => await _userManager.FindByNameAsync(username);
@@ -21,6 +26,13 @@ public class PortfolioSeeder(PadbContext context, UserManager<ApplicationUser> u
 
     public async Task Seed()
     {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
         var userA = (await GetUser(UserData.UsernameA))!;
         var userB = (await GetUser(UserData.UsernameB))!;
 
