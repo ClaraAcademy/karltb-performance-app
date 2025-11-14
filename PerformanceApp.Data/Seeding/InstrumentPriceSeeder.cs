@@ -21,7 +21,7 @@ public class InstrumentPriceSeeder(PadbContext context)
         };
     }
 
-    public async void Seed()
+    public async Task Seed()
     {
         var instruments = await _instrumentRepository.GetInstrumentsAsync();
         var stagings = await _stagingRepository.GetStagingsAsync();
