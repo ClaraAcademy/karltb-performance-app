@@ -21,7 +21,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
 
     public async Task SeedBaseData()
     {
-        _stagingSeeder.Seed();
+        await _stagingSeeder.Seed();
         await _dateInfoSeeder.Seed();
         await _instrumentTypeSeeder.Seed();
         await _instrumentSeeder.Seed();
