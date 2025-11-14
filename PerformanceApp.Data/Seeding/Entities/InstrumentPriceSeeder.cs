@@ -14,12 +14,14 @@ public class InstrumentPriceSeeder(PadbContext context)
 
     private static InstrumentPrice MapToInstrumentPrice(Staging staging, Instrument instrument)
     {
-        return new InstrumentPrice
-        {
-            InstrumentId = instrument.InstrumentId,
-            Price = staging.Price!.Value
-        };
+        var instrumentId = instrument.InstrumentId;
+        var price = staging.Price!.Value;
+        var bankday = staging.Bankday!.Value;
+        return new InstrumentPrice { InstrumentId = instrumentId, Price = price, Bankday = bankday };
     }
+
+    private static string GetInstrumentName(Staging staging) => staging.InstrumentName!;
+    private static string GetInstrumentName(Instrument instrument) => instrument.InstrumentName!;
 
     public async Task Seed()
     {
@@ -28,12 +30,9 @@ public class InstrumentPriceSeeder(PadbContext context)
 
         var instrumentPrices = stagings
             .Where(HasPrice)
-            .Join(
-                instruments,
-                s => s.InstrumentName,
-                i => i.InstrumentName,
-                MapToInstrumentPrice
-            ).ToList();
+            .Join(instruments, GetInstrumentName, GetInstrumentName, MapToInstrumentPrice)
+            .Distinct()
+            .ToList();
 
         await _instrumentPriceRepository.AddInstrumentPricesAsync(instrumentPrices);
     }

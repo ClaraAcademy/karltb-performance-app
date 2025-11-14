@@ -39,8 +39,7 @@ public class PerformanceSeeder(PadbContext context)
     public async Task Seed()
     {
         var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
-        var bankdays = dateInfos
-            .Select(GetBankday)
+        var bankdays = dateInfos.Select(GetBankday)
             .OrderBy(d => d)
             .ToList();
 

@@ -17,9 +17,7 @@ public class TransactionTypeSeeder(PadbContext context)
     {
         var raw = new List<string> { "Buy", "Sell" };
 
-        var transactionTypes = raw
-            .Select(MapToTransactionType)
-            .ToList();
+        var transactionTypes = raw.Select(MapToTransactionType).ToList();
 
         await _transactionTypeRepository.AddTransactionTypesAsync(transactionTypes);
     }

@@ -20,6 +20,7 @@ public class InstrumentTypeSeeder(PadbContext context)
         var instrumentTypes = stagings
             .Select(GetInstrumentTypeName)
             .OfType<string>()
+            .Distinct()
             .Select(MapToInstrumentType)
             .ToList();
 

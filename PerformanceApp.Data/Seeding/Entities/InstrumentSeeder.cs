@@ -11,11 +11,7 @@ public class InstrumentSeeder(PadbContext context)
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
 
-    private class Key
-    {
-        public required string InstrumentName { get; set; }
-        public required string InstrumentTypeName { get; set; }
-    }
+    private record Key(string InstrumentName, string InstrumentTypeName);
 
     private static Key? MapToKey(Staging staging)
     {
@@ -27,7 +23,7 @@ public class InstrumentSeeder(PadbContext context)
             return null;
         }
 
-        return new Key { InstrumentName = instrument, InstrumentTypeName = instrumentType };
+        return new(instrument, instrumentType);
     }
 
     private static Instrument MapToInstrument(Key key, InstrumentType instrumentType)
@@ -38,6 +34,9 @@ public class InstrumentSeeder(PadbContext context)
             InstrumentTypeId = instrumentType.InstrumentTypeId
         };
     }
+
+    private static string GetInstrumentTypeName(Key key) => key.InstrumentTypeName;
+    private static string GetInstrumentTypeName(InstrumentType instrumentType) => instrumentType.InstrumentTypeName;
 
     public async Task Seed()
     {
@@ -54,7 +53,8 @@ public class InstrumentSeeder(PadbContext context)
         var keys = stagings.Select(MapToKey).OfType<Key>().Distinct();
 
         var instruments = keys
-            .Join(instrumentTypes, k => k.InstrumentTypeName, it => it.InstrumentTypeName, MapToInstrument)
+            .Join(instrumentTypes, GetInstrumentTypeName, GetInstrumentTypeName, MapToInstrument)
+            .Distinct()
             .ToList();
 
         await _instrumentRepository.AddInstrumentsAsync(instruments);
