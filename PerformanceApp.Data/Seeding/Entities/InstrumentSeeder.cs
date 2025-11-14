@@ -11,6 +11,13 @@ public class InstrumentSeeder(PadbContext context)
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
     private readonly InstrumentRepository _instrumentRepository = new(context);
 
+    private async Task<bool> IsPopulated()
+    {
+        var instruments = await _instrumentRepository.GetInstrumentsAsync();
+
+        return instruments.Any();
+    }
+
     private record Key(string InstrumentName, string InstrumentTypeName);
 
     private static Key? MapToKey(Staging staging)
@@ -40,6 +47,13 @@ public class InstrumentSeeder(PadbContext context)
 
     public async Task Seed()
     {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
         var stagings = await _stagingRepository.GetStagingsAsync();
 
         var instrumentTypeNames = stagings
