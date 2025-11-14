@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding;
 
@@ -21,8 +22,8 @@ public class UserSeeder(UserManager<ApplicationUser> userManager)
     {
         var dtos = new List<Dto>
         {
-            new("UserA", "Password123!"),
-            new("UserB", "Password123!")
+            new(UserData.UsernameA, UserData.Password),
+            new(UserData.UsernameB, UserData.Password)
         };
 
         foreach (var dto in dtos)

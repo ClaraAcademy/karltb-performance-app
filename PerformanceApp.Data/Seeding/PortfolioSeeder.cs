@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding;
 
@@ -20,15 +21,15 @@ public class PortfolioSeeder(PadbContext context, UserManager<ApplicationUser> u
 
     public async Task Seed()
     {
-        var userA = (await GetUser("UserA"))!;
-        var userB = (await GetUser("UserB"))!;
+        var userA = (await GetUser(UserData.UsernameA))!;
+        var userB = (await GetUser(UserData.UsernameB))!;
 
         var dtos = new List<Dto>
         {
-            new ("Portfolio A", userA),
-            new ("Benchmark A", userA),
-            new ("Portfolio B", userB),
-            new ("Benchmark B", userB)
+            new (PortfolioData.PortfolioA, userA),
+            new (PortfolioData.BenchmarkA, userA),
+            new (PortfolioData.PortfolioB, userB),
+            new (PortfolioData.BenchmarkB, userB)
         };
 
         var portfolios = dtos.Select(MapToPortfolio).ToList();

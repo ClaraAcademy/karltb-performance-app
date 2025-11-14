@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding;
 
@@ -19,8 +20,8 @@ public class BenchmarkSeeder(PadbContext context)
 
     public async Task Seed()
     {
-        var portfolios = new List<string> { "Portfolio A", "Portfolio B" };
-        var benchmarks = new List<string> { "Benchmark A", "Benchmark B" };
+        var portfolios = new List<string> { PortfolioData.PortfolioA, PortfolioData.PortfolioB };
+        var benchmarks = new List<string> { PortfolioData.BenchmarkA, PortfolioData.BenchmarkB };
 
         var tasks = portfolios.Zip(benchmarks).Select(MapToBenchmark);
         var benchmarkMappings = await Task.WhenAll(tasks);

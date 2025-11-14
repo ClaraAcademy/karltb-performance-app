@@ -3,6 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 using System.Threading.Tasks;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding;
 
@@ -16,11 +17,11 @@ public class KeyFigureSeeder(PadbContext context)
     {
         var raw = new List<string>
         {
-            "Standard Deviation",
-            "Tracking Error",
-            "Annualised Cumulative Return",
-            "Information Ratio",
-            "Half-Year Performance"
+            KeyFigureData.StandardDeviation,
+            KeyFigureData.TrackingError,
+            KeyFigureData.AnnualisedCumulativeReturn,
+            KeyFigureData.InformationRatio,
+            KeyFigureData.HalfYearPerformance,
         };
 
         var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
