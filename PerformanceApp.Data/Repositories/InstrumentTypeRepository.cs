@@ -14,7 +14,9 @@ public interface IInstrumentTypeRepository
     InstrumentType GetInstrumentType(string name);
     Task<InstrumentType> GetInstrumentTypeAsync(string name);
     List<InstrumentType> GetInstrumentTypes(List<string> names);
+    IEnumerable<InstrumentType> GetInstrumentTypes();
     Task<List<InstrumentType>> GetInstrumentTypesAsync(List<string> names);
+    Task<IEnumerable<InstrumentType>> GetInstrumentTypesAsync();
 
 }
 
@@ -62,5 +64,13 @@ public class InstrumentTypeRepository(PadbContext context) : IInstrumentTypeRepo
     public async Task<List<InstrumentType>> GetInstrumentTypesAsync(List<string> names)
     {
         return await _context.InstrumentTypes.Where(it => names.Contains(it.InstrumentTypeName)).ToListAsync();
+    }
+    public IEnumerable<InstrumentType> GetInstrumentTypes()
+    {
+        return _context.InstrumentTypes.ToList();
+    }
+    public async Task<IEnumerable<InstrumentType>> GetInstrumentTypesAsync()
+    {
+        return await _context.InstrumentTypes.ToListAsync();
     }
 }
