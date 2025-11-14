@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -10,6 +11,8 @@ public interface ITransactionTypeRepository
     Task AddTransactionTypeAsync(TransactionType transactionType);
     void AddTransactionTypes(List<TransactionType> transactionTypes);
     Task AddTransactionTypesAsync(List<TransactionType> transactionTypes);
+    IEnumerable<TransactionType> GetTransactionTypes();
+    Task<IEnumerable<TransactionType>> GetTransactionTypesAsync();
 }
 
 public class TransactionTypeRepository(PadbContext context) : ITransactionTypeRepository
@@ -37,5 +40,14 @@ public class TransactionTypeRepository(PadbContext context) : ITransactionTypeRe
     {
         await _context.TransactionTypes.AddRangeAsync(transactionTypes);
         await _context.SaveChangesAsync();
+    }
+
+    public IEnumerable<TransactionType> GetTransactionTypes()
+    {
+        return _context.TransactionTypes.ToList();
+    }
+    public async Task<IEnumerable<TransactionType>> GetTransactionTypesAsync()
+    {
+        return await _context.TransactionTypes.ToListAsync();
     }
 }
