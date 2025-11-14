@@ -10,23 +10,29 @@ public class BenchmarkSeeder(PadbContext context)
     private readonly PortfolioRepository _portfolioRepository = new(context);
     private readonly BenchmarkRepository _benchmarkRepository = new(context);
 
-    private async Task<Benchmark> MapToBenchmark((string portfolioName, string benchmarkName) pair)
+    private Benchmark MapToBenchmark((Portfolio, Portfolio) pair)
     {
-        var portfolio = await _portfolioRepository.GetPortfolioAsync(pair.portfolioName);
-        var benchmark = await _portfolioRepository.GetPortfolioAsync(pair.benchmarkName);
-
-        return new Benchmark { PortfolioId = portfolio!.PortfolioId, BenchmarkId = benchmark!.PortfolioId };
+        var (portfolio, benchmark) = pair;
+        return new Benchmark
+        {
+            PortfolioId = portfolio.PortfolioId,
+            BenchmarkId = benchmark.PortfolioId
+        };
     }
 
     public async Task Seed()
     {
-        var portfolios = new List<string> { PortfolioData.PortfolioA, PortfolioData.PortfolioB };
-        var benchmarks = new List<string> { PortfolioData.BenchmarkA, PortfolioData.BenchmarkB };
+        var portfolioNames = new List<string> { PortfolioData.PortfolioA, PortfolioData.PortfolioB };
+        var benchmarkNames = new List<string> { PortfolioData.BenchmarkA, PortfolioData.BenchmarkB };
 
-        var tasks = portfolios.Zip(benchmarks).Select(MapToBenchmark);
-        var benchmarkMappings = await Task.WhenAll(tasks);
+        var portfolios = await _portfolioRepository.GetPortfoliosAsync(portfolioNames);
+        var benchmarks = await _portfolioRepository.GetPortfoliosAsync(benchmarkNames);
 
-        await _benchmarkRepository.AddBenchmarkMappingsAsync(benchmarkMappings.ToList());
+        var benchmarkMappings = portfolios.Zip(benchmarks)
+            .Select(MapToBenchmark)
+            .ToList();
+
+        await _benchmarkRepository.AddBenchmarkMappingsAsync(benchmarkMappings);
     }
 
 }

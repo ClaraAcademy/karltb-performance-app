@@ -14,6 +14,7 @@ namespace PerformanceApp.Data.Repositories
         Task<Portfolio?> GetPortfolioAsync(string name);
         Task<Portfolio> GetPortfolioAsync(int portfolioId);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
+        Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names);
         Task<IEnumerable<Portfolio>> GetAllPortfoliosAsync();
     }
     public class PortfolioRepository(PadbContext context) : IPortfolioRepository
@@ -57,6 +58,14 @@ namespace PerformanceApp.Data.Repositories
             => await _context.Portfolios
                 .Include(p => p.PortfolioCumulativeDayPerformancesNavigation)
                 .SingleAsync(p => p.PortfolioId == portfolioId);
+
+        public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names)
+        {
+            return await _context.Portfolios
+                .Where(p => names.Contains(p.PortfolioName))
+                .OfType<Portfolio>()
+                .ToListAsync();
+        }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
             => await _context.Portfolios
