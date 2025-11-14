@@ -7,8 +7,10 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IStagingRepository
 {
-    EntityEntry<Staging>? AddStaging(Staging staging);
-    List<EntityEntry<Staging>?> AddStagings(List<Staging> stagings);
+    void AddStaging(Staging staging);
+    Task AddStagingAsync(Staging staging);
+    void AddStagings(List<Staging> stagings);
+    Task AddStagingsAsync(List<Staging> stagings);
     List<Staging> GetStagings();
     Task<List<Staging>> GetStagingsAsync();
 }
@@ -17,21 +19,38 @@ public class StagingRepository(PadbContext context) : IStagingRepository
 {
     private readonly PadbContext _context = context;
 
-    private static bool Equal(Staging lhs, Staging rhs)
+
+    public void AddStaging(Staging staging)
     {
-        return lhs.Bankday == rhs.Bankday
-            && lhs.InstrumentName == rhs.InstrumentName
-            && lhs.InstrumentType == rhs.InstrumentType;
+        _context.Stagings.Add(staging);
+        _context.SaveChanges();
     }
 
-    private bool Exists(Staging staging)
+    public async Task AddStagingAsync(Staging staging)
     {
-        return _context.Stagings.AsEnumerable().Any(s => Equal(s, staging));
+        await _context.Stagings.AddAsync(staging);
+        await _context.SaveChangesAsync();
     }
 
-    public EntityEntry<Staging>? AddStaging(Staging staging) => Exists(staging) ? null : _context.Stagings.Add(staging);
-    public List<EntityEntry<Staging>?> AddStagings(List<Staging> stagings) => stagings.Select(AddStaging).ToList();
-    public List<Staging> GetStagings() => GetStagingsAsync().Result;
-    public async Task<List<Staging>> GetStagingsAsync() => await _context.Stagings.ToListAsync();
+    public void AddStagings(List<Staging> stagings)
+    {
+        _context.Stagings.AddRange(stagings);
+        _context.SaveChanges();
+    }
+
+    public async Task AddStagingsAsync(List<Staging> stagings)
+    {
+        await _context.Stagings.AddRangeAsync(stagings);
+        await _context.SaveChangesAsync();
+    }
+
+    public List<Staging> GetStagings()
+    {
+        return _context.Stagings.ToList();
+    }
+    public async Task<List<Staging>> GetStagingsAsync()
+    {
+        return await _context.Stagings.ToListAsync();
+    }
 
 }

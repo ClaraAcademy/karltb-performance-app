@@ -422,9 +422,8 @@ public partial class PadbContext
     {
         modelBuilder.Entity<Staging>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Staging", "padb");
+            entity.HasKey(e => new { e.Bankday, e.InstrumentName, e.InstrumentType });
+            entity.ToTable("Staging", "padb");
 
             entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.InstrumentName).HasMaxLength(100);
