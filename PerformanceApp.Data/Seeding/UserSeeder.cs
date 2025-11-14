@@ -6,26 +6,39 @@ namespace PerformanceApp.Data.Seeding;
 public class UserSeeder(UserManager<ApplicationUser> userManager)
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private static ApplicationUser ToUser(string username) => new() { UserName = username };
+    private static ApplicationUser MapToUser(string username) => new() { UserName = username };
 
-    private bool UserExists(string username) => _userManager.FindByNameAsync(username).Result != null;
+    private record Dto(string Username, string Password);
 
-    public void Seed()
+    private async Task<bool> UserExists(string username)
     {
-        var usernamesPasswords = new List<(string, string)>
+        var user = await _userManager.FindByNameAsync(username);
+
+        return user != null;
+    }
+
+    public async Task Seed()
+    {
+        var dtos = new List<Dto>
         {
-            ("UserA", "Password123!"),
-            ("UserB", "Password123!")
+            new("UserA", "Password123!"),
+            new("UserB", "Password123!")
         };
 
-        foreach ((var username, var password) in usernamesPasswords)
+        foreach (var dto in dtos)
         {
-            if (!UserExists(username))
+            var username = dto.Username;
+            var password = dto.Password;
+
+            var exists = await UserExists(username);
+            if (!exists)
             {
-                var result = _userManager.CreateAsync(ToUser(username), password).Result;
+                var user = MapToUser(username);
+                var result = await _userManager.CreateAsync(user, password);
                 if (!result.Succeeded)
                 {
-                    throw new Exception($"Failed to create user {username}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    var message = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new Exception($"Failed to create user {username}: {message}");
                 }
             }
         }
