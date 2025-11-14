@@ -4,28 +4,28 @@ using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Repositories;
 
-public interface IPerformanceTypeInfoRepository
+public interface IPerformanceTypeRepository
 {
-    Task AddPerformanceTypeAsync(PerformanceTypeInfo performanceTypeInfo);
-    Task AddPerformanceTypesAsync(List<PerformanceTypeInfo> performanceTypeInfos);
-    Task<IEnumerable<PerformanceTypeInfo>> GetPerformanceTypeInfosAsync();
+    Task AddPerformanceTypeAsync(PerformanceType performanceTypeInfo);
+    Task AddPerformanceTypesAsync(List<PerformanceType> performanceTypeInfos);
+    Task<IEnumerable<PerformanceType>> GetPerformanceTypeInfosAsync();
 }
 
-public class PerformanceTypeInfoRepository(PadbContext context) : IPerformanceTypeInfoRepository
+public class PerformanceTypeRepository(PadbContext context) : IPerformanceTypeRepository
 {
     private readonly PadbContext _context = context;
 
-    public async Task AddPerformanceTypeAsync(PerformanceTypeInfo performanceTypeInfo)
+    public async Task AddPerformanceTypeAsync(PerformanceType performanceTypeInfo)
     {
         await _context.PerformanceTypeInfos.AddAsync(performanceTypeInfo);
         await _context.SaveChangesAsync();
     }
-    public async Task AddPerformanceTypesAsync(List<PerformanceTypeInfo> performanceTypeInfos)
+    public async Task AddPerformanceTypesAsync(List<PerformanceType> performanceTypeInfos)
     {
         await _context.PerformanceTypeInfos.AddRangeAsync(performanceTypeInfos);
         await _context.SaveChangesAsync();
     }
-    public async Task<IEnumerable<PerformanceTypeInfo>> GetPerformanceTypeInfosAsync()
+    public async Task<IEnumerable<PerformanceType>> GetPerformanceTypeInfosAsync()
     {
         return await _context.PerformanceTypeInfos.ToListAsync();
     }

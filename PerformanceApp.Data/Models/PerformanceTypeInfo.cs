@@ -1,6 +1,6 @@
 namespace PerformanceApp.Data.Models;
 
-public class PerformanceTypeInfo
+public class PerformanceType
 {
     public int Id { get; set; }
     public required string Name { get; set; }

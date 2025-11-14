@@ -19,7 +19,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
     private readonly StagingSeeder _stagingSeeder = new(context);
     private readonly TransactionTypeSeeder _transactionTypeSeeder = new(context);
     private readonly UserSeeder _userSeeder = new(userManager);
-    private readonly PerformanceTypeInfoSeeder _performanceTypeInfoSeeder = new(context);
+    private readonly PerformanceTypeSeeder _performanceTypeSeeder = new(context);
 
     public async Task SeedBaseData()
     {
@@ -39,7 +39,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         await _benchmarkSeeder.Seed();
         await _transactionTypeSeeder.Seed();
         await _keyFigureSeeder.Seed();
-        await _performanceTypeInfoSeeder.Seed();
+        await _performanceTypeSeeder.Seed();
         await _positionSeeder.Seed();
         await _performanceSeeder.Seed();
     }

@@ -90,7 +90,7 @@ public partial class PadbContext
                 .HasForeignKey(d => d.InstrumentId)
                 .OnDelete(DeleteBehavior.ClientCascade)
                 .HasConstraintName("FK_InstrumentPerformance_InstrumentID");
-            entity.HasOne(d => d.PerformanceTypeInfoNavigation)
+            entity.HasOne(d => d.PerformanceTypeNavigation)
                 .WithMany(p => p.InstrumentPerformancesNavigation)
                 .HasForeignKey(d => d.TypeId)
                 .OnDelete(DeleteBehavior.ClientCascade)
@@ -186,7 +186,7 @@ public partial class PadbContext
     }
     private static void ConfigurePerformanceTypeInfo(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PerformanceTypeInfo>(entity =>
+        modelBuilder.Entity<PerformanceType>(entity =>
         {
             entity.ToTable("PerformanceTypeInfo", "padb");
 
@@ -252,7 +252,7 @@ public partial class PadbContext
                 .HasForeignKey(d => d.PortfolioId)
                 .OnDelete(DeleteBehavior.ClientCascade)
                 .HasConstraintName("FK_PortfolioPerformance_PortfolioID");
-            entity.HasOne(d => d.PerformanceTypeInfoNavigation)
+            entity.HasOne(d => d.PerformanceTypeNavigation)
                 .WithMany(p => p.PortfolioPerformancesNavigation)
                 .HasForeignKey(d => d.TypeId)
                 .OnDelete(DeleteBehavior.ClientCascade)

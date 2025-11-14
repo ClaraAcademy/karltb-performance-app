@@ -4,9 +4,9 @@ using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
-public class PerformanceTypeInfoSeeder(PadbContext context)
+public class PerformanceTypeSeeder(PadbContext context)
 {
-    private readonly PerformanceTypeInfoRepository _performanceTypeInfoRepository = new(context);
+    private readonly PerformanceTypeRepository _performanceTypeInfoRepository = new(context);
 
     private async Task<bool> IsPopulated()
     {
@@ -15,9 +15,9 @@ public class PerformanceTypeInfoSeeder(PadbContext context)
         return performanceTypeInfos.Any();
     }
 
-    private PerformanceTypeInfo MapToPerformanceTypeInfo(string s)
+    private PerformanceType MapToPerformanceTypeInfo(string s)
     {
-        return new PerformanceTypeInfo { Name = s };
+        return new PerformanceType { Name = s };
     }
 
     public async Task Seed()

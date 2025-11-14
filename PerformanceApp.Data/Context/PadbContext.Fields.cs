@@ -21,5 +21,5 @@ public partial class PadbContext
     public virtual DbSet<Staging> Stagings { get; set; }
     public virtual DbSet<Transaction> Transactions { get; set; }
     public virtual DbSet<TransactionType> TransactionTypes { get; set; }
-    public virtual DbSet<PerformanceTypeInfo> PerformanceTypeInfos { get; set; }
+    public virtual DbSet<PerformanceType> PerformanceTypeInfos { get; set; }
 }

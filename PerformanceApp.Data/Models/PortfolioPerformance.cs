@@ -9,7 +9,7 @@ public class PortfolioPerformance
     public decimal Value { get; set; }
     public DateTime Created { get; set; }
     public virtual Portfolio PortfolioNavigation { get; set; } = null!;
-    public virtual PerformanceTypeInfo PerformanceTypeInfoNavigation { get; set; } = null!;
+    public virtual PerformanceType PerformanceTypeNavigation { get; set; } = null!;
     public virtual DateInfo PeriodStartNavigation { get; set; } = null!;
     public virtual DateInfo PeriodEndNavigation { get; set; } = null!;
 }
