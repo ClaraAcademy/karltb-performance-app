@@ -5,7 +5,7 @@ using PerformanceApp.Data.Repositories;
 using System.Threading.Tasks;
 using PerformanceApp.Data.Seeding.Constants;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class KeyFigureSeeder(PadbContext context)
 {

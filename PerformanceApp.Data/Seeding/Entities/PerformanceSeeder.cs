@@ -4,7 +4,7 @@ using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class PerformanceSeeder(PadbContext context)
 {

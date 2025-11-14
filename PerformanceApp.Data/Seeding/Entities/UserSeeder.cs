@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class UserSeeder(UserManager<ApplicationUser> userManager)
 {

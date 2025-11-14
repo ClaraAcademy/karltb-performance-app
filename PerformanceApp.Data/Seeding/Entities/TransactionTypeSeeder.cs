@@ -3,7 +3,7 @@ using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class TransactionTypeSeeder(PadbContext context)
 {

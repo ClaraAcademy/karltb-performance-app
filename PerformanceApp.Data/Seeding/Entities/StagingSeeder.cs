@@ -1,7 +1,7 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class StagingSeeder(PadbContext context)
 {

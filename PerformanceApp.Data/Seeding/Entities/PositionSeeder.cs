@@ -2,7 +2,7 @@ using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace PerformanceApp.Data.Seeding;
+namespace PerformanceApp.Data.Seeding.Entities;
 
 public class PositionSeeder(PadbContext context)
 {
