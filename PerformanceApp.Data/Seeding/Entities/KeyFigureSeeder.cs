@@ -11,10 +11,24 @@ public class KeyFigureSeeder(PadbContext context)
 {
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
 
+    private async Task<bool> IsPopulated()
+    {
+        var keyFigureInfos = await _keyFigureInfoRepository.GetKeyFigureInfosAsync();
+
+        return keyFigureInfos.Any();
+    }
+
     KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { KeyFigureName = name };
 
     public async Task Seed()
     {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
         var raw = new List<string>
         {
             KeyFigureData.StandardDeviation,

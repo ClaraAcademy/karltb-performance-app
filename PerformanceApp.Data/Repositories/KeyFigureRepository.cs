@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -12,6 +13,8 @@ public interface IKeyFigureInfoRepository
     Task AddKeyFigureInfoAsync(KeyFigureInfo keyFigureInfo);
     void AddKeyFigureInfos(List<KeyFigureInfo> keyFigureInfos);
     Task AddKeyFigureInfosAsync(List<KeyFigureInfo> keyFigureInfos);
+    IEnumerable<KeyFigureInfo> GetKeyFigureInfos();
+    Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync();
 }
 
 public class KeyFigureInfoRepository(PadbContext context) : IKeyFigureInfoRepository
@@ -40,5 +43,13 @@ public class KeyFigureInfoRepository(PadbContext context) : IKeyFigureInfoReposi
     {
         await _context.AddRangeAsync(keyFigureInfos);
         await _context.SaveChangesAsync();
+    }
+    public IEnumerable<KeyFigureInfo> GetKeyFigureInfos()
+    {
+        return _context.KeyFigureInfos.ToList();
+    }
+    public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
+    {
+        return await _context.KeyFigureInfos.ToListAsync();
     }
 }
