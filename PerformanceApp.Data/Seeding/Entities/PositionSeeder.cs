@@ -3,6 +3,7 @@ using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -13,14 +14,22 @@ public class PositionSeeder(PadbContext context)
 
     private static FormattableString GetBuyQuery(string portfolioName, string instrumentName, DateOnly date, int? count = null, decimal? amount = null, decimal? proportion = null, decimal? nominal = null)
     {
+        var portfolioParameter = new SqlParameter("PortfolioName", portfolioName);
+        var instrumentParameter = new SqlParameter("InstrumentName", instrumentName);
+        var countParameter = new SqlParameter("BuyCount", count);
+        var amountParameter = new SqlParameter("BuyAmount", amount);
+        var proportionParameter = new SqlParameter("BuyProportion", proportion);
+        var nominalParameter = new SqlParameter("BuyNominal", nominal);
+        var dateParameter = new SqlParameter("BuyDate", date);
+
         return $@"EXEC [padb].[uspBuyInstrument]
-            @PortfolioName = {portfolioName},
-            @InstrumentName = {instrumentName},
-            @Count = {count},
-            @Amount = {amount},
-            @Proportion = {proportion},
-            @Nominal = {nominal},
-            @BuyDate = {date}";
+            @PortfolioName = {portfolioParameter},
+            @InstrumentName = {instrumentParameter},
+            @Count = {countParameter},
+            @Amount = {amountParameter},
+            @Proportion = {proportionParameter},
+            @Nominal = {nominalParameter},
+            @BuyDate = {dateParameter}";
     }
 
     private async Task<List<FormattableString>> GetBuyQueries()
