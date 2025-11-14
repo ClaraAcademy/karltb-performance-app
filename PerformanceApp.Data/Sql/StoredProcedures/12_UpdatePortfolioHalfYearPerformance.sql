@@ -13,9 +13,10 @@ BEGIN
     -- Might change this to run with arguments
 
     BEGIN TRANSACTION;
-        INSERT INTO padb.PortfolioHalfYearPerformance(PortfolioID, PeriodStart, PeriodEnd, HalfYearPerformance)
+        INSERT INTO padb.PortfolioPerformance(PortfolioID, TypeID, PeriodStart, PeriodEnd, [Value])
         SELECT
             PortfolioID,
+            padb.ufnGetHalfYearPerformanceID(),
             MIN(Bankday),
             MAX(Bankday),
             EXP(SUM(LOG(1.0 + DayPerformance))) - 1.0

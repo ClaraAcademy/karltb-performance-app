@@ -17,9 +17,11 @@ BEGIN
     DECLARE @PreviousBankday DATE = padb.ufnGetPreviousBankday(@Bankday);
 
     BEGIN TRANSACTION;
-        INSERT INTO padb.InstrumentDayPerformance(InstrumentID, Bankday, DayPerformance)
+        INSERT INTO padb.InstrumentPerformance(InstrumentID, TypeID, PeriodStart, PeriodEnd, [Value])
         SELECT
             i.InstrumentID,
+            padb.ufnGetDayPerformanceID(),
+            @Bankday,
             @Bankday,
             COALESCE(
                 curr.Price / prev.Price - 1,

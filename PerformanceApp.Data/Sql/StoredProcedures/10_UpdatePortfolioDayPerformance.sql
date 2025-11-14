@@ -17,12 +17,14 @@ BEGIN
     DECLARE @PreviousBankday DATE = padb.ufnGetPreviousBankday(@Bankday);
 
     BEGIN TRANSACTION;
-        INSERT INTO padb.PortfolioDayPerformance(PortfolioID, Bankday, DayPerformance)
+        INSERT INTO padb.PortfolioPerformance(PortfolioID, TypeID, PeriodStart, PeriodEnd, [Value])
         ----------------------------------------------------------------------------------------------------------------
         -- Actual Portfolios
         ----------------------------------------------------------------------------------------------------------------
         SELECT
             p.PortfolioID,
+            padb.ufnGetDayPerformanceID(),
+            @Bankday,
             @Bankday,
             COALESCE(
                 curr.PortfolioValue / prev.PortfolioValue - 1,
@@ -44,6 +46,8 @@ BEGIN
         ----------------------------------------------------------------------------------------------------------------
         SELECT
             pos.PortfolioID,
+            padb.ufnGetDayPerformanceID(),
+            @Bankday,
             @Bankday,
             SUM(pos.Proportion * ip.DayPerformance)
         FROM padb.Position AS pos

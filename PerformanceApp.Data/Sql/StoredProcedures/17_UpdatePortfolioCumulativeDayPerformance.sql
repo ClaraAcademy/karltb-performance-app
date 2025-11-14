@@ -15,10 +15,11 @@ BEGIN
         @Bankday = @Bankday;
 
     BEGIN TRANSACTION;
-        INSERT INTO 
-            padb.PortfolioCumulativeDayPerformance(PortfolioID, Bankday, CumulativeDayPerformance)
+        INSERT INTO padb.PortfolioPerformance(PortfolioID, TypeID, PeriodStart, PeriodEnd, [Value])
         SELECT
             PortfolioID,
+            padb.ufnGetCumulativeDayPerformanceID(),
+            @Bankday,
             @Bankday,
             CASE
                 WHEN SUM(CASE WHEN DayPerformance + 1.0 = 0.0 THEN 1 ELSE 0 END) > 0 
