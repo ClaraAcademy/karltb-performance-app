@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
@@ -6,32 +8,37 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IKeyFigureInfoRepository
 {
-    EntityEntry<KeyFigureInfo>? AddKeyFigureInfo(KeyFigureInfo keyFigureInfo);
-    List<EntityEntry<KeyFigureInfo>?> AddKeyFigureInfos(List<KeyFigureInfo> keyFigureInfo);
+    void AddKeyFigureInfo(KeyFigureInfo keyFigureInfo);
+    Task AddKeyFigureInfoAsync(KeyFigureInfo keyFigureInfo);
+    void AddKeyFigureInfos(List<KeyFigureInfo> keyFigureInfos);
+    Task AddKeyFigureInfosAsync(List<KeyFigureInfo> keyFigureInfos);
 }
 
 public class KeyFigureInfoRepository(PadbContext context) : IKeyFigureInfoRepository
 {
     private readonly PadbContext _context = context;
-    private bool Equal(KeyFigureInfo lhs, KeyFigureInfo rhs)
+
+    public void AddKeyFigureInfo(KeyFigureInfo keyFigureInfo)
     {
-        return lhs.KeyFigureName.Equals(rhs.KeyFigureName);
-    }
-    private bool Exists(KeyFigureInfo keyFigureInfo)
-    {
-        return _context.KeyFigureInfos.AsEnumerable().Any(kfi => Equal(kfi, keyFigureInfo));
+        _context.KeyFigureInfos.Add(keyFigureInfo);
+        _context.SaveChanges();
     }
 
-    public EntityEntry<KeyFigureInfo>? AddKeyFigureInfo(KeyFigureInfo keyFigureInfo)
+    public async Task AddKeyFigureInfoAsync(KeyFigureInfo keyFigureInfo)
     {
-        if (Exists(keyFigureInfo))
-        {
-            return null;
-        }
-        return _context.KeyFigureInfos.Add(keyFigureInfo);
+        await _context.KeyFigureInfos.AddAsync(keyFigureInfo);
+        await _context.SaveChangesAsync();
     }
-    public List<EntityEntry<KeyFigureInfo>?> AddKeyFigureInfos(List<KeyFigureInfo> keyFigureInfos)
+
+    public void AddKeyFigureInfos(List<KeyFigureInfo> keyFigureInfos)
     {
-        return keyFigureInfos.Select(AddKeyFigureInfo).ToList();
+        _context.AddRange(keyFigureInfos);
+        _context.SaveChanges();
+    }
+
+    public async Task AddKeyFigureInfosAsync(List<KeyFigureInfo> keyFigureInfos)
+    {
+        await _context.AddRangeAsync(keyFigureInfos);
+        await _context.SaveChangesAsync();
     }
 }

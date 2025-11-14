@@ -2,18 +2,17 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
+using System.Threading.Tasks;
 
 namespace PerformanceApp.Data.Seeding;
 
 public class KeyFigureSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
-
 
     KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { KeyFigureName = name };
 
-    public void Seed()
+    public async Task Seed()
     {
         var raw = new List<string>
         {
@@ -24,11 +23,8 @@ public class KeyFigureSeeder(PadbContext context)
             "Half-Year Performance"
         };
 
-        var keyFigureInfos = raw.Select(MapToKeyFigureInfo)
-            .ToList();
+        var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
 
-        _keyFigureInfoRepository.AddKeyFigureInfos(keyFigureInfos);
-
-        _context.SaveChanges();
+        await _keyFigureInfoRepository.AddKeyFigureInfosAsync(keyFigureInfos);
     }
 }
