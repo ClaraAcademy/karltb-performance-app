@@ -7,8 +7,10 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IInstrumentTypeRepository
 {
-    EntityEntry<InstrumentType>? AddInstrumentType(InstrumentType instrumentType);
-    List<EntityEntry<InstrumentType>?> AddInstrumentTypes(List<InstrumentType> instrumentTypes);
+    void AddInstrumentType(InstrumentType instrumentType);
+    Task AddInstrumentTypeAsync(InstrumentType instrumentType);
+    void AddInstrumentTypes(List<InstrumentType> instrumentTypes);
+    Task AddInstrumentTypesAsync(List<InstrumentType> instrumentTypes);
     InstrumentType GetInstrumentType(string name);
     Task<InstrumentType> GetInstrumentTypeAsync(string name);
     List<InstrumentType> GetInstrumentTypes(List<string> names);
@@ -20,20 +22,31 @@ public class InstrumentTypeRepository(PadbContext context) : IInstrumentTypeRepo
 {
     private readonly PadbContext _context = context;
 
-    private static bool Equal(InstrumentType lhs, InstrumentType rhs) => lhs.InstrumentTypeName == rhs.InstrumentTypeName;
-    private bool Exists(InstrumentType instrumentType)
+
+    public void AddInstrumentType(InstrumentType instrumentType)
     {
-        return _context.InstrumentTypes.AsEnumerable().Any(it => Equal(it, instrumentType));
+        _context.InstrumentTypes.Add(instrumentType);
+        _context.SaveChanges();
     }
 
-    public EntityEntry<InstrumentType>? AddInstrumentType(InstrumentType instrumentType)
+    public async Task AddInstrumentTypeAsync(InstrumentType instrumentType)
     {
-        return Exists(instrumentType) ? null : _context.InstrumentTypes.Add(instrumentType);
+        await _context.InstrumentTypes.AddAsync(instrumentType);
+        await _context.SaveChangesAsync();
     }
-    public List<EntityEntry<InstrumentType>?> AddInstrumentTypes(List<InstrumentType> instrumentTypes)
+
+    public void AddInstrumentTypes(List<InstrumentType> instrumentTypes)
     {
-        return instrumentTypes.Select(AddInstrumentType).ToList();
+        _context.InstrumentTypes.AddRange(instrumentTypes);
+        _context.SaveChanges();
     }
+
+    public async Task AddInstrumentTypesAsync(List<InstrumentType> instrumentTypes)
+    {
+        await _context.InstrumentTypes.AddRangeAsync(instrumentTypes);
+        await _context.SaveChangesAsync();
+    }
+
     public InstrumentType GetInstrumentType(string name)
     {
         return _context.InstrumentTypes.Single(it => it.InstrumentTypeName == name);

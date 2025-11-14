@@ -6,21 +6,23 @@ namespace PerformanceApp.Data.Seeding;
 
 public class InstrumentTypeSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly StagingRepository _stagingRepository = new(context);
     private readonly InstrumentTypeRepository _instrumentTypeRepository = new(context);
 
-    InstrumentType MapToInstrumentType(string name) => new InstrumentType { InstrumentTypeName = name };
-    public void Seed()
+    private static string? GetInstrumentTypeName(Staging staging) => staging.InstrumentType;
+    private static InstrumentType MapToInstrumentType(string name)
     {
-        var instrumentTypes = _stagingRepository.GetStagings()
-            .Select(s => s.InstrumentType)
+        return new InstrumentType { InstrumentTypeName = name };
+    }
+    public async Task Seed()
+    {
+        var stagings = await _stagingRepository.GetStagingsAsync();
+        var instrumentTypes = stagings
+            .Select(GetInstrumentTypeName)
             .OfType<string>()
             .Select(MapToInstrumentType)
             .ToList();
 
-        _instrumentTypeRepository.AddInstrumentTypes(instrumentTypes);
-
-        _context.SaveChanges();
+        await _instrumentTypeRepository.AddInstrumentTypesAsync(instrumentTypes);
     }
 }
