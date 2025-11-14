@@ -23,7 +23,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
     {
         _stagingSeeder.Seed();
         await _dateInfoSeeder.Seed();
-        _instrumentTypeSeeder.Seed();
+        await _instrumentTypeSeeder.Seed();
         await _instrumentSeeder.Seed();
         _instrumentPriceSeeder.Seed();
     }
