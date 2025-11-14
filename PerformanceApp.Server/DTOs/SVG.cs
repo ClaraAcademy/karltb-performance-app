@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.SqlServer.Server;
 using System.Reflection.Emit;
 
-namespace PerformanceApp.Server.DTOs;
+namespace PerformanceApp.Server.Dtos;
 
 public class SVG
 {

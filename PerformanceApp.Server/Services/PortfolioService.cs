@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
-using PerformanceApp.Server.DTOs;
+using PerformanceApp.Server.Dtos;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 

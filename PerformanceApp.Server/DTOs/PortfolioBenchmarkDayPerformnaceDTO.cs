@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PerformanceApp.Server.DTOs;
+namespace PerformanceApp.Server.Dtos;
 
 public partial class PortfolioBenchmarkDayPerformanceDTO
 {

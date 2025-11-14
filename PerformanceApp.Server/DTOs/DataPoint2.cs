@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.DTOs
+namespace PerformanceApp.Server.Dtos
 {
     public class DataPoint2
     {

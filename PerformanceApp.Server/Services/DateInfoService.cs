@@ -1,4 +1,4 @@
-using PerformanceApp.Server.DTOs;
+using PerformanceApp.Server.Dtos;
 using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Server.Services

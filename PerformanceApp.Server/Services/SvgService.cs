@@ -1,5 +1,5 @@
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.DTOs;
+using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Controllers;
 using System.Xml.Linq;
 using System.Globalization;
