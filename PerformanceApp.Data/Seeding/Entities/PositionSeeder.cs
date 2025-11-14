@@ -9,7 +9,7 @@ public class PositionSeeder(PadbContext context)
     private readonly PadbContext _context = context;
     private readonly DateInfoRepository _dateInfoRepository = new(context);
 
-    private static async Task<FormattableString> GetBuyQuery(string portfolioName, string instrumentName, DateOnly date, int? count = null, decimal? amount = null, decimal? proportion = null, decimal? nominal = null)
+    private static FormattableString GetBuyQuery(string portfolioName, string instrumentName, DateOnly date, int? count = null, decimal? amount = null, decimal? proportion = null, decimal? nominal = null)
     {
         return $@"EXEC [padb].[uspBuyInstrument]
             @PortfolioName = {portfolioName},
@@ -21,7 +21,7 @@ public class PositionSeeder(PadbContext context)
             @BuyDate = {date}";
     }
 
-    private async Task<List<FormattableString>> GetBuyQueries()
+    private List<FormattableString> GetBuyQueries()
     {
         DateOnly firstDay = _dateInfoRepository
             .GetDateInfos()
@@ -41,21 +41,21 @@ public class PositionSeeder(PadbContext context)
 
         return
         [
-            await GetBuyQuery(portfolioA, ssabB, firstDay, count : 40000),
-            await GetBuyQuery(portfolioA, astraZeneca, firstDay, count : 13200),
-            await GetBuyQuery(portfolioB, ssabB, firstDay, count : 20000),
-            await GetBuyQuery(portfolioB, astraZeneca, firstDay, count : 6600),
-            await GetBuyQuery(portfolioB, statsobligation1046, firstDay, nominal : 5000000.0m),
-            await GetBuyQuery(benchmarkA, omx30, firstDay, proportion : 1.0m),
-            await GetBuyQuery(benchmarkB, omx30, firstDay, proportion : 0.5m),
-            await GetBuyQuery(benchmarkB, omrXtBond, firstDay, proportion : 0.5m)
+            GetBuyQuery(portfolioA, ssabB, firstDay, count : 40000),
+            GetBuyQuery(portfolioA, astraZeneca, firstDay, count : 13200),
+            GetBuyQuery(portfolioB, ssabB, firstDay, count : 20000),
+            GetBuyQuery(portfolioB, astraZeneca, firstDay, count : 6600),
+            GetBuyQuery(portfolioB, statsobligation1046, firstDay, nominal : 5000000.0m),
+            GetBuyQuery(benchmarkA, omx30, firstDay, proportion : 1.0m),
+            GetBuyQuery(benchmarkB, omx30, firstDay, proportion : 0.5m),
+            GetBuyQuery(benchmarkB, omrXtBond, firstDay, proportion : 0.5m)
         ];
 
     }
 
     public async Task Seed()
     {
-        var queries = await GetBuyQueries();
+        var queries = GetBuyQueries();
 
         foreach (var q in queries)
         {
