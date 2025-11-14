@@ -17,7 +17,9 @@ public class DateInfoSeeder(PadbContext context)
     public async Task Seed()
     {
         var stagings = await _stagingRepository.GetStagingsAsync();
-        var bankdays = stagings.Select(GetBankday).OfType<DateOnly>();
+        var bankdays = stagings.Select(GetBankday)
+            .OfType<DateOnly>()
+            .Distinct();
         var dateInfos = bankdays.Select(MapToDateInfo).ToList();
 
         await _dateInfoRepository.AddDateInfosAsync(dateInfos);

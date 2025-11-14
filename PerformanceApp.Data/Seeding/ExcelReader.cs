@@ -14,7 +14,7 @@ public static class ExcelReader
         return Enum.IsDefined(typeof(InstrumentTypeSV), s) || Enum.IsDefined(typeof(InstrumentTypeEN), s);
     }
     private static bool IsInstrumentName(string s) => !IsInstrumentType(s);
-    private static bool IsDate(IXLCell cell) => DateOnly.TryParse(cell.GetString(), out _);
+    private static bool IsDate(IXLCell cell) => cell.TryGetValue<DateTime>(out _);
     private static bool IsDecimal(IXLCell cell) => decimal.TryParse(cell.GetString(), out _);
     private static bool IsString(IXLCell cell)
     {
@@ -23,7 +23,11 @@ public static class ExcelReader
             && !string.IsNullOrWhiteSpace(cell.GetString());
     }
 
-    private static DateOnly MapToDate(IXLCell cell) => DateOnly.Parse(cell.Value.ToString());
+    private static DateOnly MapToDate(IXLCell cell)
+    {
+        var dateTime = cell.GetValue<DateTime>();
+        return DateOnly.FromDateTime(dateTime);
+    }
     private static decimal MapToDecimal(IXLCell cell) => decimal.Parse(cell.Value.ToString());
     private static string MapToString(IXLCell cell) => cell.Value.ToString();
     private static string NormalizeInstrumentType(string type)
@@ -58,7 +62,7 @@ public static class ExcelReader
     private static List<DateOnly> GetDates(IXLRange range)
     {
         return range.Column(1)
-            .Cells()
+            .CellsUsed()
             .Where(IsDate)
             .Select(MapToDate)
             .ToList();

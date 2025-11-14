@@ -1,6 +1,8 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
+using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -21,12 +23,11 @@ public class PositionSeeder(PadbContext context)
             @BuyDate = {date}";
     }
 
-    private List<FormattableString> GetBuyQueries()
+    private async Task<List<FormattableString>> GetBuyQueries()
     {
-        DateOnly firstDay = _dateInfoRepository
-            .GetDateInfos()
-            .Select(di => di.Bankday)
-            .Min();
+        var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
+
+        DateOnly firstDay = dateInfos.Select(d => d.Bankday).Min();
 
         var portfolioA = "Portfolio A";
         var portfolioB = "Portfolio B";
@@ -55,7 +56,7 @@ public class PositionSeeder(PadbContext context)
 
     public async Task Seed()
     {
-        var queries = GetBuyQueries();
+        var queries = await GetBuyQueries();
 
         foreach (var q in queries)
         {
