@@ -1,12 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Repositories;
 using PerformanceApp.Server.Services;
 using PerformanceApp.Data;
 
