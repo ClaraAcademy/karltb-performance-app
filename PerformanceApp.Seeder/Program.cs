@@ -11,7 +11,7 @@ namespace PerformanceApp.Seeder;
 
 public class Program
 {
-    static void Main()
+    static async Task Main()
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -23,7 +23,7 @@ public class Program
 
         var serviceProvider = services.BuildServiceProvider();
 
-        DatabaseInitializer.Initialize(serviceProvider);
+        await DatabaseInitializer.Initialize(serviceProvider);
     }
 
 }
