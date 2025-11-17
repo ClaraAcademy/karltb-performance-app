@@ -68,6 +68,13 @@ public static class ExcelReader
             .ToList();
     }
 
+    private static bool IsBond(string type)
+    {
+        var normalizedType = NormalizeInstrumentType(type);
+
+        return normalizedType == InstrumentTypeEN.Bond.ToString();
+    }
+
     private static List<Staging> MapColumn(List<DateOnly> dates, IXLRangeColumn column)
     {
         if (!IsPopulated(column))
@@ -82,6 +89,11 @@ public static class ExcelReader
         var headers = cells.Where(IsString).Select(MapToString).ToList();
         var type = headers.Single(IsInstrumentType);
         var name = headers.Single(IsInstrumentName);
+
+        if (IsBond(type))
+        {
+            prices = prices.Select(p => p / 100.0m).ToList();
+        }
 
         Staging mapToStaging(DateOnly date, decimal price) => MapToStaging(date, type, name, price);
 
@@ -108,9 +120,11 @@ public static class ExcelReader
 
         var dates = GetDates(range);
 
-        return range.Columns(2, numColumns)         // Skip index column
+        var stagings = range.Columns(2, numColumns) // Skip index column
             .SelectMany(c => MapColumn(dates, c))   // Map to Staging and flatten
             .ToList();
+
+        return stagings;
     }
 
 }
