@@ -30,8 +30,8 @@ public class SVG
 
     private readonly XElement _schema;
 
-    private float PairwiseMin(DataPoint2 d) => Math.Min(d.y1, d.y2);
-    private float PairwiseMax(DataPoint2 d) => Math.Max(d.y1, d.y2);
+    private float PairwiseMin(DataPoint2 d) => Math.Min(d.Y1, d.Y2);
+    private float PairwiseMax(DataPoint2 d) => Math.Max(d.Y1, d.Y2);
 
     public SVG(List<DataPoint2> dataPoints, int width, int height)
     {
@@ -54,13 +54,13 @@ public class SVG
     private XElement GetSvg()
     {
         List<float> xs = DataPoints.Select((_, x) => ScaleX(x)).ToList();
-        List<float> y1s = DataPoints.Select(d => ScaleY(d.y1)).ToList();
-        List<float> y2s = DataPoints.Select(d => ScaleY(d.y2)).ToList();
+        List<float> y1s = DataPoints.Select(d => ScaleY(d.Y1)).ToList();
+        List<float> y2s = DataPoints.Select(d => ScaleY(d.Y2)).ToList();
 
         List<string> portfolioPoints = xs.Zip(y1s, MapToPoint).ToList();
         List<string> benchmarkPoints = xs.Zip(y2s, MapToPoint).ToList();
 
-        List<DateOnly> bankdays = DataPoints.Select(d => d.x).ToList();
+        List<DateOnly> bankdays = DataPoints.Select(d => d.X).ToList();
 
         int xTicks = 5;
         int yTicks = 5;
@@ -85,7 +85,7 @@ public class SVG
         for (int i = 0; i < numTicks; i++)
         {
             int index = (int)Math.Floor(i * (DataPoints.Count - 1f) / (numTicks - 1f));
-            string label = DataPoints[index].x.ToString();
+            string label = DataPoints[index].X.ToString();
             float x = hMargin + i * (Width - 2f * hMargin) / (numTicks - 1f);
 
             // Skip origin tick

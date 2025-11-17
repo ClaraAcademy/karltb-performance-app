@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Diagnostics;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Server.Services
 {
@@ -21,42 +22,60 @@ namespace PerformanceApp.Server.Services
         private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
         private readonly IBenchmarkRepository _benchmarkRepository = benchmarkRepository;
 
-        private static PortfolioDTO MapToPortfolioDTO(Portfolio p)
-            => new PortfolioDTO { PortfolioId = p.Id, PortfolioName = p.Name };
+        private static PortfolioDTO MapToPortfolioDTO(Portfolio portfolio)
+        {
+            var id = portfolio.Id;
+            var name = portfolio.Name;
+
+            return new PortfolioDTO { PortfolioId = id, PortfolioName = name };
+        }
 
         public async Task<List<PortfolioDTO>> GetPortfolioDTOsAsync()
-            => (await _portfolioRepository.GetProperPortfoliosAsync())
-                .Select(MapToPortfolioDTO)
-                .ToList();
+        {
+            var portfolios = await _portfolioRepository.GetProperPortfoliosAsync();
 
-        private static PortfolioBenchmarkDTO MapToPortfolioBenchmarkDTO(Benchmark b)
-            => new PortfolioBenchmarkDTO
+            return portfolios.Select(MapToPortfolioDTO).ToList();
+        }
+
+        private static PortfolioBenchmarkDTO MapToPortfolioBenchmarkDTO(Benchmark benchmarkMapping)
+        {
+            var portfolioId = benchmarkMapping.PortfolioPortfolioNavigation.Id;
+            var portfolioName = benchmarkMapping.PortfolioPortfolioNavigation.Name;
+            var benchmarkId = benchmarkMapping.BenchmarkPortfolioNavigation.Id;
+            var benchmarkName = benchmarkMapping.BenchmarkPortfolioNavigation.Name;
+
+            return new PortfolioBenchmarkDTO
             {
-                PortfolioId = b.PortfolioPortfolioNavigation.Id,
-                PortfolioName = b.PortfolioPortfolioNavigation.Name,
-                BenchmarkId = b.BenchmarkPortfolioNavigation.Id,
-                BenchmarkName = b.BenchmarkPortfolioNavigation.Name
+                PortfolioId = portfolioId,
+                PortfolioName = portfolioName,
+                BenchmarkId = benchmarkId,
+                BenchmarkName = benchmarkName
             };
+        }
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync()
-            => (await _benchmarkRepository.GetBenchmarkMappingsAsync())
-                .Select(MapToPortfolioBenchmarkDTO)
-                .ToList();
+        {
+            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+
+            return benchmarkMappings.Select(MapToPortfolioBenchmarkDTO).ToList();
+        }
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId)
-            => (await _benchmarkRepository.GetBenchmarkMappingsAsync())
-                .Where(b => b.PortfolioId == portfolioId)
+        {
+            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+
+            return benchmarkMappings.Where(b => b.PortfolioId == portfolioId)
                 .Select(MapToPortfolioBenchmarkDTO)
                 .ToList();
+        }
 
 
         private static PortfolioPerformanceDTO MapToPortfolioPerformanceDTO(PortfolioPerformance portfolioPerformance)
         {
-            return new PortfolioPerformanceDTO
-            {
-                Bankday = portfolioPerformance.PeriodStart,
-                Value = portfolioPerformance.Value
-            };
+            var bankday = portfolioPerformance.PeriodStart;
+            var value = portfolioPerformance.Value;
+
+            return new PortfolioPerformanceDTO { Bankday = bankday, Value = value };
         }
 
         public async Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
@@ -69,9 +88,11 @@ namespace PerformanceApp.Server.Services
         }
 
         public async Task<int> GetBenchmarkId(int portfolioId)
-            => (await _benchmarkRepository.GetBenchmarkMappingsAsync())
-                .Single(b => b.PortfolioId == portfolioId)
-                .BenchmarkId;
+        {
+            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+
+            return benchmarkMappings.Single(b => b.PortfolioId == portfolioId).BenchmarkId;
+        }
 
         private static PortfolioBenchmarkPerformanceDTO MapToPortfolioBenchmarkCumulativeDayPerformanceDTO(
             PortfolioPerformanceDTO portfolioPerformance,

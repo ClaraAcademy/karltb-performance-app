@@ -1,9 +1,3 @@
-namespace PerformanceApp.Server.Dtos
-{
-    public class DataPoint2
-    {
-        public DateOnly x { get; set; }
-        public float y1 { get; set; }
-        public float y2 { get; set; }
-    }
-}
+namespace PerformanceApp.Server.Dtos;
+
+public record DataPoint2(DateOnly X, float Y1, float Y2);
