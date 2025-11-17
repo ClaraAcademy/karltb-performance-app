@@ -21,7 +21,7 @@ public static class DataServices
         services.AddScoped<IPositionRepository, PositionRepository>();
         services.AddScoped<IDateInfoRepository, DateInfoRepository>();
         services.AddScoped<IBenchmarkRepository, BenchmarkRepository>();
-        services.AddScoped<IPerformanceRepository, PerformanceRepository>();
+        services.AddScoped<IKeyFigureValueRepository, KeyFigureValueRepository>();
         services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
         services.AddScoped<IKeyFigureInfoRepository, KeyFigureInfoRepository>();
         services.AddScoped<IStagingRepository, StagingRepository>();

@@ -5,32 +5,38 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace PerformanceApp.Data.Repositories
 {
-    public interface IPerformanceRepository
+    public interface IKeyFigureValueRepository
     {
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync();
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId);
         Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync();
     }
 
-    public class PerformanceRepository(PadbContext context) : IPerformanceRepository
+    public class KeyFigureValueRepository(PadbContext context) : IKeyFigureValueRepository
     {
         private readonly PadbContext _context = context;
 
         private IQueryable<KeyFigureValue> BaseKeyFigureValuesQuery()
-            => _context.KeyFigureValues
-                .Include(kfv => kfv.PortfolioNavigation)
-                .AsQueryable();
+        {
+            return _context.KeyFigureValues
+                   .Include(kfv => kfv.PortfolioNavigation)
+                   .AsQueryable();
+        }
 
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync()
-            => await BaseKeyFigureValuesQuery()
-                .ToListAsync();
+        {
+            return await BaseKeyFigureValuesQuery().ToListAsync();
+        }
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId)
-            => await BaseKeyFigureValuesQuery()
-                .Include(k => k.PortfolioNavigation)
-                .ToListAsync();
+        {
+            return await BaseKeyFigureValuesQuery()
+                   .Include(k => k.PortfolioNavigation)
+                   .ToListAsync();
+        }
         public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
-            => await _context.KeyFigureInfos
-                .ToListAsync();
+        {
+            return await _context.KeyFigureInfos.ToListAsync();
+        }
 
     }
 }

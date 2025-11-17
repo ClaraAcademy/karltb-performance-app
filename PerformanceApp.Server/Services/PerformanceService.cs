@@ -9,9 +9,9 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioBenchmarkKeyFigureDTO>> GetPortfolioBenchmarkKeyFigureValues(int portfolioId);
     }
 
-    public class PerformanceService(IPerformanceRepository performanceRepository, IPortfolioService portfolioService) : IPerformanceService
+    public class PerformanceService(IKeyFigureValueRepository performanceRepository, IPortfolioService portfolioService) : IPerformanceService
     {
-        private readonly IPerformanceRepository PerformanceRepository = performanceRepository;
+        private readonly IKeyFigureValueRepository PerformanceRepository = performanceRepository;
         private readonly IPortfolioService PortfolioService = portfolioService;
 
         private static PortfolioBenchmarkKeyFigureDTO MapInitial(PortfolioBenchmarkDTO pb, KeyFigureInfo kfi)
