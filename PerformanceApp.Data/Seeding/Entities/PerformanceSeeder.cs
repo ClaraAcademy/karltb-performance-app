@@ -26,11 +26,6 @@ public class PerformanceSeeder(PadbContext context)
         return [
             $@"EXEC padb.uspUpdatePortfolioMonthPerformance;",
             $@"EXEC padb.uspUpdatePortfolioHalfYearPerformance;",
-            $@"EXEC padb.uspUpdateStandardDeviation;",
-            $@"EXEC padb.uspUpdateTrackingError;",
-            $@"EXEC padb.uspUpdateAnnualisedCumulativeReturn;",
-            $@"EXEC padb.uspUpdateInformationRatio;",
-            $@"EXEC padb.uspUpdateHalfYearPerformance;"
         ];
     }
 

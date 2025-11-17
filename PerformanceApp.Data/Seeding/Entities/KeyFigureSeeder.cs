@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Seeding.Entities;
 
 public class KeyFigureSeeder(PadbContext context)
 {
+    private readonly PadbContext _context = context;
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
 
     private async Task<bool> IsPopulated()
@@ -41,5 +42,10 @@ public class KeyFigureSeeder(PadbContext context)
         var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
 
         await _keyFigureInfoRepository.AddKeyFigureInfosAsync(keyFigureInfos);
+
+        foreach (var query in KeyFigureQueries.Queries)
+        {
+            await SqlExecutor.ExecuteQueryAsync(_context, query);
+        }
     }
 }

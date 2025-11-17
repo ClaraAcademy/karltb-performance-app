@@ -38,10 +38,10 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         await _portfolioSeeder.Seed();
         await _benchmarkSeeder.Seed();
         await _transactionTypeSeeder.Seed();
-        await _keyFigureSeeder.Seed();
         await _performanceTypeSeeder.Seed();
         await _positionSeeder.Seed();
         await _performanceSeeder.Seed();
+        await _keyFigureSeeder.Seed();
     }
 
 }
