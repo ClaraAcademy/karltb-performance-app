@@ -9,7 +9,6 @@ namespace PerformanceApp.Data.Repositories
         Task AddBenchmarkMappingAsync(Benchmark benchmark);
         Task AddBenchmarkMappingsAsync(List<Benchmark> benchmarks);
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync();
-        Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId);
     }
 
     public class BenchmarkRepository(PadbContext context) : IBenchmarkRepository
@@ -35,17 +34,6 @@ namespace PerformanceApp.Data.Repositories
                    .Include(b => b.BenchmarkPortfolioNavigation)
                    .ToListAsync();
         }
-
-        public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId)
-            => await _context.Benchmarks
-                .Include(bm => bm.PortfolioPortfolioNavigation)
-                    .ThenInclude(p => p.KeyFigureValuesNavigation)
-                        .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
-                .Include(bm => bm.BenchmarkPortfolioNavigation)
-                    .ThenInclude(b => b.KeyFigureValuesNavigation)
-                        .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
-                .Where(bm => bm.PortfolioPortfolioNavigation.Id == portfolioId)
-                .ToListAsync();
 
     }
 }
