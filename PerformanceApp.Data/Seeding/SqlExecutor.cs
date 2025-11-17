@@ -20,8 +20,7 @@ public static class SqlExecutor
             .ToList();
     }
 
-    private static bool IsBlank(string s) => s.IsNullOrEmpty();
-    private static bool IsNotBlank(string s) => !IsBlank(s);
+    private static bool IsNotBlank(string s) => !string.IsNullOrWhiteSpace(s);
 
     private static List<string> GetBatches(string fileContents)
     {
