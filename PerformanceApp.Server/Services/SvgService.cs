@@ -21,7 +21,7 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
     private readonly int DefaultWidth = 800;
     private readonly int DefaultHeight = 500;
 
-    private DataPoint2 MapToDataPoint2(PortfolioBenchmarkCumulativeDayPerformanceDTO dto)
+    private DataPoint2 MapToDataPoint2(PortfolioBenchmarkPerformanceDTO dto)
         => new DataPoint2
         {
             x = dto.Bankday,
@@ -31,11 +31,9 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
 
     public async Task<string> GetLineChart(int portfolioId, int? width = null, int? height = null)
     {
-        var dtos = await _portfolioService
-            .GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var dtos = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
 
-        var dataPoints = dtos
-            .Select(MapToDataPoint2)
+        var dataPoints = dtos.Select(MapToDataPoint2)
             .ToList();
 
         return new SVG(
