@@ -29,6 +29,7 @@ public static class DataServices
         services.AddScoped<IInstrumentRepository, InstrumentRepository>();
         services.AddScoped<IInstrumentPriceRepository, InstrumentPriceRepository>();
         services.AddScoped<IPerformanceTypeRepository, PerformanceTypeRepository>();
+        services.AddScoped<IPortfolioValueRepository, PortfolioValueRepository>();
     }
 
     public static IServiceCollection AddDataServices(this IServiceCollection services, IConfiguration configuration)

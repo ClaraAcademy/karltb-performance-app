@@ -15,6 +15,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
     private readonly KeyFigureSeeder _keyFigureSeeder = new(context);
     private readonly PerformanceSeeder _performanceSeeder = new(context);
     private readonly PortfolioSeeder _portfolioSeeder = new(context, userManager);
+    private readonly PortfolioValueSeeder _portfolioValueSeeder = new(context);
     private readonly TransactionSeeder _transactionSeeder = new(context);
     private readonly PositionSeeder _positionSeeder = new(context);
     private readonly StagingSeeder _stagingSeeder = new(context);
@@ -41,6 +42,7 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
         await _transactionTypeSeeder.Seed();
         await _positionSeeder.Seed();
         await _performanceTypeSeeder.Seed();
+        await _portfolioValueSeeder.Seed();
         await _transactionSeeder.Seed();
         await _performanceSeeder.Seed();
         await _keyFigureSeeder.Seed();
