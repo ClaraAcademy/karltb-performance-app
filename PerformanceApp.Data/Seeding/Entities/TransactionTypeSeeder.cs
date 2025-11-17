@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -28,7 +29,7 @@ public class TransactionTypeSeeder(PadbContext context)
             return;
         }
 
-        var raw = new List<string> { "Buy", "Sell" };
+        var raw = TransactionTypeData.GetTransactionTypes();
 
         var transactionTypes = raw.Select(MapToTransactionType).ToList();
 
