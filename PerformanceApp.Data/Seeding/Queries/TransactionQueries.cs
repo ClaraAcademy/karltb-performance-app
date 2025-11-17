@@ -1,6 +1,6 @@
 using PerformanceApp.Data.Seeding.Dtos;
 
-namespace PerformanceApp.Data.Seeding.Constants;
+namespace PerformanceApp.Data.Seeding.Queries;
 
 public static class TransactionQueries
 {
