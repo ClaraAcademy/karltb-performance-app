@@ -1,7 +1,7 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
-using Microsoft.Data.SqlClient;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -11,21 +11,20 @@ public class PerformanceSeeder(PadbContext context)
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private static List<FormattableString> GetDailyQueries(DateOnly bankday)
     {
-        var bankdayParameter = new SqlParameter("Bankday", bankday);
         return [
-            $@"EXEC [padb].[uspUpdatePositions] @Bankday = {bankdayParameter};",
-            $@"EXEC [padb].[uspUpdatePortfolioValue] @Bankday = {bankdayParameter};",
-            $@"EXEC [padb].[uspUpdateInstrumentDayPerformance] @Bankday = {bankdayParameter};",
-            $@"EXEC [padb].[uspUpdatePortfolioDayPerformance] @Bankday = {bankdayParameter};",
-            $@"EXEC [padb].[uspUpdatePortfolioCumulativeDayPerformance] @Bankday = {bankdayParameter};"
+            PerformanceQueries.UpdatePositions(bankday),
+            PerformanceQueries.UpdatePortfolioValue(bankday),
+            PerformanceQueries.UpdateInstrumentDayPerformance(bankday),
+            PerformanceQueries.UpdatePortfolioDayPerformance(bankday),
+            PerformanceQueries.UpdatePortfolioCumulativeDayPerformance(bankday)
         ];
     }
 
-    private static List<FormattableString> GetPerformanceQueries()
+    private static List<FormattableString> GetAggregatePerformanceQueries()
     {
         return [
-            $@"EXEC padb.uspUpdatePortfolioMonthPerformance;",
-            $@"EXEC padb.uspUpdatePortfolioHalfYearPerformance;",
+            PerformanceQueries.UpdatePortfolioMontPerformance(),
+            PerformanceQueries.UpdatePortfolioHalfYearPerformance()
         ];
     }
 
@@ -46,7 +45,7 @@ public class PerformanceSeeder(PadbContext context)
             }
         }
 
-        foreach (var query in GetPerformanceQueries())
+        foreach (var query in GetAggregatePerformanceQueries())
         {
             await SqlExecutor.ExecuteQueryAsync(_context, query);
         }
