@@ -12,7 +12,6 @@ public class PerformanceSeeder(PadbContext context)
     private static List<FormattableString> GetDailyQueries(DateOnly bankday)
     {
         return [
-            PerformanceQueries.UpdatePositions(bankday),
             PerformanceQueries.UpdatePortfolioValue(bankday),
             PerformanceQueries.UpdateInstrumentDayPerformance(bankday),
             PerformanceQueries.UpdatePortfolioDayPerformance(bankday),

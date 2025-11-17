@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Repositories
         Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetBondPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId);
+        Task<IEnumerable<Position>> GetPositionsAsync();
     }
 
     public class PositionRepository(PadbContext context) : IPositionRepository
@@ -38,5 +39,9 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId)
             => await GetPositionsAsync("Index", bankday, portfolioId);
 
+        public async Task<IEnumerable<Position>> GetPositionsAsync()
+        {
+            return await _context.Positions.ToListAsync();
+        }
     }
 }
