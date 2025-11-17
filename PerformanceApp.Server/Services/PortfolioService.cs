@@ -78,11 +78,19 @@ namespace PerformanceApp.Server.Services
             return new PortfolioPerformanceDTO { Bankday = bankday, Value = value };
         }
 
+        private static bool IsCumulativeDayPerformance(PortfolioPerformance portfolioPerformance)
+        {
+            var performanceTypeName = portfolioPerformance.PerformanceTypeNavigation.Name;
+
+            return performanceTypeName == PerformanceTypeData.CumulativeDayPerformance;
+        }
+
         public async Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
         {
             var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
 
             return portfolio.PortfolioPerformancesNavigation
+                .Where(IsCumulativeDayPerformance)
                 .Select(MapToPortfolioPerformanceDTO)
                 .ToList();
         }
