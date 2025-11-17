@@ -50,6 +50,16 @@ public class PortfolioRepositoryTest : RepositoryTest
     }
 
     [Fact]
+    public void GetPortfolio_ReturnsNullForNonExistentPortfolio()
+    {
+        var context = CreateContext();
+        var repository = new PortfolioRepository(context);
+
+        var retrievedPortfolio = repository.GetPortfolio("Non Existent Portfolio");
+        Assert.Null(retrievedPortfolio);
+    }
+
+    [Fact]
     public async Task GetPortfolioAsync_ReturnsCorrectPortfolio()
     {
         var context = CreateContext();
@@ -62,6 +72,16 @@ public class PortfolioRepositoryTest : RepositoryTest
         var retrievedPortfolio = await repository.GetPortfolioAsync("Get Async Test Portfolio");
         Assert.NotNull(retrievedPortfolio);
         Assert.Equal(portfolio.Name, retrievedPortfolio!.Name);
+    }
+
+    [Fact]
+    public async Task GetPortfolioAsync_ReturnsNullForNonExistentPortfolio()
+    {
+        var context = CreateContext();
+        var repository = new PortfolioRepository(context);
+
+        var retrievedPortfolio = await repository.GetPortfolioAsync("Non Existent Async Portfolio");
+        Assert.Null(retrievedPortfolio);
     }
 
     [Fact]
