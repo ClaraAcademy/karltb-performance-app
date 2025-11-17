@@ -14,9 +14,13 @@ public partial class PadbContext
 
             entity.ToTable("Benchmark", "padb");
 
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.BenchmarkId).HasColumnName("BenchmarkID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.BenchmarkId)
+                .HasColumnName("BenchmarkID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.BenchmarkPortfolioNavigation).WithMany(p => p.BenchmarkBenchmarksNavigation)
                 .HasForeignKey(d => d.BenchmarkId)
@@ -37,7 +41,9 @@ public partial class PadbContext
 
             entity.ToTable("DateInfo", "padb");
 
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
         });
 
     }
@@ -50,10 +56,16 @@ public partial class PadbContext
 
             entity.HasIndex(e => e.Name, "UQ_Instrument_InstrumentName").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("InstrumentID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.TypeId).HasColumnName("InstrumentTypeID");
+            entity.Property(e => e.Id)
+                .HasColumnName("InstrumentID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Name)
+                .HasColumnName("InstrumentName")
+                .HasMaxLength(100);
+            entity.Property(e => e.TypeId)
+                .HasColumnName("InstrumentTypeID");
 
             entity.HasOne(d => d.InstrumentTypeNavigation).WithMany(p => p.InstrumentsNavigation)
                 .HasForeignKey(d => d.TypeId)
@@ -117,9 +129,14 @@ public partial class PadbContext
 
             entity.ToTable("InstrumentPrice", "padb");
 
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Price).HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.InstrumentId)
+                .HasColumnName("InstrumentID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Price)
+                .HasColumnName("Price")
+                .HasColumnType("decimal(19, 4)");
 
             entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.InstrumentPricesNavigation)
                 .HasForeignKey(d => d.Bankday)
@@ -138,9 +155,14 @@ public partial class PadbContext
         {
             entity.ToTable("InstrumentType", "padb");
 
-            entity.Property(e => e.Id).HasColumnName("InstrumentTypeID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Name).HasMaxLength(20);
+            entity.Property(e => e.Id)
+                .HasColumnName("InstrumentTypeID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Name)
+                .HasColumnName("InstrumentTypeName")
+                .HasMaxLength(20);
         });
     }
 
@@ -154,9 +176,14 @@ public partial class PadbContext
 
             entity.HasIndex(e => e.Name, "UQ_KeyFigureInfo_KeyFigureName").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("KeyFigureID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Id)
+                .HasColumnName("KeyFigureID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Name)
+                .HasColumnName("KeyFigureName")
+                .HasMaxLength(100);
         });
     }
 
@@ -168,9 +195,13 @@ public partial class PadbContext
 
             entity.ToTable("KeyFigureValue", "padb");
 
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.KeyFigureId).HasColumnName("KeyFigureID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.KeyFigureId)
+                .HasColumnName("KeyFigureID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Value)
                 .HasColumnType("decimal(24, 16)")
                 .HasColumnName("KeyFigureValue");
@@ -212,9 +243,14 @@ public partial class PadbContext
 
             entity.HasIndex(e => e.Name, "UQ_Portfolio_PortfolioName").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Id)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Name)
+                .HasColumnName("PortfolioName")
+                .HasMaxLength(100);
 
             entity.HasOne(p => p.User)
                 .WithMany(u => u.PortfoliosNavigation)
@@ -278,8 +314,11 @@ public partial class PadbContext
 
             entity.ToTable("PortfolioValue", "padb");
 
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Value)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("PortfolioValue");
@@ -301,13 +340,24 @@ public partial class PadbContext
         {
             entity.ToTable("Position", "padb");
 
-            entity.Property(e => e.Id).HasColumnName("PositionID");
-            entity.Property(e => e.Amount).HasColumnType("decimal(19, 4)");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Nominal).HasColumnType("decimal(19, 4)");
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Proportion).HasColumnType("decimal(5, 4)");
+            entity.Property(e => e.Id)
+                .HasColumnName("PositionID");
+            entity.Property(e => e.Amount)
+                .HasColumnName("Amount")
+                .HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.InstrumentId)
+                .HasColumnName("InstrumentID");
+            entity.Property(e => e.Nominal)
+                .HasColumnName("Nominal")
+                .HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.Proportion)
+                .HasColumnName("Proportion")
+                .HasColumnType("decimal(5, 4)");
 
             entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.PositionsNavigation)
                 .HasForeignKey(d => d.Bankday)
@@ -333,8 +383,11 @@ public partial class PadbContext
 
             entity.ToTable("PositionValue", "padb");
 
-            entity.Property(e => e.PositionId).HasColumnName("PositionID");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PositionId)
+                .HasColumnName("PositionID");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Value)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("PositionValue");
@@ -357,10 +410,18 @@ public partial class PadbContext
             entity.HasKey(e => new { e.Bankday, e.InstrumentName, e.InstrumentType });
             entity.ToTable("Staging", "padb");
 
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.InstrumentName).HasMaxLength(100);
-            entity.Property(e => e.InstrumentType).HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.InstrumentName)
+                .HasColumnName("InstrumentName")
+                .HasMaxLength(100);
+            entity.Property(e => e.InstrumentType)
+                .HasColumnName("InstrumentType")
+                .HasMaxLength(100);
+            entity.Property(e => e.Price)
+                .HasColumnName("Price")
+                .HasColumnType("decimal(19, 4)");
         });
     }
 
@@ -370,14 +431,26 @@ public partial class PadbContext
         {
             entity.ToTable("Transaction", "padb");
 
-            entity.Property(e => e.Id).HasColumnName("TransactionID");
-            entity.Property(e => e.Amount).HasColumnType("decimal(19, 4)");
-            entity.Property(e => e.Created).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.InstrumentId).HasColumnName("InstrumentID");
-            entity.Property(e => e.Nominal).HasColumnType("decimal(19, 4)");
-            entity.Property(e => e.PortfolioId).HasColumnName("PortfolioID");
-            entity.Property(e => e.Proportion).HasColumnType("decimal(5, 4)");
-            entity.Property(e => e.TransactionTypeId).HasColumnName("TransactionTypeID");
+            entity.Property(e => e.Id)
+                .HasColumnName("TransactionID");
+            entity.Property(e => e.Amount)
+                .HasColumnName("Amount")
+                .HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.Created)
+                .HasColumnName("Created")
+                .HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.InstrumentId)
+                .HasColumnName("InstrumentID");
+            entity.Property(e => e.Nominal)
+                .HasColumnName("Nominal")
+                .HasColumnType("decimal(19, 4)");
+            entity.Property(e => e.PortfolioId)
+                .HasColumnName("PortfolioID");
+            entity.Property(e => e.Proportion)
+                .HasColumnName("Proportion")
+                .HasColumnType("decimal(5, 4)");
+            entity.Property(e => e.TransactionTypeId)
+                .HasColumnName("TransactionTypeID");
 
             entity.HasOne(d => d.BankdayNavigation).WithMany(p => p.TransactionsNavigation)
                 .HasForeignKey(d => d.Bankday)
@@ -408,8 +481,11 @@ public partial class PadbContext
 
             entity.HasIndex(e => e.Name, "UQ_TransactionType_TransactionTypeName").IsUnique();
 
-            entity.Property(e => e.Id).HasColumnName("TransactionTypeID");
-            entity.Property(e => e.Name).HasMaxLength(20);
+            entity.Property(e => e.Id)
+                .HasColumnName("TransactionTypeID");
+            entity.Property(e => e.Name)
+                .HasColumnName("TransactionTypeName")
+                .HasMaxLength(20);
         });
     }
 
