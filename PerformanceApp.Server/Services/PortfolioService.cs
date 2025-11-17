@@ -12,9 +12,8 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioDTO>> GetPortfolioDTOsAsync();
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync();
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId);
-        Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync();
-        Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId);
-        Task<List<PortfolioBenchmarkCumulativeDayPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId);
+        Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId);
+        Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId);
     }
 
     public class PortfolioService(IPortfolioRepository portfolioRepository, IBenchmarkRepository benchmarkRepository) : IPortfolioService
@@ -50,42 +49,46 @@ namespace PerformanceApp.Server.Services
                 .Select(MapToPortfolioBenchmarkDTO)
                 .ToList();
 
-        private static PortfolioCumulativeDayPerformanceDTO MapToPortfolioCumulativeDayPerformanceDTO(PortfolioCumulativeDayPerformance p)
-            => new PortfolioCumulativeDayPerformanceDTO
+
+        private static PortfolioPerformanceDTO MapToPortfolioPerformanceDTO(PortfolioPerformance portfolioPerformance)
+        {
+            return new PortfolioPerformanceDTO
             {
-                Bankday = p.Bankday,
-                Value = p!.CumulativeDayPerformance!.Value
+                Bankday = portfolioPerformance.PeriodStart,
+                Value = portfolioPerformance.Value
             };
+        }
 
-        public async Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync()
-            => (await _portfolioRepository.GetPortfoliosAsync())
-                    .SelectMany(p => p.PortfolioCumulativeDayPerformancesNavigation)
-                    .Select(MapToPortfolioCumulativeDayPerformanceDTO)
-                    .ToList();
+        public async Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
+        {
+            var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
 
-        public async Task<List<PortfolioCumulativeDayPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
-            => (await _portfolioRepository.GetPortfolioAsync(portfolioId))
-                    .PortfolioCumulativeDayPerformancesNavigation
-                    .Select(MapToPortfolioCumulativeDayPerformanceDTO)
-                    .ToList();
+            return portfolio.PortfolioPerformancesNavigation
+                .Select(MapToPortfolioPerformanceDTO)
+                .ToList();
+        }
 
         public async Task<int> GetBenchmarkId(int portfolioId)
             => (await _benchmarkRepository.GetBenchmarkMappingsAsync())
                 .Single(b => b.PortfolioId == portfolioId)
                 .BenchmarkId;
 
-        private static PortfolioBenchmarkCumulativeDayPerformanceDTO MapToPortfolioBenchmarkCumulativeDayPerformanceDTO(
-            PortfolioCumulativeDayPerformanceDTO portfolioPerformance,
-            PortfolioCumulativeDayPerformanceDTO benchmarkPerformance
+        private static PortfolioBenchmarkPerformanceDTO MapToPortfolioBenchmarkCumulativeDayPerformanceDTO(
+            PortfolioPerformanceDTO portfolioPerformance,
+            PortfolioPerformanceDTO benchmarkPerformance
         )
-            => new PortfolioBenchmarkCumulativeDayPerformanceDTO
+        {
+            return new PortfolioBenchmarkPerformanceDTO
             {
                 Bankday = portfolioPerformance.Bankday,
                 PortfolioValue = portfolioPerformance.Value,
                 BenchmarkValue = benchmarkPerformance.Value
             };
+        }
 
-        public async Task<List<PortfolioBenchmarkCumulativeDayPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId)
+        private static DateOnly GetBankday(PortfolioPerformanceDTO dto) => dto.Bankday;
+
+        public async Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId)
         {
             var benchmarkId = await GetBenchmarkId(portfolioId);
 
@@ -93,16 +96,10 @@ namespace PerformanceApp.Server.Services
             var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId);
 
             return portfolioPerformance
-                .Join(
-                    benchmarkPerformance,
-                    pp => pp.Bankday,
-                    bp => bp.Bankday,
-                    MapToPortfolioBenchmarkCumulativeDayPerformanceDTO
-                )
+                .Join(benchmarkPerformance, GetBankday, GetBankday, MapToPortfolioBenchmarkCumulativeDayPerformanceDTO)
                 .OrderBy(dto => dto.Bankday)
                 .ToList();
         }
-
     }
 
 }

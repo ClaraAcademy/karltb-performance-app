@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PerformanceApp.Server.Dtos;
 
-public partial class PortfolioBenchmarkCumulativeDayPerformanceDTO
+public partial class PortfolioBenchmarkPerformanceDTO
 {
     public DateOnly Bankday { get; set; }
 
