@@ -29,10 +29,12 @@ namespace PerformanceApp.Data.Repositories
         }
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync()
-            => await _context.Benchmarks
-                .Include(b => b.PortfolioPortfolioNavigation)
-                .Include(b => b.BenchmarkPortfolioNavigation)
-                .ToListAsync();
+        {
+            return await _context.Benchmarks
+                   .Include(b => b.PortfolioPortfolioNavigation)
+                   .Include(b => b.BenchmarkPortfolioNavigation)
+                   .ToListAsync();
+        }
 
         public async Task<IEnumerable<Benchmark>> GetBenchmarkMappingsWithKeyFiguresAsync(int portfolioId)
             => await _context.Benchmarks
