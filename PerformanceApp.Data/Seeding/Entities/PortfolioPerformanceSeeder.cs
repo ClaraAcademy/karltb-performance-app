@@ -1,14 +1,23 @@
-using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Context;
-using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Data.Seeding.Utilities;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
-public class PerformanceSeeder(PadbContext context)
+public class PortfolioPerformanceSeeder(PadbContext context)
 {
     private readonly PadbContext _context = context;
+
     private readonly DateInfoRepository _dateInfoRepository = new(context);
+    private readonly PortfolioPerformanceRepository _portfolioPerformanceRepository = new(context);
+
+    private async Task<bool> IsPopulated()
+    {
+        var portfolioPerformances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+        return portfolioPerformances.Any();
+    }
+
     private static List<FormattableString> GetDailyQueries(DateOnly bankday)
     {
         return [
@@ -17,7 +26,7 @@ public class PerformanceSeeder(PadbContext context)
         ];
     }
 
-    private static List<FormattableString> GetAggregatePerformanceQueries()
+    private static List<FormattableString> GetAggregateQueries()
     {
         return [
             PerformanceQueries.UpdatePortfolioMontPerformance(),
@@ -25,14 +34,17 @@ public class PerformanceSeeder(PadbContext context)
         ];
     }
 
-    private static DateOnly GetBankday(DateInfo dateInfo) => dateInfo.Bankday;
-
     public async Task Seed()
     {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
         var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
-        var bankdays = dateInfos.Select(GetBankday)
-            .OrderBy(d => d)
-            .ToList();
+        var bankdays = BankdayHelper.GetOrderedBankdays(dateInfos);
 
         foreach (var bankday in bankdays)
         {
@@ -42,7 +54,7 @@ public class PerformanceSeeder(PadbContext context)
             }
         }
 
-        foreach (var query in GetAggregatePerformanceQueries())
+        foreach (var query in GetAggregateQueries())
         {
             await SqlExecutor.ExecuteQueryAsync(_context, query);
         }
