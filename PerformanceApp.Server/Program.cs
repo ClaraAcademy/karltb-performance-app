@@ -3,6 +3,7 @@ using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Services;
 using PerformanceApp.Data;
+using PerformanceApp.Data.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+await DatabaseInitializer.Initialize(app.Services);
 
 app.UseDefaultFiles();
 
