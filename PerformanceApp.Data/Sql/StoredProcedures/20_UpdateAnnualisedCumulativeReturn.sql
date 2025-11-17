@@ -20,7 +20,7 @@ BEGIN
                 padb.ufnGetAnnualizationFactor()
             ) - 1.0
         FROM padb.PortfolioPerformance
-        WHERE TypeID = padb.ufnGetCumulativeDayPerformanceID()
+        WHERE TypeID = padb.ufnGetDayPerformanceID()
         GROUP BY PortfolioID;
     COMMIT;
 END
