@@ -30,14 +30,7 @@ public class KeyFigureSeeder(PadbContext context)
             return;
         }
 
-        var raw = new List<string>
-        {
-            KeyFigureData.StandardDeviation,
-            KeyFigureData.TrackingError,
-            KeyFigureData.AnnualisedCumulativeReturn,
-            KeyFigureData.InformationRatio,
-            KeyFigureData.HalfYearPerformance,
-        };
+        var raw = KeyFigureData.GetKeyFigures();
 
         var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
 
