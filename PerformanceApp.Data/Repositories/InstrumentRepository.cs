@@ -12,8 +12,8 @@ public interface IInstrumentRepository
     Task AddInstrumentAsync(Instrument instrument);
     void AddInstruments(List<Instrument> instruments);
     Task AddInstrumentsAsync(List<Instrument> instruments);
-    Instrument GetInstrument(string name);
-    Task<Instrument> GetInstrumentAsync(string name);
+    Instrument? GetInstrument(string name);
+    Task<Instrument?> GetInstrumentAsync(string name);
     List<Instrument> GetInstruments();
     List<Instrument> GetInstruments(List<string> names);
     Task<List<Instrument>> GetInstrumentsAsync();
@@ -45,15 +45,13 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
         await _context.SaveChangesAsync();
     }
 
-    public Instrument GetInstrument(string name)
+    public Instrument? GetInstrument(string name)
     {
-        return _context.Instruments
-            .Single(i => i.Name == name);
+        return _context.Instruments.SingleOrDefault(i => i.Name == name);
     }
-    public async Task<Instrument> GetInstrumentAsync(string name)
+    public async Task<Instrument?> GetInstrumentAsync(string name)
     {
-        return await _context.Instruments
-            .SingleAsync(i => i.Name == name);
+        return await _context.Instruments.SingleOrDefaultAsync(i => i.Name == name);
     }
     public List<Instrument> GetInstruments()
     {
