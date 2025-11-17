@@ -37,14 +37,17 @@ public class DatabaseSeeder(PadbContext context, UserManager<ApplicationUser> us
     {
         await SeedBaseData();
 
+        await _transactionTypeSeeder.Seed();
+        await _performanceTypeSeeder.Seed();
+
         await _userSeeder.Seed();
         await _portfolioSeeder.Seed();
         await _benchmarkSeeder.Seed();
-        await _transactionTypeSeeder.Seed();
-        await _positionSeeder.Seed();
-        await _performanceTypeSeeder.Seed();
-        await _portfolioValueSeeder.Seed();
+
         await _transactionSeeder.Seed();
+        await _positionSeeder.Seed();
+        await _portfolioValueSeeder.Seed();
+
         await _instrumentPerformanceSeeder.Seed();
         await _portfolioPerformanceSeeder.Seed();
         await _keyFigureSeeder.Seed();
