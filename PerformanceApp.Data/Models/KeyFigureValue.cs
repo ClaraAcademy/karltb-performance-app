@@ -9,7 +9,7 @@ public partial class KeyFigureValue
 
     public int KeyFigureId { get; set; }
 
-    public decimal? KeyFigureValue1 { get; set; }
+    public decimal? Value { get; set; }
 
     public DateTime Created { get; set; }
 

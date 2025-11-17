@@ -17,7 +17,7 @@ public class TransactionTypeSeeder(PadbContext context)
         return transactionTypes.Any();
     }
 
-    TransactionType MapToTransactionType(string name) => new TransactionType { TransactionTypeName = name };
+    TransactionType MapToTransactionType(string name) => new TransactionType { Name = name };
 
     public async Task Seed()
     {

@@ -48,12 +48,12 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
     public Instrument GetInstrument(string name)
     {
         return _context.Instruments
-            .Single(i => i.InstrumentName == name);
+            .Single(i => i.Name == name);
     }
     public async Task<Instrument> GetInstrumentAsync(string name)
     {
         return await _context.Instruments
-            .SingleAsync(i => i.InstrumentName == name);
+            .SingleAsync(i => i.Name == name);
     }
     public List<Instrument> GetInstruments()
     {
@@ -66,15 +66,15 @@ public class InstrumentRepository(PadbContext context) : IInstrumentRepository
     public List<Instrument> GetInstruments(List<string> names)
     {
         return _context.Instruments
-            .Where(i => i.InstrumentName != null)
-            .Where(i => names.Contains(i.InstrumentName!))
+            .Where(i => i.Name != null)
+            .Where(i => names.Contains(i.Name!))
             .ToList();
     }
     public async Task<List<Instrument>> GetInstrumentsAsync(List<string> names)
     {
         return await _context.Instruments
-            .Where(i => i.InstrumentName != null)
-            .Where(i => names.Contains(i.InstrumentName!))
+            .Where(i => i.Name != null)
+            .Where(i => names.Contains(i.Name!))
             .ToListAsync();
     }
 

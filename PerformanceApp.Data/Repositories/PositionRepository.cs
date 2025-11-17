@@ -28,7 +28,7 @@ namespace PerformanceApp.Data.Repositories
                 .Include(p => p.PositionValuesNavigation)
                 .Where(p => p.Bankday == bankday)
                 .Where(p => p.PortfolioId == portfolioId)
-                .Where(p => p.InstrumentNavigation!.InstrumentTypeNavigation!.InstrumentTypeName == instrumentType)
+                .Where(p => p.InstrumentNavigation!.InstrumentTypeNavigation!.Name == instrumentType)
                 .ToListAsync();
 
         public async Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId)

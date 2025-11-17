@@ -18,7 +18,7 @@ public class KeyFigureSeeder(PadbContext context)
         return keyFigureInfos.Any();
     }
 
-    KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { KeyFigureName = name };
+    KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { Name = name };
 
     public async Task Seed()
     {

@@ -9,7 +9,7 @@ public partial class PositionValue
 
     public DateOnly Bankday { get; set; }
 
-    public decimal? PositionValue1 { get; set; }
+    public decimal? Value { get; set; }
 
     public DateTime Created { get; set; }
 

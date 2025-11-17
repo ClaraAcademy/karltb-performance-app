@@ -22,7 +22,7 @@ public class PortfolioSeeder(PadbContext context, UserManager<ApplicationUser> u
     private record Dto(string PortfolioName, ApplicationUser User);
 
     private async Task<ApplicationUser?> GetUser(string username) => await _userManager.FindByNameAsync(username);
-    private static Portfolio MapToPortfolio(Dto dto) => new Portfolio { PortfolioName = dto.PortfolioName, UserID = dto.User.Id };
+    private static Portfolio MapToPortfolio(Dto dto) => new Portfolio { Name = dto.PortfolioName, UserID = dto.User.Id };
 
     public async Task Seed()
     {

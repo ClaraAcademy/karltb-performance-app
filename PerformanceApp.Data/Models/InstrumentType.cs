@@ -5,9 +5,9 @@ namespace PerformanceApp.Data.Models;
 
 public partial class InstrumentType
 {
-    public int InstrumentTypeId { get; set; }
+    public int Id { get; set; }
 
-    public string InstrumentTypeName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public DateTime Created { get; set; }
 

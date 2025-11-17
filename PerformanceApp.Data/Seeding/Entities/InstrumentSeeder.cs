@@ -37,13 +37,13 @@ public class InstrumentSeeder(PadbContext context)
     {
         return new Instrument
         {
-            InstrumentName = key.InstrumentName,
-            InstrumentTypeId = instrumentType.InstrumentTypeId
+            Name = key.InstrumentName,
+            TypeId = instrumentType.Id
         };
     }
 
     private static string GetInstrumentTypeName(Key key) => key.InstrumentTypeName;
-    private static string GetInstrumentTypeName(InstrumentType instrumentType) => instrumentType.InstrumentTypeName;
+    private static string GetInstrumentTypeName(InstrumentType instrumentType) => instrumentType.Name;
 
     public async Task Seed()
     {

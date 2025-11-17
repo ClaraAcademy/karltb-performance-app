@@ -20,14 +20,14 @@ public class InstrumentPriceSeeder(PadbContext context)
 
     private static InstrumentPrice MapToInstrumentPrice(Staging staging, Instrument instrument)
     {
-        var instrumentId = instrument.InstrumentId;
+        var instrumentId = instrument.Id;
         var price = staging.Price!.Value;
         var bankday = staging.Bankday!.Value;
         return new InstrumentPrice { InstrumentId = instrumentId, Price = price, Bankday = bankday };
     }
 
     private static string GetInstrumentName(Staging staging) => staging.InstrumentName!;
-    private static string GetInstrumentName(Instrument instrument) => instrument.InstrumentName!;
+    private static string GetInstrumentName(Instrument instrument) => instrument.Name!;
 
     public async Task Seed()
     {

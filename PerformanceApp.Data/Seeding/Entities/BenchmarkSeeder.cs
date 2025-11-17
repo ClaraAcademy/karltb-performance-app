@@ -22,8 +22,8 @@ public class BenchmarkSeeder(PadbContext context)
         var (portfolio, benchmark) = pair;
         return new Benchmark
         {
-            PortfolioId = portfolio.PortfolioId,
-            BenchmarkId = benchmark.PortfolioId
+            PortfolioId = portfolio.Id,
+            BenchmarkId = benchmark.Id
         };
     }
 

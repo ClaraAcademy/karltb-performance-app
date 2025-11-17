@@ -17,8 +17,8 @@ namespace PerformanceApp.Server.Services
         private static PortfolioBenchmarkKeyFigureDTO MapInitial(PortfolioBenchmarkDTO pb, KeyFigureInfo kfi)
             => new PortfolioBenchmarkKeyFigureDTO
             {
-                KeyFigureId = kfi.KeyFigureId,
-                KeyFigureName = kfi.KeyFigureName,
+                KeyFigureId = kfi.Id,
+                KeyFigureName = kfi.Name,
                 PortfolioId = pb.PortfolioId,
                 PortfolioName = pb.PortfolioName,
                 PortfolioValue = null,
@@ -34,10 +34,10 @@ namespace PerformanceApp.Server.Services
                     KeyFigureName = c.KeyFigureName,
                     PortfolioId = c.PortfolioId,
                     PortfolioName = c.PortfolioName,
-                    PortfolioValue = pv?.KeyFigureValue1,
+                    PortfolioValue = pv?.Value,
                     BenchmarkId = c.BenchmarkId,
                     BenchmarkName = c.BenchmarkName,
-                    BenchmarkValue = bv?.KeyFigureValue1
+                    BenchmarkValue = bv?.Value
                 };
 
         private record Key(int PortfolioId, int KeyFigureId);

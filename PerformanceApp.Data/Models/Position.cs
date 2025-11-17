@@ -5,7 +5,7 @@ namespace PerformanceApp.Data.Models;
 
 public partial class Position
 {
-    public int PositionId { get; set; }
+    public int Id { get; set; }
 
     public int? PortfolioId { get; set; }
 

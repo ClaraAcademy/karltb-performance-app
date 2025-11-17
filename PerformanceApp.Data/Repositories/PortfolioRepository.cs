@@ -24,12 +24,12 @@ namespace PerformanceApp.Data.Repositories
 
         public Portfolio? GetPortfolio(string name)
         {
-            return _context.Portfolios.SingleOrDefault(p => p.PortfolioName == name);
+            return _context.Portfolios.SingleOrDefault(p => p.Name == name);
         }
 
         public async Task<Portfolio?> GetPortfolioAsync(string name)
         {
-            return await _context.Portfolios.SingleOrDefaultAsync(p => p.PortfolioName == name);
+            return await _context.Portfolios.SingleOrDefaultAsync(p => p.Name == name);
         }
 
         public void AddPortfolio(Portfolio portfolio)
@@ -58,12 +58,12 @@ namespace PerformanceApp.Data.Repositories
         public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
             => await _context.Portfolios
                 .Include(p => p.PortfolioPerformancesNavigation)
-                .SingleAsync(p => p.PortfolioId == portfolioId);
+                .SingleAsync(p => p.Id == portfolioId);
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names)
         {
             return await _context.Portfolios
-                .Where(p => names.Contains(p.PortfolioName))
+                .Where(p => names.Contains(p.Name))
                 .OfType<Portfolio>()
                 .ToListAsync();
         }
@@ -73,7 +73,7 @@ namespace PerformanceApp.Data.Repositories
                 .Where(
                     p => _context.Benchmarks
                             .Select(b => b.PortfolioId)
-                            .Contains(p.PortfolioId)
+                            .Contains(p.Id)
                 ).ToListAsync();
 
         public IEnumerable<Portfolio> GetPortfolios()

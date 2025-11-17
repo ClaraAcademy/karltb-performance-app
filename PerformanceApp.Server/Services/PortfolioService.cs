@@ -22,7 +22,7 @@ namespace PerformanceApp.Server.Services
         private readonly IBenchmarkRepository _benchmarkRepository = benchmarkRepository;
 
         private static PortfolioDTO MapToPortfolioDTO(Portfolio p)
-            => new PortfolioDTO { PortfolioId = p.PortfolioId, PortfolioName = p.PortfolioName };
+            => new PortfolioDTO { PortfolioId = p.Id, PortfolioName = p.Name };
 
         public async Task<List<PortfolioDTO>> GetPortfolioDTOsAsync()
             => (await _portfolioRepository.GetProperPortfoliosAsync())
@@ -32,10 +32,10 @@ namespace PerformanceApp.Server.Services
         private static PortfolioBenchmarkDTO MapToPortfolioBenchmarkDTO(Benchmark b)
             => new PortfolioBenchmarkDTO
             {
-                PortfolioId = b.PortfolioPortfolioNavigation.PortfolioId,
-                PortfolioName = b.PortfolioPortfolioNavigation.PortfolioName,
-                BenchmarkId = b.BenchmarkPortfolioNavigation.PortfolioId,
-                BenchmarkName = b.BenchmarkPortfolioNavigation.PortfolioName
+                PortfolioId = b.PortfolioPortfolioNavigation.Id,
+                PortfolioName = b.PortfolioPortfolioNavigation.Name,
+                BenchmarkId = b.BenchmarkPortfolioNavigation.Id,
+                BenchmarkName = b.BenchmarkPortfolioNavigation.Name
             };
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync()

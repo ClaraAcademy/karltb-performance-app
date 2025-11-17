@@ -42,7 +42,7 @@ namespace PerformanceApp.Data.Repositories
                 .Include(bm => bm.BenchmarkPortfolioNavigation)
                     .ThenInclude(b => b.KeyFigureValuesNavigation)
                         .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
-                .Where(bm => bm.PortfolioPortfolioNavigation.PortfolioId == portfolioId)
+                .Where(bm => bm.PortfolioPortfolioNavigation.Id == portfolioId)
                 .ToListAsync();
 
     }

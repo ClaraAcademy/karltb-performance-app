@@ -5,9 +5,9 @@ namespace PerformanceApp.Data.Models;
 
 public partial class Portfolio
 {
-    public int PortfolioId { get; set; }
+    public int Id { get; set; }
 
-    public string PortfolioName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public DateTime Created { get; set; }
 

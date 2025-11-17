@@ -9,7 +9,7 @@ public partial class PortfolioValue
 
     public DateOnly Bankday { get; set; }
 
-    public decimal? PortfolioValue1 { get; set; }
+    public decimal? Value { get; set; }
 
     public DateTime Created { get; set; }
 

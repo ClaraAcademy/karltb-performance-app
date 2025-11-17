@@ -19,7 +19,7 @@ public class InstrumentTypeSeeder(PadbContext context)
     private static string? GetInstrumentTypeName(Staging staging) => staging.InstrumentType;
     private static InstrumentType MapToInstrumentType(string name)
     {
-        return new InstrumentType { InstrumentTypeName = name };
+        return new InstrumentType { Name = name };
     }
     public async Task Seed()
     {

@@ -5,11 +5,11 @@ namespace PerformanceApp.Data.Models;
 
 public partial class Instrument
 {
-    public int InstrumentId { get; set; }
+    public int Id { get; set; }
 
-    public int? InstrumentTypeId { get; set; }
+    public int? TypeId { get; set; }
 
-    public string? InstrumentName { get; set; }
+    public string? Name { get; set; }
 
     public DateTime Created { get; set; }
 

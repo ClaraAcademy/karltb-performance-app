@@ -51,19 +51,19 @@ public class InstrumentTypeRepository(PadbContext context) : IInstrumentTypeRepo
 
     public InstrumentType GetInstrumentType(string name)
     {
-        return _context.InstrumentTypes.Single(it => it.InstrumentTypeName == name);
+        return _context.InstrumentTypes.Single(it => it.Name == name);
     }
     public async Task<InstrumentType> GetInstrumentTypeAsync(string name)
     {
-        return await _context.InstrumentTypes.SingleAsync(it => it.InstrumentTypeName == name);
+        return await _context.InstrumentTypes.SingleAsync(it => it.Name == name);
     }
     public List<InstrumentType> GetInstrumentTypes(List<string> names)
     {
-        return _context.InstrumentTypes.Where(it => names.Contains(it.InstrumentTypeName)).ToList();
+        return _context.InstrumentTypes.Where(it => names.Contains(it.Name)).ToList();
     }
     public async Task<List<InstrumentType>> GetInstrumentTypesAsync(List<string> names)
     {
-        return await _context.InstrumentTypes.Where(it => names.Contains(it.InstrumentTypeName)).ToListAsync();
+        return await _context.InstrumentTypes.Where(it => names.Contains(it.Name)).ToListAsync();
     }
     public IEnumerable<InstrumentType> GetInstrumentTypes()
     {

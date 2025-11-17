@@ -5,9 +5,9 @@ namespace PerformanceApp.Data.Models;
 
 public partial class KeyFigureInfo
 {
-    public int KeyFigureId { get; set; }
+    public int Id { get; set; }
 
-    public string KeyFigureName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public DateTime Created { get; set; }
 
