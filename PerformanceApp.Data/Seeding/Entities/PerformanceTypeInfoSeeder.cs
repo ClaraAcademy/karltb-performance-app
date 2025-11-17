@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
@@ -29,13 +30,7 @@ public class PerformanceTypeSeeder(PadbContext context)
             return;
         }
 
-        var raw = new List<string>
-        {
-            "Day Performance",
-            "Month Performance",
-            "Half-Year Performance",
-            "Cumulative Day Performance"
-        };
+        var raw = PerformanceTypeData.GetPerformanceTypes();
 
         var performanceTypeInfos = raw.Select(MapToPerformanceTypeInfo).ToList();
 
