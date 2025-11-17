@@ -7,29 +7,14 @@ namespace PerformanceApp.Data.Repositories;
 
 public interface IInstrumentPriceRepository
 {
-    void AddInstrumentPrice(InstrumentPrice instrumentPrice);
-    Task AddInstrumentPriceAsync(InstrumentPrice instrumentPrice);
     void AddInstrumentPrices(List<InstrumentPrice> instrumentPrices);
     Task AddInstrumentPricesAsync(List<InstrumentPrice> instrumentPrices);
     Task<IEnumerable<InstrumentPrice>> GetInstrumentPricesAsync();
-    IEnumerable<InstrumentPrice> GetInstrumentPrices();
 }
 
 public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRepository
 {
     private readonly PadbContext _context = context;
-
-    public void AddInstrumentPrice(InstrumentPrice instrumentPrice)
-    {
-        _context.InstrumentPrices.Add(instrumentPrice);
-        _context.SaveChanges();
-    }
-
-    public async Task AddInstrumentPriceAsync(InstrumentPrice instrumentPrice)
-    {
-        await _context.InstrumentPrices.AddAsync(instrumentPrice);
-        await _context.SaveChangesAsync();
-    }
 
     public void AddInstrumentPrices(List<InstrumentPrice> instrumentPrices)
     {
@@ -45,10 +30,6 @@ public class InstrumentPriceRepository(PadbContext context) : IInstrumentPriceRe
     public async Task<IEnumerable<InstrumentPrice>> GetInstrumentPricesAsync()
     {
         return await _context.InstrumentPrices.ToListAsync();
-    }
-    public IEnumerable<InstrumentPrice> GetInstrumentPrices()
-    {
-        return _context.InstrumentPrices.ToList();
     }
 
 }

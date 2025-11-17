@@ -6,46 +6,6 @@ namespace PerformanceApp.Data.Test.Repositories;
 public class InstrumentPriceRepositoryTest : RepositoryTest
 {
     [Fact]
-    public void AddInstrumentPrice_AddsInstrumentPriceToDatabase()
-    {
-        var context = CreateContext();
-        var repository = new InstrumentPriceRepository(context);
-
-        var instrumentPrice = new InstrumentPrice
-        {
-            InstrumentId = 1,
-            Bankday = DateOnly.FromDateTime(DateTime.Now),
-            Price = 100m
-        };
-
-        repository.AddInstrumentPrice(instrumentPrice);
-
-        var retrievedInstrumentPrice = context.InstrumentPrices.Find(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-        Assert.NotNull(retrievedInstrumentPrice);
-        Assert.Equal(100m, retrievedInstrumentPrice.Price);
-    }
-
-    [Fact]
-    public async Task AddInstrumentPriceAsync_AddsInstrumentPriceToDatabase()
-    {
-        var context = CreateContext();
-        var repository = new InstrumentPriceRepository(context);
-
-        var instrumentPrice = new InstrumentPrice
-        {
-            InstrumentId = 2,
-            Bankday = DateOnly.FromDateTime(DateTime.Now),
-            Price = 200m
-        };
-
-        await repository.AddInstrumentPriceAsync(instrumentPrice);
-
-        var retrievedInstrumentPrice = await context.InstrumentPrices.FindAsync(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-        Assert.NotNull(retrievedInstrumentPrice);
-        Assert.Equal(200m, retrievedInstrumentPrice.Price);
-    }
-
-    [Fact]
     public void AddInstrumentPrices_AddsInstrumentPricesToDatabase()
     {
         var context = CreateContext();
@@ -139,30 +99,5 @@ public class InstrumentPriceRepositoryTest : RepositoryTest
             Assert.Contains(retrievedInstrumentPrices, ip => ip.InstrumentId == instrumentPrice.InstrumentId && ip.Bankday == instrumentPrice.Bankday && ip.Price == instrumentPrice.Price);
         }
 
-    }
-
-    [Fact]
-    public void GetInstrumentPrices_ReturnsAllInstrumentPrices()
-    {
-        var context = CreateContext();
-        var repository = new InstrumentPriceRepository(context);
-
-        var instrumentPrices = new List<InstrumentPrice>
-        {
-            new InstrumentPrice { InstrumentId = 9, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 900m },
-            new InstrumentPrice { InstrumentId = 10, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 1000m }
-        };
-
-        context.InstrumentPrices.AddRange(instrumentPrices);
-        context.SaveChanges();
-
-        var retrievedInstrumentPrices = repository.GetInstrumentPrices();
-
-        Assert.Equal(2, retrievedInstrumentPrices.Count());
-
-        foreach (var instrumentPrice in instrumentPrices)
-        {
-            Assert.Contains(retrievedInstrumentPrices, ip => ip.InstrumentId == instrumentPrice.InstrumentId && ip.Bankday == instrumentPrice.Bankday && ip.Price == instrumentPrice.Price);
-        }
     }
 }

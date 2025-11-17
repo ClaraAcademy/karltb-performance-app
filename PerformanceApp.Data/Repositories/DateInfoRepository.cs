@@ -7,11 +7,7 @@ namespace PerformanceApp.Data.Repositories
 {
     public interface IDateInfoRepository
     {
-        void AddDateInfo(DateInfo dateInfo);
-        Task AddDateInfoAsync(DateInfo dateInfo);
-        void AddDateInfos(List<DateInfo> dateInfos);
         Task AddDateInfosAsync(List<DateInfo> dateInfos);
-        IEnumerable<DateInfo> GetDateInfos();
         Task<IEnumerable<DateInfo>> GetDateInfosAsync();
     }
 
@@ -19,30 +15,10 @@ namespace PerformanceApp.Data.Repositories
     {
         private readonly PadbContext _context = context;
 
-        public void AddDateInfo(DateInfo dateInfo)
-        {
-            _context.DateInfos.Add(dateInfo);
-            _context.SaveChanges();
-        }
-        public async Task AddDateInfoAsync(DateInfo dateInfo)
-        {
-            await _context.DateInfos.AddAsync(dateInfo);
-            await _context.SaveChangesAsync();
-        }
-        public void AddDateInfos(List<DateInfo> dateInfos)
-        {
-            _context.DateInfos.AddRange(dateInfos);
-            _context.SaveChanges();
-        }
         public async Task AddDateInfosAsync(List<DateInfo> dateInfos)
         {
             await _context.DateInfos.AddRangeAsync(dateInfos);
             await _context.SaveChangesAsync();
-        }
-
-        public IEnumerable<DateInfo> GetDateInfos()
-        {
-            return _context.DateInfos.ToList();
         }
 
         public async Task<IEnumerable<DateInfo>> GetDateInfosAsync()

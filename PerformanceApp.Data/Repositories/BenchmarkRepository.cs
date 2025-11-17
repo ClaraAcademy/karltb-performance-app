@@ -6,7 +6,6 @@ namespace PerformanceApp.Data.Repositories
 {
     public interface IBenchmarkRepository
     {
-        Task AddBenchmarkMappingAsync(Benchmark benchmark);
         Task AddBenchmarkMappingsAsync(List<Benchmark> benchmarks);
         Task<IEnumerable<Benchmark>> GetBenchmarkMappingsAsync();
     }
@@ -14,12 +13,6 @@ namespace PerformanceApp.Data.Repositories
     public class BenchmarkRepository(PadbContext context) : IBenchmarkRepository
     {
         private readonly PadbContext _context = context;
-
-        public async Task AddBenchmarkMappingAsync(Benchmark benchmark)
-        {
-            await _context.Benchmarks.AddAsync(benchmark);
-            await _context.SaveChangesAsync();
-        }
 
         public async Task AddBenchmarkMappingsAsync(List<Benchmark> benchmarks)
         {

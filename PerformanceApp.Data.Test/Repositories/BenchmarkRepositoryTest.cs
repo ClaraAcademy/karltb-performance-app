@@ -6,20 +6,6 @@ namespace PerformanceApp.Data.Test.Repositories;
 public class BenchmarkRepositoryTest : RepositoryTest
 {
     [Fact]
-    public async Task AddBenchmarkMappingAsync_AddsBenchmarkToDatabase()
-    {
-        var context = CreateContext();
-        var repository = new BenchmarkRepository(context);
-
-        var benchmark = new Benchmark { PortfolioId = 1, BenchmarkId = 3 };
-
-        await repository.AddBenchmarkMappingAsync(benchmark);
-
-        var retrievedBenchmark = await context.Benchmarks.FindAsync(1, 3);
-        Assert.NotNull(retrievedBenchmark);
-    }
-
-    [Fact]
     public async Task AddBenchmarkMappingsAsync_AddsBenchmarksToDatabase()
     {
         var context = CreateContext();

@@ -7,7 +7,6 @@ namespace PerformanceApp.Data.Repositories
 {
     public interface IKeyFigureValueRepository
     {
-        Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync();
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId);
         Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync();
     }
@@ -23,10 +22,6 @@ namespace PerformanceApp.Data.Repositories
                    .AsQueryable();
         }
 
-        public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync()
-        {
-            return await BaseKeyFigureValuesQuery().ToListAsync();
-        }
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId)
         {
             return await BaseKeyFigureValuesQuery()
