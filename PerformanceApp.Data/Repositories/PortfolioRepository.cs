@@ -59,6 +59,7 @@ namespace PerformanceApp.Data.Repositories
         {
             return await _context.Portfolios
                 .Include(p => p.PortfolioPerformancesNavigation)
+                    .ThenInclude(pp => pp.PerformanceTypeNavigation)
                 .SingleAsync(p => p.Id == portfolioId);
         }
 
