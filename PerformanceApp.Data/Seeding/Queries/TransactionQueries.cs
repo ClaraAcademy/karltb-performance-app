@@ -1,10 +1,11 @@
+using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Data.Seeding.Dtos;
 
 namespace PerformanceApp.Data.Seeding.Queries;
 
 public static class TransactionQueries
 {
-    public static FormattableString BuyInstrument(TransactionDto transaction)
+    private static FormattableString GetQuery(TransactionDto transaction)
     {
         var portfolioName = transaction.PortfolioName;
         var instrumentName = transaction.InstrumentName;
@@ -15,7 +16,7 @@ public static class TransactionQueries
         var date = transaction.Bankday;
         return BuyInstrument(portfolioName, instrumentName, date, count, amount, proportion, nominal);
     }
-    public static FormattableString BuyInstrument(string portfolioName, string instrumentName, DateOnly date, int? count = null, decimal? amount = null, decimal? proportion = null, decimal? nominal = null)
+    private static FormattableString BuyInstrument(string portfolioName, string instrumentName, DateOnly date, int? count = null, decimal? amount = null, decimal? proportion = null, decimal? nominal = null)
     {
         return $@"EXEC [padb].[uspBuyInstrument]
             @PortfolioName = {portfolioName},
@@ -25,5 +26,11 @@ public static class TransactionQueries
             @Proportion = {proportion},
             @Nominal = {nominal},
             @BuyDate = {date}";
+    }
+
+    public static List<FormattableString> GetBuyQueries()
+    {
+        var transactions = TransactionData.GetInitialTransactions();
+        return transactions.Select(GetQuery).ToList();
     }
 }
