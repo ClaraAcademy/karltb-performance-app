@@ -17,15 +17,15 @@ BEGIN
         SELECT
             PortfolioID,
             padb.ufnGetMonthPerformanceID(),
-            MIN(Bankday),
-            MAX(Bankday),
-            EXP(SUM(LOG(1.0 + DayPerformance))) - 1.0
-        FROM
-            padb.PortfolioDayPerformance
+            MIN(PeriodStart),
+            MAX(PeriodEnd),
+            EXP(SUM(LOG(1.0 + [Value]))) - 1.0
+        FROM padb.PortfolioPerformance
+        WHERE TypeID = padb.ufnGetDayPerformanceID()
         GROUP BY
             PortfolioID,
-            YEAR(Bankday),
-            MONTH(Bankday);
+            YEAR(PeriodStart),
+            MONTH(PeriodStart);
     COMMIT;
 END
 GO

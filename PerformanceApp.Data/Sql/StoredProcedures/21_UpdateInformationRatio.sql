@@ -14,12 +14,14 @@ BEGIN
         WITH ActiveReturn AS (
             SELECT 
                 pp.PortfolioID AS PortfolioID,
-                pp.DayPerformance - bp.DayPerformance AS [Value]
+                pp.[Value] - bp.[Value] AS [Value]
             FROM padb.Benchmark AS b
-                JOIN padb.PortfolioDayPerformance AS pp
+                JOIN padb.PortfolioPerformance AS pp
                     ON b.PortfolioID = pp.PortfolioID
-                JOIN padb.PortfolioDayPerformance AS bp
+                    AND pp.TypeID = padb.ufnGetDayPerformanceID()
+                JOIN padb.PortfolioPerformance AS bp
                     ON b.BenchmarkID = bp.PortfolioID
+                    AND bp.TypeID = padb.ufnGetDayPerformanceID()
         )
         INSERT INTO padb.KeyFigureValue(PortfolioID, KeyFigureID, KeyFigureValue)
         SELECT

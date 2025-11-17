@@ -15,8 +15,9 @@ BEGIN
         SELECT 
             PortfolioID, 
             padb.ufnGetKeyFigureID('Standard Deviation'), 
-            STDEV(DayPerformance) * SQRT(padb.ufnGetAnnualizationFactor())
-        FROM padb.PortfolioDayPerformance
+            STDEV([Value]) * SQRT(padb.ufnGetAnnualizationFactor())
+        FROM padb.PortfolioPerformance
+        WHERE TypeID = padb.ufnGetDayPerformanceID()
         GROUP BY PortfolioID;
     COMMIT;
 END

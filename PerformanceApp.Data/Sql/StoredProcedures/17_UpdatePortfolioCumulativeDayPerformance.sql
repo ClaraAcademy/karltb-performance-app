@@ -22,14 +22,14 @@ BEGIN
             @Bankday,
             @Bankday,
             CASE
-                WHEN SUM(CASE WHEN DayPerformance + 1.0 = 0.0 THEN 1 ELSE 0 END) > 0 
+                WHEN SUM(CASE WHEN [Value] + 1.0 = 0.0 THEN 1 ELSE 0 END) > 0 
                     THEN -1.0
-                WHEN SUM(CASE WHEN DayPerformance + 1.0 < 0.0 THEN 1 ELSE 0 END) % 2 = 1
-                    THEN -EXP(SUM(LOG(ABS(DayPerformance + 1.0)))) - 1.0
-                ELSE EXP(SUM(LOG(DayPerformance + 1.0))) - 1.0
+                WHEN SUM(CASE WHEN [Value] + 1.0 < 0.0 THEN 1 ELSE 0 END) % 2 = 1
+                    THEN -EXP(SUM(LOG(ABS([Value] + 1.0)))) - 1.0
+                ELSE EXP(SUM(LOG([Value] + 1.0))) - 1.0
             END
-        FROM padb.PortfolioDayPerformance
-        WHERE Bankday <= @Bankday
+        FROM padb.PortfolioPerformance
+        WHERE TypeID = padb.ufnGetDayPerformanceID() AND PeriodStart <= @Bankday
         GROUP BY PortfolioID
     COMMIT;
 END

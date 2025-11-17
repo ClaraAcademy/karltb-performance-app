@@ -16,10 +16,11 @@ BEGIN
             PortfolioID,
             padb.ufnGetKeyFigureID('Annualised Cumulative Return'),
             POWER(
-                EXP(SUM(LOG(DayPerformance + 1.0))),
+                EXP(SUM(LOG([Value] + 1.0))),
                 padb.ufnGetAnnualizationFactor()
             ) - 1.0
-        FROM padb.PortfolioDayPerformance
+        FROM padb.PortfolioPerformance
+        WHERE TypeID = padb.ufnGetCumulativeDayPerformanceID()
         GROUP BY PortfolioID;
     COMMIT;
 END

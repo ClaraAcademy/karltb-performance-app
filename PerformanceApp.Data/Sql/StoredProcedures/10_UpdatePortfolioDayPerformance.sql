@@ -49,12 +49,14 @@ BEGIN
             padb.ufnGetDayPerformanceID(),
             @Bankday,
             @Bankday,
-            SUM(pos.Proportion * ip.DayPerformance)
+            SUM(pos.Proportion * ip.Value)
         FROM padb.Position AS pos
-            JOIN padb.InstrumentDayPerformance AS ip
+            JOIN padb.InstrumentPerformance AS ip
                 ON pos.InstrumentID = ip.InstrumentID
                     AND pos.Bankday = @Bankday
-                    AND ip.Bankday = @Bankday
+                    AND ip.PeriodStart = @Bankday
+                    AND ip.PeriodEnd = @Bankday
+                    AND ip.TypeID = padb.ufnGetDayPerformanceID()
         WHERE pos.PortfolioID IN (SELECT BenchmarkID FROM padb.Benchmark)
         GROUP BY pos.PortfolioID;
 

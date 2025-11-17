@@ -15,8 +15,9 @@ BEGIN
         SELECT
             PortfolioID,
             padb.ufnGetKeyFigureID('Half-Year Performance'),
-            HalfYearPerformance
-        FROM padb.PortfolioHalfYearPerformance;
+            [Value]
+        FROM padb.PortfolioPerformance
+        WHERE TypeID = padb.ufnGetHalfYearPerformanceID();
     COMMIT;
 END
 GO
