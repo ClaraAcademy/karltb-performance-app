@@ -8,24 +8,18 @@ namespace PerformanceApp.Data.Repositories
     public interface IKeyFigureValueRepository
     {
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId);
-        Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync();
+        Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync(); // This is in the wrong class
     }
 
     public class KeyFigureValueRepository(PadbContext context) : IKeyFigureValueRepository
     {
         private readonly PadbContext _context = context;
 
-        private IQueryable<KeyFigureValue> BaseKeyFigureValuesQuery()
-        {
-            return _context.KeyFigureValues
-                   .Include(kfv => kfv.PortfolioNavigation)
-                   .AsQueryable();
-        }
-
         public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId)
         {
-            return await BaseKeyFigureValuesQuery()
-                   .Include(k => k.PortfolioNavigation)
+            return await _context.KeyFigureValues
+                   .Where(kfv => kfv.PortfolioId == portfolioId)
+                   .Include(kfv => kfv.PortfolioNavigation)
                    .ToListAsync();
         }
         public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
