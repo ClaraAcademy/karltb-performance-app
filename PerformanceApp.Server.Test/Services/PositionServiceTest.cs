@@ -18,6 +18,49 @@ public class PositionServiceTest
         _positionService = new PositionService(_positionRepositoryMock.Object);
     }
 
+    private static PositionValue CreatePositionValue(DateOnly bankday, decimal value)
+    {
+        return new PositionValue { Bankday = bankday, Value = value };
+    }
+    private static InstrumentPrice CreateInstrumentPrice(DateOnly bankday, decimal price)
+    {
+        return new InstrumentPrice { Bankday = bankday, Price = price };
+    }
+    private static Instrument CreateInstrument(string name, DateOnly bankday, decimal price)
+    {
+        return new Instrument { Name = name, InstrumentPricesNavigation = [CreateInstrumentPrice(bankday, price)] };
+    }
+    private static Position CreatePosition(int portfolioId, int instrumentId, DateOnly bankday, int? count = null, decimal? nominal = null, decimal? proportion = null, decimal? positionValue = null, string? instrumentName = null, decimal? instrumentPrice = null)
+    {
+        return new Position
+        {
+            PortfolioId = portfolioId,
+            InstrumentId = instrumentId,
+            Bankday = bankday,
+            Count = count,
+            Nominal = nominal,
+            Proportion = proportion,
+            InstrumentNavigation = instrumentName != null && instrumentPrice != null
+                ? CreateInstrument(instrumentName, bankday, instrumentPrice.Value)
+                : null,
+            PositionValuesNavigation = positionValue != null
+                ? [CreatePositionValue(bankday, positionValue.Value)]
+                : []
+        };
+    }
+    private static Position CreateStockPosition(int portfolioId, int instrumentId, DateOnly bankday, int count, decimal? positionValue = null, string? instrumentName = null, decimal? instrumentPrice = null)
+    {
+        return CreatePosition(portfolioId, instrumentId, bankday, count: count, positionValue: positionValue, instrumentName: instrumentName, instrumentPrice: instrumentPrice);
+    }
+    private static Position CreateBondPosition(int portfolioId, int instrumentId, DateOnly bankday, decimal nominal, decimal? positionValue = null, string? instrumentName = null, decimal? instrumentPrice = null)
+    {
+        return CreatePosition(portfolioId, instrumentId, bankday, nominal: nominal, positionValue: positionValue, instrumentName: instrumentName, instrumentPrice: instrumentPrice);
+    }
+    private static Position CreateIndexPosition(int portfolioId, int instrumentId, DateOnly bankday, decimal proportion, decimal? positionValue = null, string? instrumentName = null, decimal? instrumentPrice = null)
+    {
+        return CreatePosition(portfolioId, instrumentId, bankday, proportion: proportion, positionValue: positionValue, instrumentName: instrumentName, instrumentPrice: instrumentPrice);
+    }
+
     [Fact]
     public async Task GetStockPositionsAsync_ReturnsMappedStockPositionDTOs()
     {
@@ -27,25 +70,15 @@ public class PositionServiceTest
 
         var positions = new List<Position>
         {
-            new Position
-            {
-                PortfolioId = portfolioId,
-                InstrumentId = 100,
-                Bankday = bankday,
-                Count = 50,
-                InstrumentNavigation = new Instrument
-                {
-                    Name = "Test Stock",
-                    InstrumentPricesNavigation = new List<InstrumentPrice>
-                    {
-                        new InstrumentPrice { Bankday = bankday, Price = 200.0m }
-                    }
-                },
-                PositionValuesNavigation = new List<PositionValue>
-                {
-                    new PositionValue { Bankday = bankday, Value = 10000.0m }
-                }
-            }
+            CreateStockPosition(
+                portfolioId: portfolioId,
+                instrumentId: 100,
+                bankday: bankday,
+                count: 50,
+                positionValue: 10000.0m,
+                instrumentName: "Test Stock",
+                instrumentPrice: 200.0m
+            )
         };
 
         _positionRepositoryMock.Setup(r => r.GetStockPositionsAsync(bankday, portfolioId))
@@ -143,25 +176,15 @@ public class PositionServiceTest
 
         var positions = new List<Position>
         {
-            new Position
-            {
-                PortfolioId = portfolioId,
-                InstrumentId = 200,
-                Bankday = bankday,
-                Nominal = 1000.0m,
-                InstrumentNavigation = new Instrument
-                {
-                    Name = "Test Bond",
-                    InstrumentPricesNavigation = new List<InstrumentPrice>
-                    {
-                        new InstrumentPrice { Bankday = bankday, Price = 105.0m }
-                    }
-                },
-                PositionValuesNavigation = new List<PositionValue>
-                {
-                    new PositionValue { Bankday = bankday, Value = 1050.0m }
-                }
-            }
+            CreateBondPosition(
+                portfolioId: portfolioId,
+                instrumentId: 200,
+                bankday: bankday,
+                nominal: 1000.0m,
+                positionValue: 1050.0m,
+                instrumentName: "Test Bond",
+                instrumentPrice: 105.0m
+            )
         };
 
         _positionRepositoryMock.Setup(r => r.GetBondPositionsAsync(bankday, portfolioId))
@@ -242,25 +265,15 @@ public class PositionServiceTest
 
         var positions = new List<Position>
         {
-            new Position
-            {
-                PortfolioId = portfolioId,
-                InstrumentId = 300,
-                Bankday = bankday,
-                Proportion = 0.25m,
-                InstrumentNavigation = new Instrument
-                {
-                    Name = "Test Index",
-                    InstrumentPricesNavigation = new List<InstrumentPrice>
-                    {
-                        new InstrumentPrice { Bankday = bankday, Price = 1500.0m }
-                    }
-                },
-                PositionValuesNavigation = new List<PositionValue>
-                {
-                    new PositionValue { Bankday = bankday, Value = 375.0m }
-                }
-            }
+            CreateIndexPosition(
+                portfolioId: portfolioId,
+                instrumentId: 300,
+                bankday: bankday,
+                proportion: 0.25m,
+                positionValue: 375.0m,
+                instrumentName: "Test Index",
+                instrumentPrice: 1500.0m
+            )
         };
 
         _positionRepositoryMock.Setup(r => r.GetIndexPositionsAsync(bankday, portfolioId))
