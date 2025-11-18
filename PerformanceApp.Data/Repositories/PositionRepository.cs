@@ -6,10 +6,10 @@ namespace PerformanceApp.Data.Repositories
 {
     public interface IPositionRepository
     {
+        Task<IEnumerable<Position>> GetPositionsAsync();
         Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetBondPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId);
-        Task<IEnumerable<Position>> GetPositionsAsync();
     }
 
     public class PositionRepository(PadbContext context) : IPositionRepository
