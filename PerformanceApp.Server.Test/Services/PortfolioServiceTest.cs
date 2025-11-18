@@ -47,13 +47,13 @@ public class PortfolioServiceTest
         return new PerformanceType { Name = name };
     }
 
-    private static PortfolioPerformance CreatePortfolioPerformance(DateOnly date, decimal value, string typeName)
+    private static PortfolioPerformance CreatePortfolioPerformance(DateOnly date, decimal value, PerformanceType type)
     {
         return new PortfolioPerformance
         {
             PeriodStart = date,
             Value = value,
-            PerformanceTypeNavigation = CreatePerformanceType(typeName)
+            PerformanceTypeNavigation = type
         };
     }
 
@@ -68,6 +68,13 @@ public class PortfolioServiceTest
     {
         return Enumerable.Range(1, count)
             .Select(i => CreateBenchmark(i, $"Portfolio {i}", i + 100, $"Benchmark {i}"))
+            .ToList();
+    }
+
+    private static List<PortfolioPerformance> GetPortfolioPerformances(int count, PerformanceType type)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => CreatePortfolioPerformance(new DateOnly(2025, 1, i), i * 100m, type))
             .ToList();
     }
 
@@ -172,41 +179,8 @@ public class PortfolioServiceTest
     public async Task GeyPortfolioBenchmarksAsync_WithPortfolioId_ReturnsEmptyList_WhenNoMatchingBenchmarks()
     {
         // Arrange
-        int portfolioId = 1;
-        var benchmarkMappings = new List<Benchmark>
-        {
-            new Benchmark
-            {
-                PortfolioId = 2,
-                PortfolioPortfolioNavigation = new Portfolio { Id = 2, Name = "Portfolio 2" },
-                BenchmarkPortfolioNavigation = new Portfolio { Id = 3, Name = "Benchmark 2" }
-            }
-        };
-
-        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
-            .ReturnsAsync(benchmarkMappings);
-
-        // Act
-        var result = await _portfolioService.GetPortfolioBenchmarksAsync(portfolioId);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task GetPortfolioBenchmarksAsync_WithPortfolioId_ReturnsEmptyList_WhenInvalidPortfolioId()
-    {
-        // Arrange
-        int portfolioId = 999; // Non-existent portfolio ID
-        var benchmarkMappings = new List<Benchmark>
-        {
-            new Benchmark
-            {
-                PortfolioId = 1,
-                PortfolioPortfolioNavigation = new Portfolio { Id = 1, Name = "Portfolio 1" },
-                BenchmarkPortfolioNavigation = new Portfolio { Id = 2, Name = "Benchmark 1" }
-            }
-        };
+        int portfolioId = -999;
+        var benchmarkMappings = GetBenchmarks(5);
 
         _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
             .ReturnsAsync(benchmarkMappings);
@@ -223,22 +197,9 @@ public class PortfolioServiceTest
     {
         // Arrange
         int portfolioId = 1;
-        var performanceType = new PerformanceType { Name = PerformanceTypeData.CumulativeDayPerformance };
-        var performances = new List<PortfolioPerformance>
-        {
-            new PortfolioPerformance
-            {
-                PeriodStart = new DateOnly(2025, 1, 1),
-                Value = 100m,
-                PerformanceTypeNavigation = performanceType
-            },
-            new PortfolioPerformance
-            {
-                PeriodStart = new DateOnly(2025, 1, 2),
-                Value = 200m,
-                PerformanceTypeNavigation = performanceType
-            }
-        };
+        var performanceType = CreatePerformanceType(PerformanceTypeData.CumulativeDayPerformance);
+        var performances = GetPortfolioPerformances(2, performanceType);
+
         var portfolio = new Portfolio
         {
             Id = portfolioId,
@@ -258,5 +219,42 @@ public class PortfolioServiceTest
         Assert.Equal(new DateOnly(2025, 1, 2), result[1].Bankday);
         Assert.Equal(200m, result[1].Value);
 
+    }
+
+    [Fact]
+    public async Task GetPortfolioCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPerformances()
+    {
+        // Arrange
+        int portfolioId = 1;
+        var portfolio = new Portfolio
+        {
+            Id = portfolioId,
+            PortfolioPerformancesNavigation = new List<PortfolioPerformance>()
+        };
+
+        _portfolioRepositoryMock.Setup(r => r.GetPortfolioAsync(portfolioId))
+            .ReturnsAsync(portfolio);
+
+        // Act
+        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetPortfolioCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPortfolio()
+    {
+        // Arrange
+        int portfolioId = 1;
+
+        _portfolioRepositoryMock.Setup(r => r.GetPortfolioAsync(portfolioId))
+            .ReturnsAsync((Portfolio?)null);
+
+        // Act
+        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Empty(result);
     }
 }
