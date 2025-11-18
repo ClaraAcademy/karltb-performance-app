@@ -89,6 +89,11 @@ namespace PerformanceApp.Server.Services
         {
             var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
 
+            if (portfolio == null)
+            {
+                return [];
+            }
+
             return portfolio.PortfolioPerformancesNavigation
                 .Where(IsCumulativeDayPerformance)
                 .Select(MapToPortfolioPerformanceDTO)
