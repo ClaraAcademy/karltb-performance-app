@@ -73,7 +73,7 @@ public class PerformanceServiceTest
     }
 
     [Fact]
-    public async Task GetPortfolioBenchmarkKeyFigureValues_NoKeyFigureValues_ReturnsNulls()
+    public async Task GetPortfolioBenchmarkKeyFigureValues_NoKeyFigureValues_ReturnsEmpty()
     {
         // Arrange
         int portfolioId = 1;
@@ -103,16 +103,7 @@ public class PerformanceServiceTest
         var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(portfolioId);
 
         // Assert
-        Assert.Single(result);
-        var dto = result.First();
-        Assert.Equal(1, dto.PortfolioId);
-        Assert.Equal("Portfolio 1", dto.PortfolioName);
-        Assert.Equal(2, dto.BenchmarkId);
-        Assert.Equal("Benchmark 1", dto.BenchmarkName);
-        Assert.Equal(1, dto.KeyFigureId);
-        Assert.Equal("Key Figure 1", dto.KeyFigureName);
-        Assert.Null(dto.PortfolioValue);
-        Assert.Null(dto.BenchmarkValue);
+        Assert.Empty(result);
     }
 
     [Fact]
