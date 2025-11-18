@@ -36,13 +36,14 @@ public class SVG
 
     public SVG(List<DataPoint2> dataPoints, int width, int height)
     {
+        var empty = dataPoints.Count == 0;
         Width = width;
         Height = height;
         HalfHeight = Height / 2;
         DataPoints = dataPoints;
-        MinY = dataPoints.Min(PairwiseMin);
-        MaxY = dataPoints.Max(PairwiseMax);
-        _schema = GetSvg();
+        MinY = empty ? 0 : dataPoints.Min(PairwiseMin);
+        MaxY = empty ? 0 : dataPoints.Max(PairwiseMax);
+        _schema = empty ? GetEmptySvg() : GetSvg();
     }
     public SVG(List<DataPoint2> dataPoints, int width) : this(dataPoints, width, DefaultHeight) { }
     public SVG(List<DataPoint2> dataPoints) : this(dataPoints, DefaultWidth, DefaultHeight) { }
@@ -50,6 +51,14 @@ public class SVG
     public override string ToString()
     {
         return _schema.ToString();
+    }
+
+    private XElement GetEmptySvg()
+    {
+        return new(SvgNamespace + "svg",
+            new XAttribute("width", Width),
+            new XAttribute("height", Height)
+        );
     }
 
     private XElement GetSvg()
