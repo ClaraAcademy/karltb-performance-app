@@ -1,5 +1,6 @@
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Server.Services
 {
@@ -12,17 +13,16 @@ namespace PerformanceApp.Server.Services
     {
         private readonly IDateInfoRepository _repo = repo;
 
+        private BankdayDTO MapToDTO(DateInfo dateInfo)
+        {
+            return new BankdayDTO { Bankday = dateInfo.Bankday };
+        }
+
         public async Task<List<BankdayDTO>> GetBankdayDTOsAsync()
         {
             var dateInfos = await _repo.GetDateInfosAsync();
 
-            return dateInfos
-                .Select(
-                    di => new BankdayDTO
-                    {
-                        Bankday = di.Bankday
-                    }
-                ).ToList();
+            return dateInfos.Select(MapToDTO).ToList();
         }
     }
 }
