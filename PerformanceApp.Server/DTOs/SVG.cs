@@ -29,6 +29,7 @@ public class SVG
     private static readonly string BenchmarkColor = "#ec646b";
 
     private readonly XElement _schema;
+    public XElement GetSchema() => _schema;
 
     private float PairwiseMin(DataPoint2 d) => Math.Min(d.Y1, d.Y2);
     private float PairwiseMax(DataPoint2 d) => Math.Max(d.Y1, d.Y2);
