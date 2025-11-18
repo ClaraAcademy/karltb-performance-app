@@ -9,9 +9,9 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioBenchmarkKeyFigureDTO>> GetPortfolioBenchmarkKeyFigureValues(int portfolioId);
     }
 
-    public class PerformanceService(IKeyFigureValueRepository performanceRepository, IPortfolioService portfolioService) : IPerformanceService
+    public class PerformanceService(IKeyFigureValueRepository keyFigureValueRepository, IPortfolioService portfolioService) : IPerformanceService
     {
-        private readonly IKeyFigureValueRepository PerformanceRepository = performanceRepository;
+        private readonly IKeyFigureValueRepository KeyFigureValueRepository = keyFigureValueRepository;
         private readonly IPortfolioService PortfolioService = portfolioService;
 
         private static PortfolioBenchmarkKeyFigureDTO MapInitial(PortfolioBenchmarkDTO pb, KeyFigureInfo kfi)
@@ -53,10 +53,10 @@ namespace PerformanceApp.Server.Services
             var portfolioBenchmarkDto = await PortfolioService.GetPortfolioBenchmarksAsync(portfolioId);
             var benchmarkId = portfolioBenchmarkDto.Single(pb => pb.PortfolioId == portfolioId).BenchmarkId;
 
-            var keyFigureInfos = await PerformanceRepository.GetKeyFigureInfosAsync();
+            var keyFigureInfos = await KeyFigureValueRepository.GetKeyFigureInfosAsync();
 
-            var portfolioKeyFigureValues = await PerformanceRepository.GetKeyFigureValuesAsync(portfolioId);
-            var benchmarkKeyFigureValues = await PerformanceRepository.GetKeyFigureValuesAsync(benchmarkId);
+            var portfolioKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(portfolioId);
+            var benchmarkKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(benchmarkId);
 
             var combinations = portfolioBenchmarkDto.SelectMany(pb => keyFigureInfos, MapInitial);
 
