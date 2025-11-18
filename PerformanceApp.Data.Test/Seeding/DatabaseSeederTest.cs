@@ -109,7 +109,6 @@ public class DatabaseSeederTest : IDisposable
         Assert.Equal(initialTransactionsCount, _context.Transactions.Count());
         Assert.Equal(initialTransactionTypesCount, _context.TransactionTypes.Count());
         Assert.Equal(initialPerformanceTypeInfosCount, _context.PerformanceTypeInfos.Count());
-
     }
 
 }
