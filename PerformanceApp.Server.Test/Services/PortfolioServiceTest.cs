@@ -42,6 +42,17 @@ public class PortfolioServiceTest
         };
     }
 
+    private static Benchmark CreateBenchmark(Portfolio portfolio, Portfolio benchmark)
+    {
+        return new Benchmark
+        {
+            PortfolioId = portfolio.Id,
+            PortfolioPortfolioNavigation = portfolio,
+            BenchmarkId = benchmark.Id,
+            BenchmarkPortfolioNavigation = benchmark
+        };
+    }
+
     private static PerformanceType CreatePerformanceType(string name)
     {
         return new PerformanceType { Name = name };
@@ -253,6 +264,92 @@ public class PortfolioServiceTest
 
         // Act
         var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    private void SetupGetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync()
+    {
+        var bankday = new DateOnly(2025, 1, 1);
+        var performanceType = CreatePerformanceType(PerformanceTypeData.CumulativeDayPerformance);
+        var portfolioPerformance = new PortfolioPerformance { PeriodStart = bankday, Value = 100m, PerformanceTypeNavigation = performanceType };
+        var benchmarkPerformance = new PortfolioPerformance { PeriodStart = bankday, Value = 150m, PerformanceTypeNavigation = performanceType };
+
+        var portfolio = new Portfolio { Id = 1, Name = "Portfolio", PortfolioPerformancesNavigation = [portfolioPerformance] };
+        var benchmark = new Portfolio { Id = 2, Name = "Benchmark", PortfolioPerformancesNavigation = [benchmarkPerformance] };
+
+        var benchmarkMapping = CreateBenchmark(portfolio, benchmark);
+
+        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
+            .ReturnsAsync(new List<Benchmark> { benchmarkMapping });
+
+        _portfolioRepositoryMock.Setup(r => r.GetPortfolioAsync(portfolio.Id))
+            .ReturnsAsync(portfolio);
+
+        _portfolioRepositoryMock.Setup(r => r.GetPortfolioAsync(benchmark.Id))
+            .ReturnsAsync(benchmark);
+    }
+
+    [Fact]
+    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsExpectedResults()
+    {
+        // Arrange
+        SetupGetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync();
+        var portfolioId = 1;
+
+        // Act
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Single(result);
+        var dto = result.First();
+        Assert.Equal(new DateOnly(2025, 1, 1), dto.Bankday);
+        Assert.Equal(100m, dto.PortfolioValue);
+        Assert.Equal(150m, dto.BenchmarkValue);
+    }
+
+    [Fact]
+    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPerformances()
+    {
+        // Arrange
+        int portfolioId = 1;
+
+        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
+            .ReturnsAsync(new List<Benchmark>());
+
+        // Act
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPortfolio()
+    {
+        // Arrange
+        int portfolioId = 1;
+
+        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
+            .ReturnsAsync(new List<Benchmark>());
+
+        // Act
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenInvalidPortfolioId()
+    {
+        // Arrange
+        int portfolioId = -999;
+
+        SetupGetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync();
+        // Act
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
 
         // Assert
         Assert.Empty(result);
