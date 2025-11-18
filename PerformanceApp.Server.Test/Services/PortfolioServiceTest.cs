@@ -38,6 +38,7 @@ public class PortfolioServiceTest
         {
             PortfolioId = portfolioId,
             PortfolioPortfolioNavigation = CreatePortfolio(portfolioId, portfolioName),
+            BenchmarkId = benchmarkId,
             BenchmarkPortfolioNavigation = CreatePortfolio(benchmarkId, benchmarkName)
         };
     }
@@ -267,6 +268,46 @@ public class PortfolioServiceTest
 
         // Assert
         Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetBenchmarkAsync_ReturnsExpectedResult()
+    {
+        // Arrange
+        var portfolioId = 1;
+        var benchmarkId = 200;
+        var portfolioName = "Portfolio 1";
+        var benchmarkName = "Benchmark 1";
+
+        var benchmarkMapping = CreateBenchmark(portfolioId, portfolioName, benchmarkId, benchmarkName);
+
+        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
+            .ReturnsAsync([benchmarkMapping]);
+
+        // Act
+        var result = await _portfolioService.GetBenchmarkAsync(portfolioId);
+
+        // Assert
+        Assert.NotNull(result);
+
+        Assert.Equal(benchmarkName, result.BenchmarkPortfolioNavigation.Name);
+        Assert.Equal(benchmarkId, result.BenchmarkId);
+    }
+
+    [Fact]
+    public async Task GetBenchmarkAsync_ReturnsNull_WhenNoBenchmarkMapping()
+    {
+        // Arrange
+        int portfolioId = 1;
+
+        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
+            .ReturnsAsync(new List<Benchmark>());
+
+        // Act
+        var result = await _portfolioService.GetBenchmarkAsync(portfolioId);
+
+        // Assert
+        Assert.Null(result);
     }
 
     private void SetupGetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync()
