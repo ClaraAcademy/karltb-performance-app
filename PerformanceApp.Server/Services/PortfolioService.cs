@@ -14,6 +14,7 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync();
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId);
         Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId);
+        Task<Benchmark?> GetBenchmarkAsync(int portfolioId);
         Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId);
     }
 
@@ -100,17 +101,12 @@ namespace PerformanceApp.Server.Services
                 .ToList();
         }
 
-        private async Task<int?> GetBenchmarkId(int portfolioId)
+        public async Task<Benchmark?> GetBenchmarkAsync(int portfolioId)
         {
             var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
             var benchmark = benchmarkMappings.SingleOrDefault(b => b.PortfolioId == portfolioId);
 
-            if (benchmark == null)
-            {
-                return null;
-            }
-
-            return benchmark.BenchmarkId;
+            return benchmark;
         }
 
         private static PortfolioBenchmarkPerformanceDTO MapToPortfolioBenchmarkCumulativeDayPerformanceDTO(
@@ -130,15 +126,17 @@ namespace PerformanceApp.Server.Services
 
         public async Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId)
         {
-            var benchmarkId = await GetBenchmarkId(portfolioId);
+            var benchmark = await GetBenchmarkAsync(portfolioId);
 
-            if (benchmarkId == null)
+            if (benchmark == null)
             {
                 return [];
             }
 
+            var benchmarkId = benchmark.BenchmarkId;
+
             var portfolioPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
-            var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId.Value);
+            var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId);
 
             var empty = !portfolioPerformance.Any() || !benchmarkPerformance.Any();
             if (empty)

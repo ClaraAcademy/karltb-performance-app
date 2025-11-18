@@ -14,7 +14,7 @@ namespace PerformanceApp.Server.Services
         private readonly IKeyFigureValueRepository KeyFigureValueRepository = keyFigureValueRepository;
         private readonly IPortfolioService PortfolioService = portfolioService;
 
-        private static PortfolioBenchmarkKeyFigureDTO MapInitial(PortfolioBenchmarkDTO pb, KeyFigureInfo kfi)
+        private static PortfolioBenchmarkKeyFigureDTO MapInitial(KeyFigureInfo kfi, PortfolioBenchmarkDTO pb)
             => new PortfolioBenchmarkKeyFigureDTO
             {
                 KeyFigureId = kfi.Id,
@@ -50,15 +50,34 @@ namespace PerformanceApp.Server.Services
 
         public async Task<List<PortfolioBenchmarkKeyFigureDTO>> GetPortfolioBenchmarkKeyFigureValues(int portfolioId)
         {
-            var portfolioBenchmarkDto = await PortfolioService.GetPortfolioBenchmarksAsync(portfolioId);
-            var benchmarkId = portfolioBenchmarkDto.Single(pb => pb.PortfolioId == portfolioId).BenchmarkId;
+            var dtos = await PortfolioService.GetPortfolioBenchmarksAsync(portfolioId);
 
+            if (dtos.Count != 1)
+            {
+                return [];
+            }
+
+            var dto = dtos.Single();
+
+            var benchmarkId = dto.BenchmarkId;
             var keyFigureInfos = await KeyFigureValueRepository.GetKeyFigureInfosAsync();
+
+            if (!keyFigureInfos.Any())
+            {
+                return [];
+            }
 
             var portfolioKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(portfolioId);
             var benchmarkKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(benchmarkId);
 
-            var combinations = portfolioBenchmarkDto.SelectMany(pb => keyFigureInfos, MapInitial);
+            var empty = !portfolioKeyFigureValues.Any() && !benchmarkKeyFigureValues.Any();
+
+            if (empty)
+            {
+                return [];
+            }
+
+            var combinations = keyFigureInfos.Select(kfi => MapInitial(kfi, dto)).ToList();
 
             return (
                 from c in combinations
