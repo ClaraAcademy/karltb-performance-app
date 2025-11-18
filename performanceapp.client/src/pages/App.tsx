@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import MainApp from "../components/App";
+import LoginForm from "../components/LoginForm";
 
 const App: React.FC = () => {
-    const { token, login, logout, isAuthenticated } = useAuth();
+    const { login, logout, isAuthenticated } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -22,21 +23,15 @@ const App: React.FC = () => {
     return (
         <div>
             {!isAuthenticated ? (
-                <form onSubmit={handleLogin}>
-                    <input
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
-                    />
-                    <input
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                        placeholder="Password"
-                    />
-                    <button type="submit">Login</button>
-                    {error && <div style={{ color: "red" }}>{error}</div>}
-                </form>
+                <LoginForm
+                    onLogin={(user, pass) => {
+                        setUsername(user);
+                        setPassword(pass);
+                        handleLogin(
+                            new Event("submit") as unknown as React.FormEvent,
+                        );
+                    }}
+                />
             ) : (
                 <div>
                     <button onClick={handleLogout}>Logout</button>
