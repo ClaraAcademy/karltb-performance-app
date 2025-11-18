@@ -4,13 +4,13 @@ using Xunit;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class PortfolioRepositoryTest : RepositoryTest
+public class PortfolioRepositoryTest 
 {
 
     [Fact]
     public async Task AddPortfoliosAsync_AddsMultiplePortfoliosToDatabase()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>
@@ -27,7 +27,7 @@ public class PortfolioRepositoryTest : RepositoryTest
     [Fact]
     public async Task AddPortfoliosAsync_DoesNotAddEmptyList()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>();
@@ -40,7 +40,7 @@ public class PortfolioRepositoryTest : RepositoryTest
     [Fact]
     public async Task GetPortfolioAsync_ById_ReturnsCorrectPortfolio()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolio = new Portfolio { Name = "Get By ID Portfolio" };
@@ -55,7 +55,7 @@ public class PortfolioRepositoryTest : RepositoryTest
     [Fact]
     public async Task GetPortfoliosAsync_ByNames_ReturnsCorrectPortfolios()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>

@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class InstrumentTypeRepositoryTest : RepositoryTest
+public class InstrumentTypeRepositoryTest 
 {
     [Fact]
     public async Task AddInstrumentTypesAsync_AddsMultipleInstrumentTypesToDatabase()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentTypeRepository(context);
 
         var instrumentTypes = new List<InstrumentType>
@@ -26,7 +26,7 @@ public class InstrumentTypeRepositoryTest : RepositoryTest
     [Fact]
     public async Task AddInstrumentTypesAsync_DoesNotAddEmptyList()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentTypeRepository(context);
 
         var instrumentTypes = new List<InstrumentType>();
@@ -40,7 +40,7 @@ public class InstrumentTypeRepositoryTest : RepositoryTest
     [Fact]
     public async Task GetInstrumentTypesAsync_ReturnsCorrectInstrumentTypes()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         context.InstrumentTypes.AddRange(new List<InstrumentType>
         {
             new InstrumentType { Name = "Equity" },

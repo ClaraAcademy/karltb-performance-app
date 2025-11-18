@@ -3,12 +3,12 @@ using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class DateInfoRepositoryTest : RepositoryTest
+public class DateInfoRepositoryTest 
 {
     [Fact]
     public async Task AddDateInfosAsync_AddsDateInfos()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repo = new DateInfoRepository(context);
 
         var dateInfos = new List<DateInfo>
@@ -25,7 +25,7 @@ public class DateInfoRepositoryTest : RepositoryTest
     [Fact]
     public async Task GetDateInfosAsync_ReturnsDateInfos()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         context.DateInfos.AddRange(new List<DateInfo>
         {
             new DateInfo { Bankday = new DateOnly(2024, 1, 1) },

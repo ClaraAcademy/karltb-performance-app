@@ -3,9 +3,9 @@ using PerformanceApp.Data.Context;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class RepositoryTest
+public static class RepositoryTest
 {
-    protected static PadbContext CreateContext()
+    public static PadbContext GetContext()
     {
         var options = new DbContextOptionsBuilder<PadbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())

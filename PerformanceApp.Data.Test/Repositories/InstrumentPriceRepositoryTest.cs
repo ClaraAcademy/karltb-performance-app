@@ -3,12 +3,12 @@ using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class InstrumentPriceRepositoryTest : RepositoryTest
+public class InstrumentPriceRepositoryTest
 {
     [Fact]
     public void AddInstrumentPrices_AddsInstrumentPricesToDatabase()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>
@@ -30,7 +30,7 @@ public class InstrumentPriceRepositoryTest : RepositoryTest
     [Fact]
     public void AddInstrumentPrices_DoesNotAddEmptyList()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>();
@@ -43,7 +43,7 @@ public class InstrumentPriceRepositoryTest : RepositoryTest
     [Fact]
     public async Task AddInstrumentPricesAsync_AddsInstrumentPricesToDatabase()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>
@@ -65,7 +65,7 @@ public class InstrumentPriceRepositoryTest : RepositoryTest
     [Fact]
     public async Task AddInstrumentPricesAsync_DoesNotAddEmptyList()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>();
@@ -78,7 +78,7 @@ public class InstrumentPriceRepositoryTest : RepositoryTest
     [Fact]
     public async Task GetInstrumentPricesAsync_ReturnsAllInstrumentPrices()
     {
-        var context = CreateContext();
+        var context = RepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>
