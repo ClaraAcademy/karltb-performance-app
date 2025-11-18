@@ -100,11 +100,17 @@ namespace PerformanceApp.Server.Services
                 .ToList();
         }
 
-        public async Task<int> GetBenchmarkId(int portfolioId)
+        private async Task<int?> GetBenchmarkId(int portfolioId)
         {
             var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+            var benchmark = benchmarkMappings.SingleOrDefault(b => b.PortfolioId == portfolioId);
 
-            return benchmarkMappings.Single(b => b.PortfolioId == portfolioId).BenchmarkId;
+            if (benchmark == null)
+            {
+                return null;
+            }
+
+            return benchmark.BenchmarkId;
         }
 
         private static PortfolioBenchmarkPerformanceDTO MapToPortfolioBenchmarkCumulativeDayPerformanceDTO(
@@ -126,8 +132,19 @@ namespace PerformanceApp.Server.Services
         {
             var benchmarkId = await GetBenchmarkId(portfolioId);
 
+            if (benchmarkId == null)
+            {
+                return [];
+            }
+
             var portfolioPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
-            var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId);
+            var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId.Value);
+
+            var empty = !portfolioPerformance.Any() || !benchmarkPerformance.Any();
+            if (empty)
+            {
+                return [];
+            }
 
             return portfolioPerformance
                 .Join(benchmarkPerformance, GetBankday, GetBankday, MapToPortfolioBenchmarkCumulativeDayPerformanceDTO)
