@@ -7,7 +7,7 @@ namespace PerformanceApp.Data.Repositories
     public interface IPortfolioRepository
     {
         Task AddPortfoliosAsync(List<Portfolio> portfolios);
-        Task<Portfolio> GetPortfolioAsync(int portfolioId);
+        Task<Portfolio?> GetPortfolioAsync(int portfolioId);
         Task<IEnumerable<Portfolio>> GetProperPortfoliosAsync();
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
@@ -21,12 +21,12 @@ namespace PerformanceApp.Data.Repositories
             await _context.Portfolios.AddRangeAsync(portfolios);
             await _context.SaveChangesAsync();
         }
-        public async Task<Portfolio> GetPortfolioAsync(int portfolioId)
+        public async Task<Portfolio?> GetPortfolioAsync(int portfolioId)
         {
             return await _context.Portfolios
                 .Include(p => p.PortfolioPerformancesNavigation)
                     .ThenInclude(pp => pp.PerformanceTypeNavigation)
-                .SingleAsync(p => p.Id == portfolioId);
+                .SingleOrDefaultAsync(p => p.Id == portfolioId);
         }
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names)
         {
