@@ -26,6 +26,11 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
     {
         var dtos = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
 
+        if (dtos == null || dtos.Count == 0)
+        {
+            return string.Empty;
+        }
+
         var dataPoints = dtos.Select(MapToDataPoint2).ToList();
 
         return new SVG(

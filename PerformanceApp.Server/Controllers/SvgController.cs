@@ -22,7 +22,7 @@ namespace PerformanceApp.Server.Controllers
         {
             var svg = await _service.GetLineChart(portfolioId, width, height);
 
-            if (svg == null)
+            if (svg == string.Empty)
             {
                 return NotFound();
             }
