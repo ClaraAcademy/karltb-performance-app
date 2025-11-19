@@ -8,7 +8,7 @@ namespace PerformanceApp.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PortfolioController(IPortfolioService service) : ControllerBase
+    public class PortfolioController(IPortfolioService service) : MyControllerBase
     {
         private readonly IPortfolioService _service = service;
 
@@ -18,7 +18,11 @@ namespace PerformanceApp.Server.Controllers
         // GET: api/Portfolio
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PortfolioDTO>>> GetPortfolios()
-        => CheckReturn(await _service.GetPortfolioDTOsAsync());
+        {
+            var dtos = await _service.GetPortfolioDTOsAsync();
+
+            return CheckReturn(dtos);
+        }
 
         // GET: api/PortfolioBenchmark?portfolioId={portfolioId}
         [HttpGet("/api/PortfolioBenchmark")]
