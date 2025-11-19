@@ -1,6 +1,5 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using Moq;
 using PerformanceApp.Data.Seeding.Constants;

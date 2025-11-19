@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PerformanceApp.Data.Models;
+﻿namespace PerformanceApp.Data.Models;
 
 public partial class Instrument
 {

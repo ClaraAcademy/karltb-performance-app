@@ -7,7 +7,6 @@ using PerformanceApp.Data.Seeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

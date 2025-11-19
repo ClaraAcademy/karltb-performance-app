@@ -1,7 +1,4 @@
-using System.Runtime.CompilerServices;
-using DocumentFormat.OpenXml.Office2013.PowerPoint.Roaming;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 

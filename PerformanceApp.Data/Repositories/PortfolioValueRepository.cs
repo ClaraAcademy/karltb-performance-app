@@ -1,4 +1,3 @@
-using System.Collections;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;

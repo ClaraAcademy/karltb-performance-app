@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PerformanceApp.Server.Dtos;
+﻿namespace PerformanceApp.Server.Dtos;
 
 public partial class PortfolioPerformanceDTO
 {

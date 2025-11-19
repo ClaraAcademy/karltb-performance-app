@@ -1,6 +1,5 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;

@@ -1,11 +1,5 @@
-using PerformanceApp.Server.Controllers;
 using System.Xml.Linq;
 using System.Globalization;
-using Microsoft.Data.SqlClient;
-using System.Xml.Xsl;
-using System.Runtime.CompilerServices;
-using Microsoft.SqlServer.Server;
-using System.Reflection.Emit;
 
 namespace PerformanceApp.Server.Dtos;
 

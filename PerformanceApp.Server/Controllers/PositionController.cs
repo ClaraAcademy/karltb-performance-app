@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
-using SQLitePCL;
 
 namespace PerformanceApp.Server.Controllers
 {

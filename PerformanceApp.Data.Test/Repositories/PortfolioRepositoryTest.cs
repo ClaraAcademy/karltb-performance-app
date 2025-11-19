@@ -1,6 +1,5 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
-using Xunit;
 
 namespace PerformanceApp.Data.Test.Repositories;
 

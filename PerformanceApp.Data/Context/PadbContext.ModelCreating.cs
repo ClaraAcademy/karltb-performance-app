@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context;
 

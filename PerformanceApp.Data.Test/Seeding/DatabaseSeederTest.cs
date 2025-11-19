@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Seeding;
-using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

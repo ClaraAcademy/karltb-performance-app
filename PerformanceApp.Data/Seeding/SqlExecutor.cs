@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Context;
 
 namespace PerformanceApp.Data.Seeding;

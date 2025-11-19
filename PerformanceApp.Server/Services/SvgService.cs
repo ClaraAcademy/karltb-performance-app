@@ -1,12 +1,4 @@
-using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Dtos;
-using PerformanceApp.Server.Controllers;
-using System.Xml.Linq;
-using System.Globalization;
-using PerformanceApp.Data.Repositories;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 
 namespace PerformanceApp.Server.Services;
 

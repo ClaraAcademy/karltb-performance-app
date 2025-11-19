@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;

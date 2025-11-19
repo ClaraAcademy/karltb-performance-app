@@ -1,7 +1,6 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace PerformanceApp.Data.Repositories
 {
