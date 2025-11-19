@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { usePortfolio } from "../contexts/PortfolioContext";
 import { useBankday } from "../contexts/BankdayContext";
-import "./Table.css"
+import "./Table.css";
+import { api } from "../api/api";
 
 interface PositionTableProps<T> {
     endpoint: string | undefined;
@@ -17,25 +18,29 @@ function PositionTable<T>({ endpoint, columns }: PositionTableProps<T>) {
     const { bankday } = useBankday();
     const [positions, setPositions] = useState<T[]>([]);
 
-    useEffect(() => {
-        setPositions([]);
+    const getDateString = (date: Date | null) => {
+        return date ? date.toISOString().split("T")[0] : "";
+    };
+
+    const fetchPositions = async () => {
         if (endpoint == null || portfolio == null || bankday == null) {
             return;
         }
-        const portfolioId = portfolio.portfolioId;
-        const dateString = bankday ? bankday.toISOString().split("T")[0] : "";
-        fetch(
-            `api/position/${endpoint}?portfolioId=${portfolioId}&date=${dateString}`,
-        )
-            .then((res) => {
-                if (!res.ok) throw new Error(res.statusText);
-                return res.json();
-            })
-            .then((data) => {
-                console.log(`Fetched ${endpoint} positions: `, data);
-                setPositions(data);
-            })
-            .catch((err) => console.error("Fetch error: ", err));
+        try {
+            const portfolioId = portfolio.portfolioId;
+            const dateString = getDateString(bankday);
+            const url = `api/position/${endpoint}?portfolioId=${portfolioId}&date=${dateString}`;
+            const response = await api(url);
+            const data = await response.json();
+            setPositions(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        setPositions([]);
+        fetchPositions();
     }, [portfolio, bankday, endpoint]);
 
     return (
