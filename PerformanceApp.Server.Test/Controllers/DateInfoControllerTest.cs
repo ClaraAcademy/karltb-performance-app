@@ -61,4 +61,19 @@ public class DateInfoControllerTest : ControllerTestBase
         // Assert
         var notFoundResult = Assert.IsType<NotFoundResult>(result.Result);
     }
+
+    [Fact]
+    public async Task GetDates_ReturnsUnauthorized_WhenUserIsNotAuthenticated()
+    {
+        // Arrange
+        var controller = new DateInfoController(_mockDateInfoService.Object);
+
+        // No user is set in the controller context to simulate unauthenticated access
+
+        // Act
+        var result = await controller.GetDates();
+
+        // Assert
+        Assert.IsType<UnauthorizedObjectResult>(result.Result);
+    }
 }

@@ -8,7 +8,7 @@ namespace PerformanceApp.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DateInfoController(IDateInfoService service) : ControllerBase
+    public class DateInfoController(IDateInfoService service) : MyControllerBase
     {
         private readonly IDateInfoService _service = service;
 
@@ -16,6 +16,11 @@ namespace PerformanceApp.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankdayDTO>>> GetDates()
         {
+            if (!UserIsAuthenticated())
+            {
+                return UnauthorizedResponse();
+            }
+
             var bankdayDtos = await _service.GetBankdayDTOsAsync();
 
             if (bankdayDtos == null || bankdayDtos.Count == 0)
