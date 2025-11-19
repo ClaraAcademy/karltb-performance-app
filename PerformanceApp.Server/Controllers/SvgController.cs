@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PerformanceApp.Server.Services;
 
@@ -5,6 +6,7 @@ namespace PerformanceApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SvgController(ISvgService service) : ControllerBase
     {
         private readonly ISvgService _service = service;

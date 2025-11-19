@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./LineChart.css";
 import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
+import { api } from "../api/api";
 
 const LineChart = () => {
     const { portfolioBenchmark } = usePortfolioBenchmark();
@@ -10,17 +11,24 @@ const LineChart = () => {
     const WIDTH = 800;
     const HEIGHT = 500;
 
-    useEffect(() => {
+    const fetchSvg = async () => {
         if (portfolioBenchmark == null) {
             return;
         }
-        const portfolioId = portfolioBenchmark[0].portfolioId;
-        fetch(
-            `api/svg?portfolioId=${portfolioId}&width=${WIDTH}&height=${HEIGHT}`,
-        )
-            .then((res) => res.text())
-            .then((data) => setSvg("data:image/svg+xml;base64," + btoa(data)))
-            .catch((err) => console.error(err));
+        try {
+            const portfolioId = portfolioBenchmark[0].portfolioId;
+            const endpoint = `api/svg?portfolioId=${portfolioId}&width=${WIDTH}&height=${HEIGHT}`;
+            const response = await api(endpoint);
+            const data = await response.text();
+            const encoded = "data:image/svg+xml;base64," + btoa(data);
+            setSvg(encoded);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        fetchSvg();
     }, [portfolioBenchmark]);
 
     return svg == null ? (
