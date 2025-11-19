@@ -33,7 +33,9 @@ public class PerformanceControllerTest : ControllerTestBase
 
     private List<PortfolioBenchmarkKeyFigureDTO> CreateDtos(int count)
     {
-        return Enumerable.Range(0, count).Select(_ => CreateDto()).ToList();
+        return Enumerable.Range(0, count)
+            .Select(_ => CreateDto())
+            .ToList();
     }
 
     [Fact]
@@ -56,10 +58,7 @@ public class PerformanceControllerTest : ControllerTestBase
         var result = await controller.GetKeyFigures(portfolioId);
 
         // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        Assert.Equal(StatusCodes.OK, okResult.StatusCode);
-        var returnedKeyFigures = Assert.IsType<List<PortfolioBenchmarkKeyFigureDTO>>(okResult.Value);
-        Assert.Equal(keyFigures.Count, returnedKeyFigures.Count);
+        AssertIsOk(result, keyFigures.Count);
     }
 
     [Fact]
@@ -81,8 +80,7 @@ public class PerformanceControllerTest : ControllerTestBase
         var result = await controller.GetKeyFigures(portfolioId);
 
         // Assert
-        var notFoundResult = Assert.IsType<NotFoundResult>(result.Result);
-        Assert.Equal(StatusCodes.NotFound, notFoundResult.StatusCode);
+        AssertIsNotFound(result);
     }
 
     [Fact]
@@ -102,8 +100,7 @@ public class PerformanceControllerTest : ControllerTestBase
         var result = await controller.GetKeyFigures(portfolioId);
 
         // Assert
-        var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result.Result);
-        Assert.Equal(StatusCodes.Unauthorized, unauthorizedResult.StatusCode);
+        AssertIsUnauthorized(result);
     }
 
 }
