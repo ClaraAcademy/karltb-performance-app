@@ -6,9 +6,10 @@ namespace PerformanceApp.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController(IAuthService service) : ControllerBase
+public class AuthController(IAuthService service) : MyControllerBase
 {
     private readonly IAuthService _service = service;
+    private readonly string LogoutErrorMessage = "Logout failed";
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -17,21 +18,32 @@ public class AuthController(IAuthService service) : ControllerBase
 
         if (!result.Success)
         {
-            return Unauthorized(new { message = result.ErrorMessage });
+            return Unauthorized(new ErrorResponse(result.ErrorMessage ?? AuthenticationErrorMessage));
         }
 
-        return Ok(new { token = result.Token });
+        var token = result.Token;
+
+        if (token == null)
+        {
+            return Unauthorized(new ErrorResponse("Token generation failed"));
+        }
+
+        return Ok(new LoginResponse(token));
     }
 
     [HttpPost("logout")]
     [Authorize]
     public async Task<IActionResult> Logout()
     {
+        if (!UserIsAuthenticated())
+        {
+            return Unauthorized(new ErrorResponse(AuthenticationErrorMessage));
+        }
         var result = await _service.LogoutAsync();
 
         if (!result.Success)
         {
-            return BadRequest(new { message = result.ErrorMessage });
+            return BadRequest(new ErrorResponse(result.ErrorMessage ?? LogoutErrorMessage));
         }
 
         return Ok();
