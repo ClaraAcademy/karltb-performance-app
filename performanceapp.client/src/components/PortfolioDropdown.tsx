@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Portfolio } from "../types";
 import { usePortfolio } from "../contexts/PortfolioContext";
+import { api } from "../api/api";
 
 interface PortfolioDropdownProps {
     onSelect?: (portfolio: Portfolio | null) => void;
@@ -10,14 +11,18 @@ const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const { portfolio, setPortfolio } = usePortfolio();
 
+    const fetchPortfolios = async () => {
+        try {
+            const response = await api("api/Portfolio");
+            const data: Portfolio[] = await response.json();
+            setPortfolios(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
-        fetch("api/Portfolio")
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Fetched portfolios:", data);
-                setPortfolios(data);
-            })
-            .catch((err) => console.error(err));
+        fetchPortfolios();
     }, [portfolio]);
 
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -4,25 +4,29 @@ import { usePortfolio } from "../contexts/PortfolioContext";
 import PortfolioDropdown from "./PortfolioDropdown";
 import "./PortfolioGrid.css";
 import DateDropdown from "./DateDropdown";
+import { api } from "../api/api";
 
 const PortfolioGrid = () => {
     const { portfolio } = usePortfolio();
     const { portfolioBenchmark, setPortfolioBenchmark } =
         usePortfolioBenchmark();
+
+    const fetchPortfolioBenchmark = async () => {
+        try {
+            const endpoint = `api/PortfolioBenchmark?portfolioId=${portfolio?.portfolioId}`;
+            const response = await api(endpoint);
+            const data = await response.json();
+            setPortfolioBenchmark(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         if (portfolio == null) {
             return;
         }
-        fetch(`api/PortfolioBenchmark?portfolioId=${portfolio.portfolioId}`)
-            .then((res) => {
-                if (!res.ok) throw new Error(res.statusText);
-                return res.json();
-            })
-            .then((data) => {
-                console.log("Fetched portfolios and benchmarks:", data);
-                setPortfolioBenchmark(data);
-            })
-            .catch((err) => console.error("Fetch error:", err));
+        fetchPortfolioBenchmark();
     }, [portfolio]);
 
     const portfolioName = portfolioBenchmark
