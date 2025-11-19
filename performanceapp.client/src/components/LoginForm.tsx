@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./LoginForm.css";
 
 interface LoginFormProps {
-    onLogin?: (username: string, password: string) => void;
+    onLogin?: (username: string, password: string) => Promise<boolean>;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
@@ -10,7 +10,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         const msg = `username: ${username}, password: ${password}`;
         console.log(msg);
         e.preventDefault();
@@ -20,7 +20,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         }
         setError("");
         if (onLogin) {
-            onLogin(username, password);
+            const success = await onLogin(username, password);
+            if (!success) {
+                setError("Invalid credentials");
+            }
         }
     };
 

@@ -1,7 +1,7 @@
-import { getToken } from "../auth/token";
+import { getJwt } from "../auth/token";
 
 export async function api(endpoint: string, options: RequestInit = {}) {
-    const token = getToken();
+    const token = getJwt();
 
     const headers: HeadersInit = {
         "Content-Type": "application/json",

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import MainApp from "../components/App";
+import MainApp from "../components/MainApp";
 import LoginForm from "../components/LoginForm";
 
 const App: React.FC = () => {
     const { login, logout, isAuthenticated } = useAuth();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleLogin = async (
+        username: string,
+        password: string,
+    ): Promise<boolean> => {
         const success = await login(username, password);
-        if (!success) setError("Invalid credentials");
-        else setError("");
+        return success;
     };
 
     const handleLogout = () => {
@@ -23,15 +21,7 @@ const App: React.FC = () => {
     return (
         <div>
             {!isAuthenticated ? (
-                <LoginForm
-                    onLogin={(user, pass) => {
-                        setUsername(user);
-                        setPassword(pass);
-                        handleLogin(
-                            new Event("submit") as unknown as React.FormEvent,
-                        );
-                    }}
-                />
+                <LoginForm onLogin={handleLogin} />
             ) : (
                 <div>
                     <button onClick={handleLogout}>Logout</button>

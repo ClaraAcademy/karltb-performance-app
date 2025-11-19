@@ -1,13 +1,13 @@
 const TOKEN = "auth_token";
 
-export function setToken(token: string) {
+export function setJwt(token: string) {
     localStorage.setItem(TOKEN, token);
 }
 
-export function getToken(): string | null {
+export function getJwt(): string | null {
     return localStorage.getItem(TOKEN);
 }
 
-export function clearToken() {
+export function clearJwt() {
     localStorage.removeItem(TOKEN);
 }

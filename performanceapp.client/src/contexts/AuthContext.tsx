@@ -4,6 +4,7 @@ import {
     login as loginService,
     logout as logoutService,
 } from "../auth/authService";
+import { getJwt, setJwt, clearJwt } from "../auth/token";
 
 interface AuthContextType {
     token: string | null;
@@ -17,15 +18,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [token, setToken] = useState<string | null>(() =>
-        localStorage.getItem("token"),
-    );
+    const [token, setToken] = useState<string | null>(() => getJwt());
 
     useEffect(() => {
         if (token) {
-            localStorage.setItem("token", token);
+            setJwt(token);
         } else {
-            localStorage.removeItem("token");
+            clearJwt();
         }
     }, [token]);
 
@@ -34,6 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         password: string,
     ): Promise<boolean> => {
         const result = await loginService(username, password);
+        console.log("Login result:", result);
         if (result) {
             setToken(result);
             return true;
@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     const logout = () => {
         setToken(null);
+        clearJwt();
         logoutService();
     };
 
