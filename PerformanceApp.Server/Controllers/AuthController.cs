@@ -18,14 +18,14 @@ public class AuthController(IAuthService service) : MyControllerBase
 
         if (!result.Success)
         {
-            return Unauthorized(new ErrorResponse(result.ErrorMessage ?? AuthenticationErrorMessage));
+            return UnauthorizedResponse();
         }
 
         var token = result.Token;
 
         if (token == null)
         {
-            return Unauthorized(new ErrorResponse("Token generation failed"));
+            return UnauthorizedResponse();
         }
 
         return Ok(new LoginResponse(token));
@@ -37,13 +37,14 @@ public class AuthController(IAuthService service) : MyControllerBase
     {
         if (!UserIsAuthenticated())
         {
-            return Unauthorized(new ErrorResponse(AuthenticationErrorMessage));
+            return UnauthorizedResponse();
         }
+
         var result = await _service.LogoutAsync();
 
         if (!result.Success)
         {
-            return BadRequest(new ErrorResponse(result.ErrorMessage ?? LogoutErrorMessage));
+            return BadRequestResponse(result.ErrorMessage ?? LogoutErrorMessage);
         }
 
         return Ok();
