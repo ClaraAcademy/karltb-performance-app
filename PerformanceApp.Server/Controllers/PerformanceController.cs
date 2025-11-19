@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
@@ -6,6 +7,7 @@ namespace PerformanceApp.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PerformanceController(IPerformanceService service) : ControllerBase
     {
         private readonly IPerformanceService Service = service;

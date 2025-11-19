@@ -4,6 +4,7 @@ import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
 import { formatPercent } from "../utilities/format";
 import "./KeyFigureTable.css";
 import type { PortfolioBenchmarkKeyFigure } from "../types";
+import { api } from "../api/api";
 
 function KeyFigureTable() {
     const [portfolioBenchmarkKeyFigures, setPortfolioBenchmarkKeyFigures] =
@@ -19,18 +20,24 @@ function KeyFigureTable() {
         );
     }
 
+    const fetchKeyFigures = async () => {
+        try {
+            const portfolioId = portfolio?.portfolioId;
+            const endpoint = `api/performance?portfolioId=${portfolioId}`;
+            const response = await api(endpoint);
+            const data = await response.json();
+            console.log("Fetched portfolioBenchmarkKeyFigure: " + data);
+            setPortfolioBenchmarkKeyFigures(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         if (!isLoaded()) {
             return;
         }
-
-        fetch(`api/performance?portfolioId=${portfolio?.portfolioId}`)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Fetched portfolioBenchmarkKeyFigure: " + data);
-                setPortfolioBenchmarkKeyFigures(data);
-            })
-            .catch((err) => console.error(err));
+        fetchKeyFigures();
     }, [portfolio, portfolioBenchmark]);
 
     return !isLoaded() ? (
@@ -57,10 +64,14 @@ function KeyFigureTable() {
                         <tr key={kf.keyFigureId}>
                             <td className="tdText">{kf.keyFigureName}</td>
                             <td className="tdNumber">
-                                {kf.portfolioValue ? formatPercent(kf.portfolioValue) : ""}
+                                {kf.portfolioValue
+                                    ? formatPercent(kf.portfolioValue)
+                                    : ""}
                             </td>
                             <td className="tdNumber">
-                                {kf.benchmarkValue ? formatPercent(kf.benchmarkValue) : ""}
+                                {kf.benchmarkValue
+                                    ? formatPercent(kf.benchmarkValue)
+                                    : ""}
                             </td>
                         </tr>
                     ),
