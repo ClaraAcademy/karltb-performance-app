@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { DateInfo } from "../types";
 import { useBankday } from "../contexts/BankdayContext";
+import { api } from "../api/api";
 
 interface DateDropdownProps {
     onSelect?: (date: Date | null) => void;
@@ -10,13 +11,18 @@ const DateDropdown: React.FC<DateDropdownProps> = ({ onSelect }) => {
     const [dates, setDates] = useState<Date[]>([]);
     const { bankday, setBankday } = useBankday();
 
+    const fetchDates = async () => {
+        try {
+            const response = await api("api/DateInfo");
+            const data: DateInfo[] = await response.json();
+            setDates(data.map((d) => new Date(d.bankday)));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
-        fetch("api/DateInfo")
-            .then((res) => res.json())
-            .then((data: DateInfo[]) =>
-                setDates(data.map((d) => new Date(d.bankday))),
-            )
-            .catch((err) => console.error(err));
+        fetchDates();
     }, []);
 
     const formatDate = (d: Date) => {
