@@ -4,56 +4,56 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class InstrumentTypeRepositoryTest 
+public class InstrumentTypeRepositoryTest : BaseRepositoryTest
 {
+    private readonly InstrumentTypeRepository _repository;
+
+    public InstrumentTypeRepositoryTest()
+    {
+        _repository = new InstrumentTypeRepository(_context);
+    }
+
+    private static List<InstrumentType> CreateInstrumentTypes()
+    {
+        return [
+            new InstrumentType { Name = "Equity" },
+            new InstrumentType { Name = "Bond" },
+            new InstrumentType { Name = "Commodity" }
+        ];
+    }
+
     [Fact]
     public async Task AddInstrumentTypesAsync_AddsMultipleInstrumentTypesToDatabase()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentTypeRepository(context);
+        var expected = CreateInstrumentTypes();
 
-        var instrumentTypes = new List<InstrumentType>
-        {
-            new InstrumentType { Name = "Equity" },
-            new InstrumentType { Name = "Bond" }
-        };
-        await repository.AddInstrumentTypesAsync(instrumentTypes);
+        await _repository.AddInstrumentTypesAsync(expected);
 
-        var retrievedInstrumentTypes = await context.InstrumentTypes.ToListAsync();
-        Assert.Equal(2, retrievedInstrumentTypes.Count);
+        var actual = await _context.InstrumentTypes.ToListAsync();
+        Assert.Equal(expected.Count, actual.Count);
     }
 
     [Fact]
     public async Task AddInstrumentTypesAsync_DoesNotAddEmptyList()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentTypeRepository(context);
+        var empty = new List<InstrumentType>();
+        await _repository.AddInstrumentTypesAsync(empty);
 
-        var instrumentTypes = new List<InstrumentType>();
-        await repository.AddInstrumentTypesAsync(instrumentTypes);
-
-        var retrievedInstrumentTypes = await context.InstrumentTypes.ToListAsync();
-        Assert.Empty(retrievedInstrumentTypes);
+        var actual = await _context.InstrumentTypes.ToListAsync();
+        Assert.Empty(actual);
     }
-
 
     [Fact]
     public async Task GetInstrumentTypesAsync_ReturnsCorrectInstrumentTypes()
     {
-        var context = BaseRepositoryTest.GetContext();
-        context.InstrumentTypes.AddRange(new List<InstrumentType>
-        {
-            new InstrumentType { Name = "Equity" },
-            new InstrumentType { Name = "Bond" },
-            new InstrumentType { Name = "Commodity" }
-        });
-        await context.SaveChangesAsync();
+        var instrumentTypes = CreateInstrumentTypes();
+        _context.InstrumentTypes.AddRange(instrumentTypes);
+        await _context.SaveChangesAsync();
 
-        var repository = new InstrumentTypeRepository(context);
-        var instrumentTypes = await repository.GetInstrumentTypesAsync(new List<string> { "Bond", "Commodity" });
+        var actual = await _repository.GetInstrumentTypesAsync(["Bond", "Commodity"]);
 
-        Assert.Equal(2, instrumentTypes.Count);
-        Assert.Contains(instrumentTypes, it => it.Name == "Bond");
-        Assert.Contains(instrumentTypes, it => it.Name == "Commodity");
+        Assert.Equal(2, actual.Count);
+        Assert.Contains(actual, it => it.Name == "Bond");
+        Assert.Contains(actual, it => it.Name == "Commodity");
     }
 }
