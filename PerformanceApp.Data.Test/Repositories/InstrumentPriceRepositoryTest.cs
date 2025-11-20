@@ -3,100 +3,87 @@ using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class InstrumentPriceRepositoryTest
+public class InstrumentPriceRepositoryTest : BaseRepositoryTest
 {
+    private readonly InstrumentPriceRepository _repository;
+
+    public InstrumentPriceRepositoryTest()
+    {
+        _repository = new InstrumentPriceRepository(_context);
+    }
+
+    private static List<InstrumentPrice> CreateInstrumentPrices()
+    {
+        return [
+            new InstrumentPrice { InstrumentId = 1, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 100m },
+            new InstrumentPrice { InstrumentId = 2, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 200m }
+        ];
+    }
+
     [Fact]
     public void AddInstrumentPrices_AddsInstrumentPricesToDatabase()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentPriceRepository(context);
+        var expected = CreateInstrumentPrices();
 
-        var instrumentPrices = new List<InstrumentPrice>
+        _repository.AddInstrumentPrices(expected);
+
+        foreach (var instrumentPrice in expected)
         {
-            new InstrumentPrice { InstrumentId = 3, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 300m },
-            new InstrumentPrice { InstrumentId = 4, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 400m }
-        };
-
-        repository.AddInstrumentPrices(instrumentPrices);
-
-        foreach (var instrumentPrice in instrumentPrices)
-        {
-            var retrievedInstrumentPrice = context.InstrumentPrices.Find(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-            Assert.NotNull(retrievedInstrumentPrice);
-            Assert.Equal(instrumentPrice.Price, retrievedInstrumentPrice.Price);
+            var actual = _context.InstrumentPrices.Find(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
+            Assert.NotNull(actual);
+            Assert.Equal(instrumentPrice.Price, actual.Price);
         }
     }
 
     [Fact]
     public void AddInstrumentPrices_DoesNotAddEmptyList()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentPriceRepository(context);
+        var empty = new List<InstrumentPrice>();
 
-        var instrumentPrices = new List<InstrumentPrice>();
+        _repository.AddInstrumentPrices(empty);
 
-        repository.AddInstrumentPrices(instrumentPrices);
-
-        Assert.Empty(context.InstrumentPrices.ToList());
+        Assert.Empty(_context.InstrumentPrices.ToList());
     }
 
     [Fact]
     public async Task AddInstrumentPricesAsync_AddsInstrumentPricesToDatabase()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentPriceRepository(context);
+        var expected = CreateInstrumentPrices();
 
-        var instrumentPrices = new List<InstrumentPrice>
+        await _repository.AddInstrumentPricesAsync(expected);
+
+        foreach (var instrumentPrice in expected)
         {
-            new InstrumentPrice { InstrumentId = 5, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 500m },
-            new InstrumentPrice { InstrumentId = 6, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 600m }
-        };
-
-        await repository.AddInstrumentPricesAsync(instrumentPrices);
-
-        foreach (var instrumentPrice in instrumentPrices)
-        {
-            var retrievedInstrumentPrice = await context.InstrumentPrices.FindAsync(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-            Assert.NotNull(retrievedInstrumentPrice);
-            Assert.Equal(instrumentPrice.Price, retrievedInstrumentPrice.Price);
+            var actual = await _context.InstrumentPrices.FindAsync(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
+            Assert.NotNull(actual);
+            Assert.Equal(instrumentPrice.Price, actual.Price);
         }
     }
 
     [Fact]
     public async Task AddInstrumentPricesAsync_DoesNotAddEmptyList()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentPriceRepository(context);
+        var empty = new List<InstrumentPrice>();
+        await _repository.AddInstrumentPricesAsync(empty);
 
-        var instrumentPrices = new List<InstrumentPrice>();
-
-        await repository.AddInstrumentPricesAsync(instrumentPrices);
-
-        Assert.Empty(context.InstrumentPrices.ToList());
+        Assert.Empty(_context.InstrumentPrices.ToList());
     }
 
     [Fact]
     public async Task GetInstrumentPricesAsync_ReturnsAllInstrumentPrices()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new InstrumentPriceRepository(context);
+        var expected = CreateInstrumentPrices();
 
-        var instrumentPrices = new List<InstrumentPrice>
+        _context.InstrumentPrices.AddRange(expected);
+        _context.SaveChanges();
+
+        var retrieved = await _repository.GetInstrumentPricesAsync();
+
+        Assert.Equal(expected.Count, retrieved.Count());
+
+        foreach (var instrumentPrice in expected)
         {
-            new InstrumentPrice { InstrumentId = 7, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 700m },
-            new InstrumentPrice { InstrumentId = 8, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 800m }
-        };
-
-        context.InstrumentPrices.AddRange(instrumentPrices);
-        context.SaveChanges();
-
-        var retrievedInstrumentPrices = await repository.GetInstrumentPricesAsync();
-
-        Assert.Equal(2, retrievedInstrumentPrices.Count());
-
-        foreach (var instrumentPrice in instrumentPrices)
-        {
-            Assert.Contains(retrievedInstrumentPrices, ip => ip.InstrumentId == instrumentPrice.InstrumentId && ip.Bankday == instrumentPrice.Bankday && ip.Price == instrumentPrice.Price);
+            Assert.Contains(retrieved, ip => ip.InstrumentId == instrumentPrice.InstrumentId && ip.Bankday == instrumentPrice.Bankday && ip.Price == instrumentPrice.Price);
         }
 
     }
