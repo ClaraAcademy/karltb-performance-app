@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using System.Net;
 using System.Net.Http;
@@ -25,9 +26,17 @@ public class BaseControllerIntegrationTests(WebApplicationFactory<Program> facto
         return scope.ServiceProvider.GetRequiredService<IJwtService>();
     }
 
+    private void AddAuthorizationHeader(HttpRequestMessage request, string token)
+    {
+        request.Headers.Add("Authorization", $"Bearer {token}");
+    }
     protected void AddAuthorizationHeader(HttpRequestMessage request, ApplicationUser user)
     {
         var token = _jwtService.GenerateJwtToken(user);
-        request.Headers.Add("Authorization", $"Bearer {token}");
+        AddAuthorizationHeader(request, token);
+    }
+    protected void AddAuthorizationHeader(HttpRequestMessage request, LoginResponse loginResult)
+    {
+        AddAuthorizationHeader(request, loginResult.Token);
     }
 }
