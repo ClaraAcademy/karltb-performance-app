@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using System.Net;
@@ -18,7 +19,7 @@ public class BaseControllerIntegrationTests(WebApplicationFactory<Program> facto
 {
     protected readonly HttpClient _client = factory.CreateClient();
     protected readonly IJwtService _jwtService = GetJwtService(factory);
-    protected readonly ApplicationUser TestUser = new ApplicationUser { UserName = "IntegrationTestUser" };
+    protected readonly ApplicationUser TestUser = new ApplicationUser { UserName = UserData.UsernameB, };
 
     protected static IJwtService GetJwtService(WebApplicationFactory<Program> factory)
     {
