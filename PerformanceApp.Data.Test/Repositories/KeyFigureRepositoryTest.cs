@@ -4,102 +4,100 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class KeyFigureRepositoryTest
+public class KeyFigureRepositoryTest : BaseRepositoryTest
 {
+    private readonly KeyFigureInfoRepository _repository;
+
+    public KeyFigureRepositoryTest()
+    {
+        _repository = new KeyFigureInfoRepository(_context);
+    }
+
+    private static string GetName(int i) => $"KeyFigure{i}";
+
+    private static List<KeyFigureInfo> CreateKeyFigureInfos(int count)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => new KeyFigureInfo { Id = i, Name = GetName(i) })
+            .ToList();
+    }
+
     [Fact]
     public async Task AddKeyFigureInfosAsync_AddsKeyFigures()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new KeyFigureInfoRepository(context);
-
-        var keyFigureInfos = new List<KeyFigureInfo>
-        {
-            new KeyFigureInfo { Id = 1, Name = "KeyFigure1" },
-            new KeyFigureInfo { Id = 2, Name = "KeyFigure2" }
-        };
+        int n = 3;
+        var keyFigureInfos = CreateKeyFigureInfos(n);
 
         // Act
-        await repository.AddKeyFigureInfosAsync(keyFigureInfos);
+        await _repository.AddKeyFigureInfosAsync(keyFigureInfos);
 
         // Assert
-        var addedKeyFigures = await context.KeyFigureInfos.ToListAsync();
-        Assert.Equal(2, addedKeyFigures.Count);
-        Assert.Contains(addedKeyFigures, kf => kf.Name == "KeyFigure1");
-        Assert.Contains(addedKeyFigures, kf => kf.Name == "KeyFigure2");
+        var addedKeyFigures = await _context.KeyFigureInfos.ToListAsync();
 
+        Assert.Equal(n, addedKeyFigures.Count);
+        for (int i = 1; i <= n; i++)
+        {
+            Assert.Contains(addedKeyFigures, kf => kf.Name == GetName(i));
+        }
     }
 
     [Fact]
     public async Task AddKeyFiguresInfosAsync_AddsSingleKeyFigure()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new KeyFigureInfoRepository(context);
-
-        var keyFigureInfos = new List<KeyFigureInfo>
-        {
-            new KeyFigureInfo { Id = 1, Name = "KeyFigure1" }
-        };
+        // Arrange
+        int n = 1;
+        var expected = CreateKeyFigureInfos(n);
 
         // Act
-        await repository.AddKeyFigureInfosAsync(keyFigureInfos);
+        await _repository.AddKeyFigureInfosAsync(expected);
 
         // Assert
-        var addedKeyFigures = await context.KeyFigureInfos.ToListAsync();
-        Assert.Single(addedKeyFigures);
-        Assert.Equal("KeyFigure1", addedKeyFigures[0].Name);
+        var actual = await _context.KeyFigureInfos.ToListAsync();
+        Assert.Single(actual);
+        Assert.Equal("KeyFigure1", actual[0].Name);
     }
 
     [Fact]
     public async Task AddKeyFigureInfosAsync_NoKeyFigures_DoesNothing()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new KeyFigureInfoRepository(context);
-
-        var keyFigureInfos = new List<KeyFigureInfo>();
+        var empty = new List<KeyFigureInfo>();
 
         // Act
-        await repository.AddKeyFigureInfosAsync(keyFigureInfos);
+        await _repository.AddKeyFigureInfosAsync(empty);
 
         // Assert
-        var addedKeyFigures = await context.KeyFigureInfos.ToListAsync();
-        Assert.Empty(addedKeyFigures);
+        var actual = await _context.KeyFigureInfos.ToListAsync();
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetKeyFigureInfosAsync_ReturnsAllKeyFigures()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new KeyFigureInfoRepository(context);
+        var n = 2;
+        var expected = CreateKeyFigureInfos(n);
 
-        var keyFigureInfos = new List<KeyFigureInfo>
-        {
-            new KeyFigureInfo { Id = 1, Name = "KeyFigure1" },
-            new KeyFigureInfo { Id = 2, Name = "KeyFigure2" }
-        };
-
-        await context.KeyFigureInfos.AddRangeAsync(keyFigureInfos);
-        await context.SaveChangesAsync();
+        await _context.KeyFigureInfos.AddRangeAsync(expected);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetKeyFigureInfosAsync();
+        var actual = await _repository.GetKeyFigureInfosAsync();
 
         // Assert
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, kf => kf.Name == "KeyFigure1");
-        Assert.Contains(result, kf => kf.Name == "KeyFigure2");
+        Assert.Equal(n, actual.Count());
+        for (int i = 1; i <= n; i++)
+        {
+            Assert.Contains(actual, kf => kf.Name == GetName(i));
+        }
     }
 
     [Fact]
     public async Task GetKeyFigureInfosAsync_NoKeyFigures_ReturnsEmptyList()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new KeyFigureInfoRepository(context);
-
         // Act
-        var result = await repository.GetKeyFigureInfosAsync();
+        var actual = await _repository.GetKeyFigureInfosAsync();
 
         // Assert
-        Assert.Empty(result);
+        Assert.Empty(actual);
     }
 
 
