@@ -35,11 +35,6 @@ public class AuthController(IAuthService service) : MyControllerBase
     [Authorize]
     public async Task<IActionResult> Logout()
     {
-        if (!UserIsAuthenticated())
-        {
-            return UnauthorizedResponse();
-        }
-
         var result = await _service.LogoutAsync();
 
         if (!result.Success)

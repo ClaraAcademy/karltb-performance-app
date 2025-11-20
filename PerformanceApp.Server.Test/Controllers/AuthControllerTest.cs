@@ -98,18 +98,4 @@ public class AuthControllerTest : ControllerTestBase
         var errorResponse = Assert.IsType<ErrorResponse>(badRequestResult.Value);
         Assert.Equal("Logout failed", errorResponse.Message);
     }
-
-    [Fact]
-    public async Task Logout_ReturnsUnauthorized_WhenUserNotAuthenticated()
-    {
-        // Arrange
-        var controller = new AuthController(_mockAuthService.Object);
-        // No user principal set
-
-        // Act
-        var result = await controller.Logout();
-
-        // Assert
-        Assert.IsType<UnauthorizedObjectResult>(result);
-    }
 }
