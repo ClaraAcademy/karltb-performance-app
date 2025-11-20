@@ -40,4 +40,54 @@ public class BaseControllerIntegrationTests(WebApplicationFactory<Program> facto
     {
         AddAuthorizationHeader(request, loginResult.Token);
     }
+
+    protected async Task Post_Unauthenticated_Returns_Unauthorized(string url)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+        // Act
+        var response = await _client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    protected async Task Post_Authenticated_Returns_Ok(string url)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        AddAuthorizationHeader(request, TestUser);
+
+        // Act
+        var response = await _client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    protected async Task Get_Unauthenticated_Returns_Unauthorized(string url)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+        // Act
+        var response = await _client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    protected async Task Get_Authenticated_Returns_Ok(string url)
+    {
+        // Arrange
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        AddAuthorizationHeader(request, TestUser);
+
+        // Act
+        var response = await _client.SendAsync(request);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 }

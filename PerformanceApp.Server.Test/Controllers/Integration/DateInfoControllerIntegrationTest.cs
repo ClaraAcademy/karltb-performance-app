@@ -9,32 +9,8 @@ public class DateInfoControllerIntegrationTest(WebApplicationFactory<Program> fa
     private readonly string _baseUrl = "api/DateInfo";
 
     [Fact]
-    public async Task GetDates_Unauthenticated_Returns_Unauthorized()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
-    }
+    public async Task GetDates_Unauthenticated_Returns_Unauthorized() => await Get_Unauthenticated_Returns_Unauthorized(_baseUrl);
 
     [Fact]
-    public async Task GetDates_Authenticated_Returns_Ok_With_Data()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl);
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        response.EnsureSuccessStatusCode();
-        var bankdayDtos = await response.Content.ReadFromJsonAsync<List<BankdayDTO>>();
-        Assert.NotNull(bankdayDtos);
-        Assert.NotEmpty(bankdayDtos);
-    }
+    public async Task GetDates_Authenticated_Returns_Ok() => await Get_Authenticated_Returns_Ok(_baseUrl);
 }

@@ -18,64 +18,16 @@ public class PositionControllerIntegrationTest(WebApplicationFactory<Program> fa
     private static string GetBondEndpoint() => GetEndpoint("bonds");
     private static string GetIndexEndpoint() => GetEndpoint("indexes");
 
-    private async Task GetPositions_Authenticated_Returns_Ok_With_Data(string endpoint)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    private async Task GetPositions_Unauthenticated_Returns_Unauthorized(string endpoint)
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
     [Fact]
-    public async Task GetStockPositions_Unauthenticated_Returns_Unauthorized()
-    {
-        await GetPositions_Unauthenticated_Returns_Unauthorized(GetStockEndpoint());
-    }
-
+    public async Task GetStockPositions_Unauthenticated_Returns_Unauthorized() => await Get_Unauthenticated_Returns_Unauthorized(GetStockEndpoint());
     [Fact]
-    public async Task GetStockPositions_Authenticated_Returns_Ok_With_Data()
-    {
-        await GetPositions_Authenticated_Returns_Ok_With_Data(GetStockEndpoint());
-    }
-
+    public async Task GetStockPositions_Authenticated_Returns_Ok_With_Data() => await Get_Authenticated_Returns_Ok(GetStockEndpoint());
     [Fact]
-    public async Task GetBondPositions_Unauthenticated_Returns_Unauthorized()
-    {
-        await GetPositions_Unauthenticated_Returns_Unauthorized(GetBondEndpoint());
-    }
-
+    public async Task GetBondPositions_Unauthenticated_Returns_Unauthorized() => await Get_Unauthenticated_Returns_Unauthorized(GetBondEndpoint());
     [Fact]
-    public async Task GetBondPositions_Authenticated_Returns_Ok()
-    {
-        await GetPositions_Authenticated_Returns_Ok_With_Data(GetBondEndpoint());
-    }
-
+    public async Task GetBondPositions_Authenticated_Returns_Ok() => await Get_Authenticated_Returns_Ok(GetBondEndpoint());
     [Fact]
-    public async Task GetIndexPositions_Unauthenticated_Returns_Unauthorized()
-    {
-        await GetPositions_Unauthenticated_Returns_Unauthorized(GetIndexEndpoint());
-    }
-
+    public async Task GetIndexPositions_Unauthenticated_Returns_Unauthorized() => await Get_Unauthenticated_Returns_Unauthorized(GetIndexEndpoint());
     [Fact]
-    public async Task GetIndexPositions_Authenticated_Returns_Ok()
-    {
-        await GetPositions_Authenticated_Returns_Ok_With_Data(GetIndexEndpoint());
-    }
+    public async Task GetIndexPositions_Authenticated_Returns_Ok() => await Get_Authenticated_Returns_Ok(GetIndexEndpoint());
 }

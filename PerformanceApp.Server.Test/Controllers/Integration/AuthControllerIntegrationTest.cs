@@ -49,7 +49,7 @@ public class AuthControllerIntegrationTest(WebApplicationFactory<Program> factor
     }
 
     [Fact]
-    public async Task Login_InValidCredentials_Returns401()
+    public async Task Login_InvalidCredentials_Returns401()
     {
         // Arrange
         var loginRequest = GetInvalidLoginRequest();
@@ -64,38 +64,9 @@ public class AuthControllerIntegrationTest(WebApplicationFactory<Program> factor
     }
 
     [Fact]
-    public async Task Logout_Authorized_Returns200()
-    {
-        // Arrange
-        var loginRequest = GetValidLoginRequest();
-
-        var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(loginRequest), System.Text.Encoding.UTF8, "application/json");
-
-        var loginResponse = await _client.PostAsync(LoginEndpoint, content);
-        var responseContent = await loginResponse.Content.ReadAsStringAsync();
-        var loginResult = System.Text.Json.JsonSerializer.Deserialize<LoginResponse>(responseContent, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-        Assert.NotNull(loginResult);
-        Assert.False(string.IsNullOrEmpty(loginResult.Token));
-
-        var request = new HttpRequestMessage(HttpMethod.Post, LogoutEndpoint);
-        AddAuthorizationHeader(request, loginResult);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
+    public async Task Logout_Authorized_ReturnsOk() => await Post_Authenticated_Returns_Ok(LogoutEndpoint);
 
     [Fact]
-    public async Task Logout_Unauthorized_Returns401()
-    {
-        // Act
-        var response = await _client.PostAsync(LogoutEndpoint, null);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
+    public async Task Logout_Unauthorized_Returns401() => await Post_Unauthenticated_Returns_Unauthorized(LogoutEndpoint);
 
 }

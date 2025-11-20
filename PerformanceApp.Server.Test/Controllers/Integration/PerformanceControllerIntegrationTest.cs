@@ -6,35 +6,10 @@ namespace PerformanceApp.Server.Test.Controllers.Integration;
 
 public class PerformanceControllerIntegrationTest(WebApplicationFactory<Program> factory) : BaseControllerIntegrationTests(factory)
 {
-    private readonly string _baseUrl = "api/performance";
+    private readonly string Endpoint = "api/performance?portfolioId=1";
 
     [Fact]
-    public async Task GetKeyFigures_Unauthenticated_Returns_Unauthorized()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}?portfolioId=1");
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
+    public async Task GetKeyFigures_Unauthenticated_Returns_Unauthorized() => await Get_Unauthenticated_Returns_Unauthorized(Endpoint);
     [Fact]
-    public async Task GetKeyFigures_Authenticated_Returns_Ok_With_Data()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}?portfolioId=1");
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        response.EnsureSuccessStatusCode();
-        var keyFigureDtos = await response.Content.ReadFromJsonAsync<List<PortfolioBenchmarkKeyFigureDTO>>();
-        Assert.NotNull(keyFigureDtos);
-        Assert.NotEmpty(keyFigureDtos);
-    }
+    public async Task GetKeyFigures_Authenticated_Returns_Ok() => await Get_Authenticated_Returns_Ok(Endpoint);
 }

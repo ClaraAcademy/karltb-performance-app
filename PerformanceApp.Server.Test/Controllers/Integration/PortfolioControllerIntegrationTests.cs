@@ -9,68 +9,19 @@ namespace PerformanceApp.Server.Test.Controllers.Integration;
 public class PortfolioControllerIntegrationTests(WebApplicationFactory<Program> factory) : BaseControllerIntegrationTests(factory)
 {
     private static readonly string PortfolioEndpoint = "/api/Portfolio";
-    private static readonly string PortfolioBenchmarkEndpoint = "/api/PortfolioBenchmark";
-    [Fact]
-    public async Task GetPortfolios_Unauthorized_Returns401()
-    {
-        // Act
-        var response = await _client.GetAsync(PortfolioEndpoint);
 
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
-    }
+    private static string GetPortfolioBenchmarkEndpoint() => "/api/PortfolioBenchmark";
+    private static string GetPortfolioBenchmarkEndpoint(int portfolioId) => $"{GetPortfolioBenchmarkEndpoint()}?portfolioId={portfolioId}";
 
     [Fact]
-    public async Task GetPortfolios_Authorized_Returns200()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, PortfolioEndpoint);
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-    }
-
+    public async Task GetPortfolios_Unauthenticated_ReturnsUnauthorized() => await Get_Unauthenticated_Returns_Unauthorized(PortfolioEndpoint);
     [Fact]
-    public async Task GetPortfolioBenchmarks_Authorized_Returns200()
-    {
-        // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Get, PortfolioBenchmarkEndpoint);
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-    }
-
+    public async Task GetPortfolios_Authenticated_ReturnsOk() => await Get_Authenticated_Returns_Ok(PortfolioEndpoint);
     [Fact]
-    public async Task GetPortfolioBenchmarks_WithPortfolioId_Authorized_Returns200()
-    {
-        // Arrange
-        var portfolioId = 1;
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{PortfolioBenchmarkEndpoint}?portfolioId={portfolioId}");
-        AddAuthorizationHeader(request, TestUser);
-
-        // Act
-        var response = await _client.SendAsync(request);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-    }
-
+    public async Task GetPortfolioBenchmarks_Authorized_Returns200() => await Get_Authenticated_Returns_Ok(GetPortfolioBenchmarkEndpoint());
     [Fact]
-    public async Task GetPortfolioBenchmarks_Unauthorized_Returns401()
-    {
-        // Act
-        var response = await _client.GetAsync(PortfolioBenchmarkEndpoint);
-
-        // Assert
-        Assert.Equal(System.Net.HttpStatusCode.Unauthorized, response.StatusCode);
-    }
+    public async Task GetPortfolioBenchmarks_WithPortfolioId_Authorized_Returns200() => await Get_Authenticated_Returns_Ok(GetPortfolioBenchmarkEndpoint(1));
+    [Fact]
+    public async Task GetPortfolioBenchmarks_Unauthorized_Returns401() => await Get_Unauthenticated_Returns_Unauthorized(GetPortfolioBenchmarkEndpoint());
 
 }
