@@ -36,4 +36,8 @@
     <ProjectReference Include="..\PerformanceApp.Data\PerformanceApp.Data.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+
 </Project>
