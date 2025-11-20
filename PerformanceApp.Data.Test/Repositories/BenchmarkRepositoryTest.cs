@@ -1,26 +1,46 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class BenchmarkRepositoryTest
+public class BenchmarkRepositoryTest : BaseRepositoryTest
 {
+    private readonly BenchmarkRepository _repository;
+
+    private static List<Benchmark> CreateBenchmarks()
+    {
+        return [
+            new Benchmark { PortfolioId = 1, BenchmarkId = 3 },
+            new Benchmark { PortfolioId = 2, BenchmarkId = 4 }
+        ];
+    }
+
+    private static List<Portfolio> CreatePortfolios()
+    {
+        return [
+            new Portfolio { Id = 1, Name = "Portfolio 1" },
+            new Portfolio { Id = 2, Name = "Portfolio 2" },
+            new Portfolio { Id = 3, Name = "Portfolio 3" },
+            new Portfolio { Id = 4, Name = "Portfolio 4" }
+        ];
+    }
+
+    public BenchmarkRepositoryTest()
+    {
+        _repository = new BenchmarkRepository(_context);
+    }
+
     [Fact]
     public async Task AddBenchmarkMappingsAsync_AddsBenchmarksToDatabase()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new BenchmarkRepository(context);
+        var benchmarks = CreateBenchmarks();
 
-        var benchmarks = new List<Benchmark>
-        {
-            new Benchmark { PortfolioId = 1, BenchmarkId = 3 },
-            new Benchmark { PortfolioId = 2, BenchmarkId = 4 }
-        };
+        await _repository.AddBenchmarkMappingsAsync(benchmarks);
 
-        await repository.AddBenchmarkMappingsAsync(benchmarks);
+        var retrievedBenchmark1 = await _context.Benchmarks.FindAsync(1, 3);
+        var retrievedBenchmark2 = await _context.Benchmarks.FindAsync(2, 4);
 
-        var retrievedBenchmark1 = await context.Benchmarks.FindAsync(1, 3);
-        var retrievedBenchmark2 = await context.Benchmarks.FindAsync(2, 4);
         Assert.NotNull(retrievedBenchmark1);
         Assert.NotNull(retrievedBenchmark2);
     }
@@ -28,25 +48,16 @@ public class BenchmarkRepositoryTest
     [Fact]
     public async Task GetBenchmarkMappingsAsync_ReturnsAllBenchmarks()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new BenchmarkRepository(context);
+        _context.Portfolios.AddRange(CreatePortfolios());
 
-        var portfolio1 = new Portfolio { Id = 1, Name = "Portfolio 1" };
-        var portfolio2 = new Portfolio { Id = 2, Name = "Portfolio 2" };
-        var portfolio3 = new Portfolio { Id = 3, Name = "Portfolio 3" };
-        var portfolio4 = new Portfolio { Id = 4, Name = "Portfolio 4" };
+        var benchmarks = CreateBenchmarks();
 
-        context.Portfolios.AddRange(portfolio1, portfolio2, portfolio3, portfolio4);
+        _context.Benchmarks.AddRange(benchmarks);
+        await _context.SaveChangesAsync();
 
-        var benchmark1 = new Benchmark { PortfolioId = 1, BenchmarkId = 3 };
-        var benchmark2 = new Benchmark { PortfolioId = 2, BenchmarkId = 4 };
+        var retrievedBenchmarks = await _repository.GetBenchmarkMappingsAsync();
 
-        context.Benchmarks.AddRange(benchmark1, benchmark2);
-        await context.SaveChangesAsync();
-
-        var benchmarks = await repository.GetBenchmarkMappingsAsync();
-
-        Assert.Equal(2, benchmarks.Count());
+        Assert.Equal(benchmarks.Count, retrievedBenchmarks.Count());
     }
 
 
