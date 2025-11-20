@@ -4,84 +4,85 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class PerformanceTypeInfoRepositoryTest
+public class PerformanceTypeInfoRepositoryTest : BaseRepositoryTest
 {
+    private readonly PerformanceTypeRepository _repository;
+
+    public PerformanceTypeInfoRepositoryTest()
+    {
+        _repository = new PerformanceTypeRepository(_context);
+    }
+
+    private static string CreateName(int i) => $"PerformanceType{i}";
+    private static PerformanceType CreatePerformanceType(int i) => new() { Id = i, Name = CreateName(i) };
+    private static List<PerformanceType> CreatePerformanceTypes(int count)
+    {
+        return Enumerable.Range(1, count)
+            .Select(CreatePerformanceType)
+            .ToList();
+    }
+
     [Fact]
     public async Task AddPerformanceTypesAsync_AddsPerformanceTypes_ToDatabase()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PerformanceTypeRepository(context);
-
-        var performanceTypes = new List<PerformanceType>
-        {
-            new PerformanceType { Id = 1, Name = "Type 1" },
-            new PerformanceType { Id = 2, Name = "Type 2" }
-        };
+        var n = 2;
+        var performanceTypes = CreatePerformanceTypes(n);
 
         // Act
-        await repository.AddPerformanceTypesAsync(performanceTypes);
+        await _repository.AddPerformanceTypesAsync(performanceTypes);
 
         // Assert
-        var addedTypes = await context.PerformanceTypeInfos.ToListAsync();
-        Assert.Equal(2, addedTypes.Count);
-        Assert.Contains(addedTypes, pt => pt.Name == "Type 1");
-        Assert.Contains(addedTypes, pt => pt.Name == "Type 2");
+        var addedTypes = await _context.PerformanceTypeInfos.ToListAsync();
+        Assert.Equal(n, addedTypes.Count);
+        for (int i = 1; i <= n; i++)
+        {
+            Assert.Contains(addedTypes, pt => pt.Name == CreateName(i));
+        }
     }
 
     [Fact]
     public async Task AddPerformanceTypeAsync_DoesNotAddEmptyList()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PerformanceTypeRepository(context);
-
-        var performanceTypes = new List<PerformanceType>();
+        var expected = new List<PerformanceType>();
 
         // Act
-        await repository.AddPerformanceTypesAsync(performanceTypes);
+        await _repository.AddPerformanceTypesAsync(expected);
 
         // Assert
-        var addedTypes = await context.PerformanceTypeInfos.ToListAsync();
-        Assert.Empty(addedTypes);
+        var actual = await _context.PerformanceTypeInfos.ToListAsync();
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetPerformanceTypeInfosAsync_ReturnsAllPerformanceTypes()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PerformanceTypeRepository(context);
+        var n = 100;
+        var performanceTypes = CreatePerformanceTypes(n);
 
-        var performanceTypes = new List<PerformanceType>
-        {
-            new PerformanceType { Id = 1, Name = "Type 1" },
-            new PerformanceType { Id = 2, Name = "Type 2" }
-        };
-
-        context.PerformanceTypeInfos.AddRange(performanceTypes);
-        await context.SaveChangesAsync();
+        _context.PerformanceTypeInfos.AddRange(performanceTypes);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetPerformanceTypeInfosAsync();
+        var result = await _repository.GetPerformanceTypeInfosAsync();
 
         // Assert
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, pt => pt.Name == "Type 1");
-        Assert.Contains(result, pt => pt.Name == "Type 2");
+        Assert.Equal(n, result.Count());
+        for (int i = 1; i <= n; i++)
+        {
+            Assert.Contains(result, pt => pt.Name == CreateName(i));
+        }
     }
 
     [Fact]
     public async Task GetPerformanceTypeInfosAsync_ReturnsEmptyList_WhenNoPerformanceTypesExist()
     {
-        // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PerformanceTypeRepository(context);
-
         // Act
-        var result = await repository.GetPerformanceTypeInfosAsync();
+        var actual = await _repository.GetPerformanceTypeInfosAsync();
 
         // Assert
-        Assert.Empty(result);
+        Assert.Empty(actual);
     }
 }
