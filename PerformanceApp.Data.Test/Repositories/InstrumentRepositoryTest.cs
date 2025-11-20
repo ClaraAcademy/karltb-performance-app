@@ -3,58 +3,55 @@ using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class InstrumentRepositoryTest 
+public class InstrumentRepositoryTest : BaseRepositoryTest
 {
+    private readonly InstrumentRepository _repository;
+
+    public InstrumentRepositoryTest()
+    {
+        _repository = new InstrumentRepository(_context);
+    }
+
+    private static List<Instrument> CreateInstruments()
+    {
+        return [
+            new Instrument { Name = "Instrument 1", TypeId = 1 },
+            new Instrument { Name = "Instrument 2", TypeId = 2 }
+        ];
+    }
 
     [Fact]
     public async Task AddInstrumentsAsync_AddsMultipleInstruments()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repo = new InstrumentRepository(context);
+        var expected = CreateInstruments();
 
-        var instruments = new List<Instrument>
-        {
-            new Instrument { Name = "Async Instrument 1", TypeId = 1 },
-            new Instrument { Name = "Async Instrument 2", TypeId = 2 }
-        };
+        await _repository.AddInstrumentsAsync(expected);
 
-        await repo.AddInstrumentsAsync(instruments);
-
-        var instrumentsInDb = context.Instruments.ToList();
-        Assert.Equal(2, instrumentsInDb.Count);
+        var actual = _context.Instruments.ToList();
+        Assert.Equal(expected.Count, actual.Count);
     }
 
     [Fact]
     public async Task GetInstrumentsAsync_ReturnsAllInstruments()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repo = new InstrumentRepository(context);
+        var expected = CreateInstruments();
+        _context.Instruments.AddRange(expected);
+        _context.SaveChanges();
 
-        var instruments = new List<Instrument>
+        var actual = await _repository.GetInstrumentsAsync();
+
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var instrument in actual)
         {
-            new Instrument { Name = "Async Instrument 1", TypeId = 1 },
-            new Instrument { Name = "Async Instrument 2", TypeId = 2 }
-        };
-        context.Instruments.AddRange(instruments);
-        context.SaveChanges();
-
-        var retrievedInstruments = await repo.GetInstrumentsAsync();
-
-        Assert.Equal(2, retrievedInstruments.Count);
-        foreach (var instrument in instruments)
-        {
-            Assert.Contains(retrievedInstruments, i => i.Name == instrument.Name);
+            Assert.Contains(actual, i => i.Name == instrument.Name);
         }
     }
 
     [Fact]
     public async Task GetInstrumentsAsync_ReturnsEmptyListWhenNoInstruments()
     {
-        var context = BaseRepositoryTest.GetContext();
-        var repo = new InstrumentRepository(context);
+        var actual = await _repository.GetInstrumentsAsync();
 
-        var retrievedInstruments = await repo.GetInstrumentsAsync();
-
-        Assert.Empty(retrievedInstruments);
+        Assert.Empty(actual);
     }
 }
