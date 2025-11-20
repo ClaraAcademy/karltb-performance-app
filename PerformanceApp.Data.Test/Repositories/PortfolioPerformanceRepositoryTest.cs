@@ -9,7 +9,7 @@ public class PortfolioPerformanceRepositoryTest
     public async Task GetPortfolioPerformancesAsync_ReturnsAllPortfolioPerformances()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioPerformanceRepository(context);
 
         var portfolioPerformances = new List<PortfolioPerformance>
@@ -34,7 +34,7 @@ public class PortfolioPerformanceRepositoryTest
     public async Task GetPortfolioPerformancesAsync_ReturnsEmpty_WhenNoPerformancesExist()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioPerformanceRepository(context);
 
         // Act

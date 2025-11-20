@@ -10,7 +10,7 @@ public class TransactionTypeRepositoryTest
     public async Task AddTransactionTypesAsync_AddsTransactionTypesToDatabase()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionTypeRepository(context);
 
         var transactionTypes = new List<TransactionType>
@@ -33,7 +33,7 @@ public class TransactionTypeRepositoryTest
     public async Task AddTransactionTypesAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionTypeRepository(context);
 
         var transactionTypes = new List<TransactionType>();
@@ -51,7 +51,7 @@ public class TransactionTypeRepositoryTest
     public async Task GetTransactionTypesAsync_ReturnsAllTransactionTypes()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionTypeRepository(context);
 
         var transactionTypes = new List<TransactionType>
@@ -76,7 +76,7 @@ public class TransactionTypeRepositoryTest
     public async Task GetTransactionTypesAsync_NoTransactionTypes_ReturnsEmptyList()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionTypeRepository(context);
 
         // Act

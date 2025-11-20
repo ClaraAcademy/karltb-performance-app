@@ -9,7 +9,7 @@ public class InstrumentRepositoryTest
     [Fact]
     public async Task AddInstrumentsAsync_AddsMultipleInstruments()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repo = new InstrumentRepository(context);
 
         var instruments = new List<Instrument>
@@ -27,7 +27,7 @@ public class InstrumentRepositoryTest
     [Fact]
     public async Task GetInstrumentsAsync_ReturnsAllInstruments()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repo = new InstrumentRepository(context);
 
         var instruments = new List<Instrument>
@@ -50,7 +50,7 @@ public class InstrumentRepositoryTest
     [Fact]
     public async Task GetInstrumentsAsync_ReturnsEmptyListWhenNoInstruments()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repo = new InstrumentRepository(context);
 
         var retrievedInstruments = await repo.GetInstrumentsAsync();

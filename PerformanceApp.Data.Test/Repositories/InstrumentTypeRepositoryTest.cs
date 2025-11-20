@@ -9,7 +9,7 @@ public class InstrumentTypeRepositoryTest
     [Fact]
     public async Task AddInstrumentTypesAsync_AddsMultipleInstrumentTypesToDatabase()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentTypeRepository(context);
 
         var instrumentTypes = new List<InstrumentType>
@@ -26,7 +26,7 @@ public class InstrumentTypeRepositoryTest
     [Fact]
     public async Task AddInstrumentTypesAsync_DoesNotAddEmptyList()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentTypeRepository(context);
 
         var instrumentTypes = new List<InstrumentType>();
@@ -40,7 +40,7 @@ public class InstrumentTypeRepositoryTest
     [Fact]
     public async Task GetInstrumentTypesAsync_ReturnsCorrectInstrumentTypes()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         context.InstrumentTypes.AddRange(new List<InstrumentType>
         {
             new InstrumentType { Name = "Equity" },

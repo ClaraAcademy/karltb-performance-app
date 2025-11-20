@@ -10,7 +10,7 @@ public class StagingRepositoryTest
     public async Task AddStagingsAsync_AddsStagingsToDatabase()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new StagingRepository(context);
 
         var bankday = DateOnly.FromDateTime(DateTime.Now);
@@ -35,7 +35,7 @@ public class StagingRepositoryTest
     public async Task AddStagingsAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new StagingRepository(context);
 
         var stagings = new List<Staging>();
@@ -52,7 +52,7 @@ public class StagingRepositoryTest
     public async Task GetStagingsAsync_ReturnsAllStagings()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new StagingRepository(context);
 
         var bankday = DateOnly.FromDateTime(DateTime.Now);
@@ -79,7 +79,7 @@ public class StagingRepositoryTest
     public async Task GetStagingsAsync_NoStagings_ReturnsEmptyList()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new StagingRepository(context);
 
         // Act

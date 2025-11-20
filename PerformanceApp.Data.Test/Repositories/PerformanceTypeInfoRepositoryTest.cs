@@ -10,7 +10,7 @@ public class PerformanceTypeInfoRepositoryTest
     public async Task AddPerformanceTypesAsync_AddsPerformanceTypes_ToDatabase()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PerformanceTypeRepository(context);
 
         var performanceTypes = new List<PerformanceType>
@@ -33,7 +33,7 @@ public class PerformanceTypeInfoRepositoryTest
     public async Task AddPerformanceTypeAsync_DoesNotAddEmptyList()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PerformanceTypeRepository(context);
 
         var performanceTypes = new List<PerformanceType>();
@@ -50,7 +50,7 @@ public class PerformanceTypeInfoRepositoryTest
     public async Task GetPerformanceTypeInfosAsync_ReturnsAllPerformanceTypes()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PerformanceTypeRepository(context);
 
         var performanceTypes = new List<PerformanceType>
@@ -75,7 +75,7 @@ public class PerformanceTypeInfoRepositoryTest
     public async Task GetPerformanceTypeInfosAsync_ReturnsEmptyList_WhenNoPerformanceTypesExist()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PerformanceTypeRepository(context);
 
         // Act

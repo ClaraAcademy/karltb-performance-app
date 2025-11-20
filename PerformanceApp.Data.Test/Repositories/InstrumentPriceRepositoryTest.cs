@@ -8,7 +8,7 @@ public class InstrumentPriceRepositoryTest
     [Fact]
     public void AddInstrumentPrices_AddsInstrumentPricesToDatabase()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>
@@ -30,7 +30,7 @@ public class InstrumentPriceRepositoryTest
     [Fact]
     public void AddInstrumentPrices_DoesNotAddEmptyList()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>();
@@ -43,7 +43,7 @@ public class InstrumentPriceRepositoryTest
     [Fact]
     public async Task AddInstrumentPricesAsync_AddsInstrumentPricesToDatabase()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>
@@ -65,7 +65,7 @@ public class InstrumentPriceRepositoryTest
     [Fact]
     public async Task AddInstrumentPricesAsync_DoesNotAddEmptyList()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>();
@@ -78,7 +78,7 @@ public class InstrumentPriceRepositoryTest
     [Fact]
     public async Task GetInstrumentPricesAsync_ReturnsAllInstrumentPrices()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new InstrumentPriceRepository(context);
 
         var instrumentPrices = new List<InstrumentPrice>

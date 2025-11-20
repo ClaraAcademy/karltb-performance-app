@@ -8,7 +8,7 @@ public class PortfolioValueRepositoryTest
     public async Task GetPortfolioValuesAsync_ReturnsAllPortfolioValues()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         context.PortfolioValues.AddRange(
             new PortfolioValue { PortfolioId = 1, Value = 1000m },
             new PortfolioValue { PortfolioId = 2, Value = 2000m }
@@ -32,7 +32,7 @@ public class PortfolioValueRepositoryTest
     public async Task GetPortfolioValuesAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioValueRepository(context);
 
         // Act

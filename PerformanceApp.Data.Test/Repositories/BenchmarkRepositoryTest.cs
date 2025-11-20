@@ -8,7 +8,7 @@ public class BenchmarkRepositoryTest
     [Fact]
     public async Task AddBenchmarkMappingsAsync_AddsBenchmarksToDatabase()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new BenchmarkRepository(context);
 
         var benchmarks = new List<Benchmark>
@@ -28,7 +28,7 @@ public class BenchmarkRepositoryTest
     [Fact]
     public async Task GetBenchmarkMappingsAsync_ReturnsAllBenchmarks()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new BenchmarkRepository(context);
 
         var portfolio1 = new Portfolio { Id = 1, Name = "Portfolio 1" };

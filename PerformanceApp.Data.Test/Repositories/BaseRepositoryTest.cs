@@ -3,8 +3,15 @@ using PerformanceApp.Data.Context;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public static class RepositoryTest
+public class BaseRepositoryTest
 {
+    protected readonly PadbContext _context;
+
+    public BaseRepositoryTest()
+    {
+        _context = GetContext();
+    }
+
     public static PadbContext GetContext()
     {
         var options = new DbContextOptionsBuilder<PadbContext>()

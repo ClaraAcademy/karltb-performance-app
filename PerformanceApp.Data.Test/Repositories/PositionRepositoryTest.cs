@@ -9,7 +9,7 @@ public class PositionRepositoryTest
     public async Task GetPositionsAsync_ReturnsAllPositions()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         context.Positions.AddRange(
             new Position { Id = 1, PortfolioId = 1, Bankday = DateOnly.FromDateTime(DateTime.Now) },
             new Position { Id = 2, PortfolioId = 2, Bankday = DateOnly.FromDateTime(DateTime.Now) }
@@ -33,7 +33,7 @@ public class PositionRepositoryTest
     public async Task GetPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PositionRepository(context);
 
         // Act
@@ -48,7 +48,7 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.AddRange(
             new Position
@@ -90,7 +90,7 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -120,7 +120,7 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -150,7 +150,7 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
@@ -166,7 +166,7 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.AddRange(
             new Position
@@ -208,7 +208,7 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -238,7 +238,7 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -268,7 +268,7 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
@@ -284,7 +284,7 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.AddRange(
             new Position
@@ -326,7 +326,7 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -356,7 +356,7 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
         context.Positions.Add(
             new Position
@@ -386,7 +386,7 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 

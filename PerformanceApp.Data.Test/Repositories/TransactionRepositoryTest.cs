@@ -8,7 +8,7 @@ public class TransactionRepositoryTest
     [Fact]
     public async Task GetTransactionsAsync_ReturnsAllTransactions()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionRepository(context);
 
         var transactions = new List<Transaction>
@@ -32,7 +32,7 @@ public class TransactionRepositoryTest
     [Fact]
     public async Task GetTransactionsAsync_ReturnsEmptyList_WhenNoTransactionsExist()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new TransactionRepository(context);
 
         var result = await repository.GetTransactionsAsync();

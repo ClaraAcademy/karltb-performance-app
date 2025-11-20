@@ -3,41 +3,49 @@ using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class DateInfoRepositoryTest 
+public class DateInfoRepositoryTest : BaseRepositoryTest
 {
+    private readonly DateInfoRepository _repository;
+    private readonly List<DateInfo> _dateInfos = CreateDateInfos();
+
+    public DateInfoRepositoryTest()
+    {
+        _repository = new DateInfoRepository(_context);
+    }
+
+    private static List<DateInfo> CreateDateInfos()
+    {
+        return [
+            new DateInfo { Bankday = new DateOnly(2024, 1, 1) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 2) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 3) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 4) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 5) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 6) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 7) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 8) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 9) },
+            new DateInfo { Bankday = new DateOnly(2024, 1, 10) }
+        ];
+    }
+
     [Fact]
     public async Task AddDateInfosAsync_AddsDateInfos()
     {
-        var context = RepositoryTest.GetContext();
-        var repo = new DateInfoRepository(context);
+        await _repository.AddDateInfosAsync(_dateInfos);
 
-        var dateInfos = new List<DateInfo>
-        {
-            new DateInfo { Bankday = new DateOnly(2024, 1, 1) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 2) }
-        };
-
-        await repo.AddDateInfosAsync(dateInfos);
-
-        Assert.Equal(dateInfos.Count(), context.DateInfos.Count());
+        Assert.Equal(_dateInfos.Count, _context.DateInfos.Count());
     }
 
     [Fact]
     public async Task GetDateInfosAsync_ReturnsDateInfos()
     {
-        var context = RepositoryTest.GetContext();
-        context.DateInfos.AddRange(new List<DateInfo>
-        {
-            new DateInfo { Bankday = new DateOnly(2024, 1, 1) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 2) }
-        });
-        context.SaveChanges();
+        _context.DateInfos.AddRange(_dateInfos);
+        _context.SaveChanges();
 
-        var repo = new DateInfoRepository(context);
+        var dateInfos = await _repository.GetDateInfosAsync();
 
-        var dateInfos = await repo.GetDateInfosAsync();
-
-        Assert.Equal(2, dateInfos.Count());
+        Assert.Equal(_dateInfos.Count, dateInfos.Count());
     }
 
 

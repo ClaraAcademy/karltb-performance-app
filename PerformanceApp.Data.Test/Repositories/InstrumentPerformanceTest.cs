@@ -8,7 +8,7 @@ public class InstrumentPerformanceTest
     [Fact]
     public async Task GetInstrumentPerformancesAsync_ReturnsPerformances()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         context.InstrumentPerformances.AddRange(new List<InstrumentPerformance>
         {
             new InstrumentPerformance { InstrumentId = 1, TypeId = 1, PeriodStart = DateOnly.FromDateTime(DateTime.Now), PeriodEnd = DateOnly.FromDateTime(DateTime.Now), Value = 0.05m },

@@ -9,7 +9,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task AddPortfoliosAsync_AddsMultiplePortfoliosToDatabase()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>
@@ -26,7 +26,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task AddPortfoliosAsync_DoesNotAddEmptyList()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>();
@@ -39,7 +39,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfolioAsync_ById_ReturnsCorrectPortfolio()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolio = new Portfolio { Name = "Get By ID Portfolio" };
@@ -54,7 +54,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfolioAsync_ById_ReturnsNull_WhenNotFound()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var retrievedPortfolio = await repository.GetPortfolioAsync(999);
@@ -64,7 +64,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfoliosAsync_ByNames_ReturnsCorrectPortfolios()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>
@@ -87,7 +87,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfoliosAsync_ByNames_ReturnsEmpty_WhenNoMatches()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>
@@ -107,7 +107,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetProperPortfoliosAsync_ReturnsPortfoliosWithBenchmarks()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var benchmarkPortfolio = new Portfolio { Name = "Benchmark Portfolio" };
@@ -129,7 +129,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfoliosAsync_ReturnsAllPortfolios()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var portfolios = new List<Portfolio>
@@ -148,7 +148,7 @@ public class PortfolioRepositoryTest
     [Fact]
     public async Task GetPortfoliosAsync_ReturnsEmpty_WhenNoPortfoliosExist()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new PortfolioRepository(context);
 
         var allPortfolios = await repository.GetPortfoliosAsync();

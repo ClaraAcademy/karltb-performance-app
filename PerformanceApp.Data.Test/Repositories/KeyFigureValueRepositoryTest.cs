@@ -7,7 +7,7 @@ public class KeyFigureValueRepositoryTest
     [Fact]
     public async Task GetKeyFigureValuesAsync_ReturnsValues_ForGivenPortfolioId()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
 
         var portfolios = new List<Portfolio>
         {
@@ -43,7 +43,7 @@ public class KeyFigureValueRepositoryTest
     public async Task GetKeyFigureValuesAsync_ReturnsEmpty_ForNonExistingPortfolioId()
     {
         // Arrange
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureValueRepository(context);
 
         // Act

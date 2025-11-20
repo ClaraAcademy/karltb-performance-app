@@ -9,7 +9,7 @@ public class KeyFigureRepositoryTest
     [Fact]
     public async Task AddKeyFigureInfosAsync_AddsKeyFigures()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureInfoRepository(context);
 
         var keyFigureInfos = new List<KeyFigureInfo>
@@ -32,7 +32,7 @@ public class KeyFigureRepositoryTest
     [Fact]
     public async Task AddKeyFiguresInfosAsync_AddsSingleKeyFigure()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureInfoRepository(context);
 
         var keyFigureInfos = new List<KeyFigureInfo>
@@ -52,7 +52,7 @@ public class KeyFigureRepositoryTest
     [Fact]
     public async Task AddKeyFigureInfosAsync_NoKeyFigures_DoesNothing()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureInfoRepository(context);
 
         var keyFigureInfos = new List<KeyFigureInfo>();
@@ -68,7 +68,7 @@ public class KeyFigureRepositoryTest
     [Fact]
     public async Task GetKeyFigureInfosAsync_ReturnsAllKeyFigures()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureInfoRepository(context);
 
         var keyFigureInfos = new List<KeyFigureInfo>
@@ -92,7 +92,7 @@ public class KeyFigureRepositoryTest
     [Fact]
     public async Task GetKeyFigureInfosAsync_NoKeyFigures_ReturnsEmptyList()
     {
-        var context = RepositoryTest.GetContext();
+        var context = BaseRepositoryTest.GetContext();
         var repository = new KeyFigureInfoRepository(context);
 
         // Act
