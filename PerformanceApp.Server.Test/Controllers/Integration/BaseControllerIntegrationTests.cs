@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 using Xunit;
 
 
-
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 
-public class BaseControllerIntegrationTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+[Collection("IntegrationTestCollection")]
+public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     protected readonly HttpClient _client = factory.CreateClient();
     protected readonly IJwtService _jwtService = GetJwtService(factory);
