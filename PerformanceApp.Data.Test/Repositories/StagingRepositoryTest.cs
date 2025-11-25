@@ -4,47 +4,70 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class StagingRepositoryTest
+public class StagingRepositoryTest : BaseRepositoryTest
 {
+    private readonly StagingRepository _repository;
+
+    public StagingRepositoryTest()
+    {
+        _repository = new StagingRepository(_context);
+    }
+
+    private static Staging CreateStaging(int i)
+    {
+        return new Staging
+        {
+            Bankday = DateOnly.FromDateTime(DateTime.Now),
+            InstrumentType = $"Type{i}",
+            InstrumentName = $"Staging{i}",
+            Price = 100.0m * i,
+            Created = DateTime.Now
+        };
+    }
+
+    private static List<Staging> CreateStagings(int count)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => CreateStaging(i))
+            .ToList();
+    }
+
     [Fact]
     public async Task AddStagingsAsync_AddsStagingsToDatabase()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new StagingRepository(context);
-
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-
-        var stagings = new List<Staging>
-        {
-            new Staging {Bankday = bankday, InstrumentType = "Type1", InstrumentName = "Staging1", Price = 100.0m, Created = DateTime.Now },
-            new Staging {Bankday = bankday, InstrumentType = "Type2", InstrumentName = "Staging2", Price = 200.0m, Created = DateTime.Now }
-        };
+        var nExpected = 5;
+        var stagings = CreateStagings(nExpected);
 
         // Act
-        await repository.AddStagingsAsync(stagings);
+        await _repository.AddStagingsAsync(stagings);
 
         // Assert
-        var addedStagings = await context.Stagings.ToListAsync();
-        Assert.Equal(2, addedStagings.Count);
-        Assert.Contains(addedStagings, s => s.InstrumentName == "Staging1");
-        Assert.Contains(addedStagings, s => s.InstrumentName == "Staging2");
+        var addedStagings = await _context.Stagings.ToListAsync();
+
+        var nActual = addedStagings.Count;
+        Assert.Equal(nExpected, nActual);
+
+        foreach ((var e, var a) in stagings.Zip(addedStagings))
+        {
+            Assert.Equal(e.Bankday, a.Bankday);
+            Assert.Equal(e.InstrumentType, a.InstrumentType);
+            Assert.Equal(e.InstrumentName, a.InstrumentName);
+            Assert.Equal(e.Price, a.Price);
+        }
     }
 
     [Fact]
     public async Task AddStagingsAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new StagingRepository(context);
-
         var stagings = new List<Staging>();
 
         // Act
-        await repository.AddStagingsAsync(stagings);
+        await _repository.AddStagingsAsync(stagings);
 
         // Assert
-        var addedStagings = await context.Stagings.ToListAsync();
+        var addedStagings = await _context.Stagings.ToListAsync();
         Assert.Empty(addedStagings);
     }
 
@@ -52,38 +75,32 @@ public class StagingRepositoryTest
     public async Task GetStagingsAsync_ReturnsAllStagings()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new StagingRepository(context);
+        var nExpected = 8;
+        var stagings = CreateStagings(nExpected);
 
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-
-        var stagings = new List<Staging>
-        {
-            new Staging {Bankday = bankday, InstrumentType = "Type1", InstrumentName = "Staging1", Price = 100.0m, Created = DateTime.Now },
-            new Staging {Bankday = bankday, InstrumentType = "Type2", InstrumentName = "Staging2", Price = 200.0m, Created = DateTime.Now }
-        };
-
-        await context.Stagings.AddRangeAsync(stagings);
-        await context.SaveChangesAsync();
+        await _context.Stagings.AddRangeAsync(stagings);
+        await _context.SaveChangesAsync();
 
         // Act
-        var retrievedStagings = await repository.GetStagingsAsync();
+        var retrievedStagings = await _repository.GetStagingsAsync();
 
         // Assert
-        Assert.Equal(2, retrievedStagings.Count);
-        Assert.Contains(retrievedStagings, s => s.InstrumentName == "Staging1");
-        Assert.Contains(retrievedStagings, s => s.InstrumentName == "Staging2");
+        var nActual = retrievedStagings.Count;
+        Assert.Equal(nExpected, nActual);
+        foreach ((var e, var a) in stagings.Zip(retrievedStagings))
+        {
+            Assert.Equal(e.Bankday, a.Bankday);
+            Assert.Equal(e.InstrumentType, a.InstrumentType);
+            Assert.Equal(e.InstrumentName, a.InstrumentName);
+            Assert.Equal(e.Price, a.Price);
+        }
     }
 
     [Fact]
     public async Task GetStagingsAsync_NoStagings_ReturnsEmptyList()
     {
-        // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new StagingRepository(context);
-
         // Act
-        var retrievedStagings = await repository.GetStagingsAsync();
+        var retrievedStagings = await _repository.GetStagingsAsync();
 
         // Assert
         Assert.Empty(retrievedStagings);
