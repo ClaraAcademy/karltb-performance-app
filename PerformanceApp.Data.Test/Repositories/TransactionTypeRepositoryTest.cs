@@ -4,46 +4,69 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class TransactionTypeRepositoryTest
+public class TransactionTypeRepositoryTest : BaseRepositoryTest
 {
+    private readonly TransactionTypeRepository _repository;
+
+    public TransactionTypeRepositoryTest()
+    {
+        _repository = new TransactionTypeRepository(_context);
+    }
+
+    private static TransactionType CreateTransactionType(int i)
+    {
+        return new TransactionType { Id = i, Name = $"Type{i}" };
+    }
+
+    private static List<TransactionType> CreateTransactionTypes(int count)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => CreateTransactionType(i))
+            .ToList();
+    }
+
+    private static void AreEqual(TransactionType expected, TransactionType actual)
+    {
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Equal(expected.Name, actual.Name);
+    }
+    private static void AssertEqual(IEnumerable<TransactionType> expected, IEnumerable<TransactionType> actual)
+    {
+        Assert.Equal(expected.Count(), actual.Count());
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            AreEqual(e, a);
+        }
+    }
+
     [Fact]
     public async Task AddTransactionTypesAsync_AddsTransactionTypesToDatabase()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new TransactionTypeRepository(context);
-
-        var transactionTypes = new List<TransactionType>
-        {
-            new TransactionType { Id = 1, Name = "Type1" },
-            new TransactionType { Id = 2, Name = "Type2" }
-        };
+        var nExpected = 9;
+        var transactionTypes = CreateTransactionTypes(nExpected);
+        await _repository.AddTransactionTypesAsync(transactionTypes);
+        await _context.SaveChangesAsync();
 
         // Act
-        await repository.AddTransactionTypesAsync(transactionTypes);
-        await context.SaveChangesAsync();
+        var addedTransactionTypes = await _context.TransactionTypes.ToListAsync();
+
         // Assert
-        var addedTransactionTypes = await context.TransactionTypes.ToListAsync();
-        Assert.Equal(2, addedTransactionTypes.Count);
-        Assert.Contains(addedTransactionTypes, tt => tt.Name == "Type1");
-        Assert.Contains(addedTransactionTypes, tt => tt.Name == "Type2");
+        AssertEqual(transactionTypes, addedTransactionTypes);
     }
 
     [Fact]
     public async Task AddTransactionTypesAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new TransactionTypeRepository(context);
-
         var transactionTypes = new List<TransactionType>();
 
         // Act
-        await repository.AddTransactionTypesAsync(transactionTypes);
-        await context.SaveChangesAsync();
+        await _repository.AddTransactionTypesAsync(transactionTypes);
+        await _context.SaveChangesAsync();
 
         // Assert
-        var addedTransactionTypes = await context.TransactionTypes.ToListAsync();
+        var addedTransactionTypes = await _context.TransactionTypes.ToListAsync();
         Assert.Empty(addedTransactionTypes);
     }
 
@@ -51,36 +74,24 @@ public class TransactionTypeRepositoryTest
     public async Task GetTransactionTypesAsync_ReturnsAllTransactionTypes()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new TransactionTypeRepository(context);
+        var nExpected = 100;
+        var transactionTypes = CreateTransactionTypes(nExpected);
 
-        var transactionTypes = new List<TransactionType>
-        {
-            new TransactionType { Id = 1, Name = "Type1" },
-            new TransactionType { Id = 2, Name = "Type2" }
-        };
-
-        await context.TransactionTypes.AddRangeAsync(transactionTypes);
-        await context.SaveChangesAsync();
+        await _context.TransactionTypes.AddRangeAsync(transactionTypes);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetTransactionTypesAsync();
+        var result = await _repository.GetTransactionTypesAsync();
 
         // Assert
-        Assert.Equal(2, result.Count());
-        Assert.Contains(result, tt => tt.Name == "Type1");
-        Assert.Contains(result, tt => tt.Name == "Type2");
+        AssertEqual(transactionTypes, result);
     }
 
     [Fact]
     public async Task GetTransactionTypesAsync_NoTransactionTypes_ReturnsEmptyList()
     {
-        // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new TransactionTypeRepository(context);
-
         // Act
-        var result = await repository.GetTransactionTypesAsync();
+        var result = await _repository.GetTransactionTypesAsync();
 
         // Assert
         Assert.Empty(result);
