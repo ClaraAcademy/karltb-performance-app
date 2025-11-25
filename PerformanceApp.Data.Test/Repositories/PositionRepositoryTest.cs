@@ -3,44 +3,75 @@ using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Test.Repositories;
 
-public class PositionRepositoryTest
+public class PositionRepositoryTest : BaseRepositoryTest
 {
+    private readonly PositionRepository _repository;
+
+    public PositionRepositoryTest()
+    {
+        _repository = new PositionRepository(_context);
+    }
+
+    private static Position CreatePosition(int id, int portfolioId, DateOnly bankday, string instrumentType)
+    {
+        return new Position
+        {
+            Id = id,
+            PortfolioId = portfolioId,
+            Bankday = bankday,
+            InstrumentNavigation = new Instrument
+            {
+                InstrumentTypeNavigation = new InstrumentType { Name = instrumentType }
+            }
+        };
+    }
+    private static List<Position> CreatePositions()
+    {
+        var bankday = DateOnly.FromDateTime(DateTime.Now);
+        return [
+            CreatePosition(1, 1, bankday, "Stock"),
+            CreatePosition(2, 1, bankday, "Bond"),
+            CreatePosition(3, 1, bankday, "Index"),
+            CreatePosition(4, 2, bankday, "Stock")
+        ];
+    }
+
+    private static DateOnly GetBankday() => DateOnly.FromDateTime(DateTime.Now);
+
     [Fact]
     public async Task GetPositionsAsync_ReturnsAllPositions()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        context.Positions.AddRange(
-            new Position { Id = 1, PortfolioId = 1, Bankday = DateOnly.FromDateTime(DateTime.Now) },
-            new Position { Id = 2, PortfolioId = 2, Bankday = DateOnly.FromDateTime(DateTime.Now) }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var positions = CreatePositions();
+        var nExpected = positions.Count;
+        await _context.AddRangeAsync(positions);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetPositionsAsync();
+        var fetched = await _repository.GetPositionsAsync();
 
         // Assert
-        Assert.NotNull(result);
-        var positions = result.ToList();
-        Assert.Equal(2, positions.Count);
-        Assert.Contains(positions, p => p.Id == 1 && p.PortfolioId == 1);
-        Assert.Contains(positions, p => p.Id == 2 && p.PortfolioId == 2);
+        var nActual = fetched.Count();
+        Assert.Equal(nExpected, nActual);
+        foreach ((var e, var a) in positions.Zip(fetched))
+        {
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.PortfolioId, a.PortfolioId);
+            Assert.Equal(e.Bankday, a.Bankday);
+
+            var eInstrumentType = e.InstrumentNavigation?.InstrumentTypeNavigation;
+            var aInstrumentType = a.InstrumentNavigation?.InstrumentTypeNavigation;
+            Assert.Equal(eInstrumentType?.Name, aInstrumentType?.Name);
+        }
     }
 
     [Fact]
     public async Task GetPositionsAsync_ReturnsEmptyListWhenNoData()
     {
-        // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PositionRepository(context);
-
         // Act
-        var result = await repository.GetPositionsAsync();
+        var result = await _repository.GetPositionsAsync();
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -48,12 +79,12 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.AddRange(
+        var bankday = GetBankday();
+        var expectedId = 1;
+        _context.Positions.AddRange(
             new Position
             {
-                Id = 1,
+                Id = expectedId,
                 PortfolioId = 1,
                 Bankday = bankday,
                 InstrumentNavigation = new Instrument
@@ -72,47 +103,30 @@ public class PositionRepositoryTest
                 }
             }
         );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetStockPositionsAsync(bankday, 1);
+        var fetched = await _repository.GetStockPositionsAsync(bankday, 1);
 
         // Assert
-        Assert.NotNull(result);
-        var positions = result.ToList();
-        Assert.Single(positions);
-        Assert.Equal(1, positions[0].Id);
+        Assert.Single(fetched);
+        var actualId = fetched.First().Id;
+        Assert.Equal(expectedId, actualId);
     }
 
     [Fact]
     public async Task GetStockPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Stock" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var bankday = GetBankday();
+        var position = CreatePosition(2, 2, bankday, "Stock");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetStockPositionsAsync(bankday.AddDays(1), 1);
+        var result = await _repository.GetStockPositionsAsync(bankday.AddDays(1), 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -120,29 +134,16 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Stock" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var bankday = GetBankday();
+        var portfolioId = 5;
+        var position = CreatePosition(5, portfolioId, bankday, "Stock");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetStockPositionsAsync(bankday, 2);
+        var result = await _repository.GetStockPositionsAsync(bankday, portfolioId - 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -150,15 +151,12 @@ public class PositionRepositoryTest
     public async Task GetStockPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
         // Act
-        var result = await repository.GetStockPositionsAsync(bankday, 1);
+        var result = await _repository.GetStockPositionsAsync(bankday, 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -166,71 +164,35 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.AddRange(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Bond" }
-                }
-            },
-            new Position
-            {
-                Id = 2,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Stock" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
+        var positions = CreatePositions();
+        _context.Positions.AddRange(positions);
+        await _context.SaveChangesAsync();
 
-        var repository = new PositionRepository(context);
+        var repository = new PositionRepository(_context);
 
         // Act
         var result = await repository.GetBondPositionsAsync(bankday, 1);
 
         // Assert
         Assert.NotNull(result);
-        var positions = result.ToList();
-        Assert.Single(positions);
-        Assert.Equal(1, positions[0].Id);
+        Assert.Single(result);
+        Assert.Equal(1, result.First().PortfolioId);
     }
 
     [Fact]
     public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Bond" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var position = CreatePosition(2, 1, bankday, "Bond");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetBondPositionsAsync(bankday.AddDays(1), 1);
+        var result = await _repository.GetBondPositionsAsync(bankday.AddDays(1), 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -238,29 +200,16 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Bond" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var portfolioId = 5;
+        var position = CreatePosition(1, portfolioId, bankday, "Bond");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetBondPositionsAsync(bankday, 2);
+        var result = await _repository.GetBondPositionsAsync(bankday, portfolioId - 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -268,15 +217,12 @@ public class PositionRepositoryTest
     public async Task GetBondPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
         // Act
-        var result = await repository.GetBondPositionsAsync(bankday, 1);
+        var result = await _repository.GetBondPositionsAsync(bankday, 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -284,71 +230,31 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsFilteredPositions()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.AddRange(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Index" }
-                }
-            },
-            new Position
-            {
-                Id = 2,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Stock" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var positions = CreatePositions();
+        _context.Positions.AddRange(positions);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetIndexPositionsAsync(bankday, 1);
+        var result = await _repository.GetIndexPositionsAsync(GetBankday(), 1);
 
         // Assert
-        Assert.NotNull(result);
-        var positions = result.ToList();
-        Assert.Single(positions);
-        Assert.Equal(1, positions[0].Id);
+        Assert.Single(result);
+        Assert.Equal(1, result.First().PortfolioId);
     }
 
     [Fact]
     public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Index" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var position = CreatePosition(1, 1, bankday, "Index");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetIndexPositionsAsync(bankday.AddDays(1), 1);
+        var result = await _repository.GetIndexPositionsAsync(bankday.AddDays(1), 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -356,29 +262,16 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        context.Positions.Add(
-            new Position
-            {
-                Id = 1,
-                PortfolioId = 1,
-                Bankday = bankday,
-                InstrumentNavigation = new Instrument
-                {
-                    InstrumentTypeNavigation = new InstrumentType { Name = "Index" }
-                }
-            }
-        );
-        await context.SaveChangesAsync();
-
-        var repository = new PositionRepository(context);
+        var portfolioId = 8;
+        var position = CreatePosition(1, portfolioId, bankday, "Index");
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
 
         // Act
-        var result = await repository.GetIndexPositionsAsync(bankday, 2);
+        var result = await _repository.GetIndexPositionsAsync(bankday, portfolioId - 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
@@ -386,15 +279,12 @@ public class PositionRepositoryTest
     public async Task GetIndexPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = BaseRepositoryTest.GetContext();
-        var repository = new PositionRepository(context);
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
         // Act
-        var result = await repository.GetIndexPositionsAsync(bankday, 1);
+        var result = await _repository.GetIndexPositionsAsync(bankday, 1);
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 
