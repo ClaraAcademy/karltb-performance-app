@@ -181,4 +181,47 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
         Assert.Empty(actual);
     }
 
+    [Fact]
+    public async Task GetPortfoliosAsync_ByUserId_ReturnsCorrectPortfolios()
+    {
+        // Arrange
+        var userId1 = "user1";
+        var userId2 = "user2";
+
+        var portfolio1 = new Portfolio { Name = "Portfolio 1", UserID = userId1 };
+        var portfolio2 = new Portfolio { Name = "Portfolio 2", UserID = userId1 };
+        var portfolio3 = new Portfolio { Name = "Portfolio 3", UserID = userId2 };
+
+        var portfolios = new List<Portfolio> { portfolio1, portfolio2, portfolio3 };
+
+        await _context.Portfolios.AddRangeAsync(portfolios);
+        await _context.SaveChangesAsync();
+
+        var benchmark = new Benchmark { PortfolioId = portfolio1.Id, BenchmarkId = portfolio3.Id };
+        await _context.Benchmarks.AddAsync(benchmark);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var fetched = await _repository.GetPortfoliosAsync(userId1);
+
+        // Assert
+        var nExpected = 1; // Only portfolio1 has a benchmark
+        var nActual = fetched.Count();
+        Assert.Equal(nExpected, nActual);
+        Assert.Contains(fetched, p => p.Name == "Portfolio 1");
+    }
+
+    [Fact]
+    public async Task GetPortfoliosAsync_ByUserId_ReturnsEmpty_WhenNoMatchingPortfolios()
+    {
+        // Arrange
+        var userId = "nonexistent_user";
+
+        // Act
+        var fetched = await _repository.GetPortfoliosAsync(userId);
+
+        // Assert
+        Assert.Empty(fetched);
+    }
+
 }

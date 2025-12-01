@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Server.Controllers;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
@@ -32,12 +33,12 @@ public class PortfolioControllerTest : ControllerTestBase
         // Arrange
         var portfolios = CreatePortfolioDTOs(2);
 
-        _mockPortfolioService.Setup(s => s.GetPortfolioDTOsAsync())
+        _mockPortfolioService.Setup(s => s.GetPortfolioDTOsAsync(UserData.UsernameB))
             .ReturnsAsync(portfolios);
 
 
         var controller = new PortfolioController(_mockPortfolioService.Object);
-        var user = CreateUserPrincipal("testuser");
+        var user = CreateUserPrincipal(UserData.UsernameB);
         controller.ControllerContext = CreateControllerContext(user);
 
         // Act

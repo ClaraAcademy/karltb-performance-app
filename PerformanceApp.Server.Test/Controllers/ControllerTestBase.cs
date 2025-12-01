@@ -6,9 +6,9 @@ namespace PerformanceApp.Server.Test.Controllers;
 
 public class ControllerTestBase
 {
-    protected static Claim[] CreateUserClaims(string username)
+    protected static List<Claim> CreateUserClaims(string username)
     {
-        return [new Claim(ClaimTypes.Name, username)];
+        return [new Claim(ClaimTypes.NameIdentifier, username)];
     }
     protected static ClaimsIdentity CreateUserIdentity(string username)
     {

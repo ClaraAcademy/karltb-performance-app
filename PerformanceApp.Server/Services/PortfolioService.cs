@@ -8,6 +8,7 @@ namespace PerformanceApp.Server.Services
     public interface IPortfolioService
     {
         Task<List<PortfolioDTO>> GetPortfolioDTOsAsync();
+        Task<List<PortfolioDTO>> GetPortfolioDTOsAsync(string userId);
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync();
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId);
         Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId);
@@ -32,6 +33,12 @@ namespace PerformanceApp.Server.Services
         {
             var portfolios = await _portfolioRepository.GetProperPortfoliosAsync();
 
+            return portfolios.Select(MapToPortfolioDTO).ToList();
+        }
+
+        public async Task<List<PortfolioDTO>> GetPortfolioDTOsAsync(string userId)
+        {
+            var portfolios = await _portfolioRepository.GetPortfoliosAsync(userId);
             return portfolios.Select(MapToPortfolioDTO).ToList();
         }
 

@@ -11,6 +11,7 @@ namespace PerformanceApp.Data.Repositories
         Task<IEnumerable<Portfolio>> GetProperPortfoliosAsync();
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names);
         Task<IEnumerable<Portfolio>> GetPortfoliosAsync();
+        Task<IEnumerable<Portfolio>> GetPortfoliosAsync(string userId);
     }
     public class PortfolioRepository(PadbContext context) : IPortfolioRepository
     {
@@ -48,6 +49,12 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
         {
             return await _context.Portfolios.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(string userId)
+        {
+            var properPortfolios = await GetProperPortfoliosAsync();
+            return properPortfolios.Where(p => p.UserID == userId).ToList();
         }
 
     }

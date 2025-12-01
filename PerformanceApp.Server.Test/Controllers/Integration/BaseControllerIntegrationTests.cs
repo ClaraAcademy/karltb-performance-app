@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Progr
 {
     protected readonly HttpClient _client = factory.CreateClient();
     protected readonly IJwtService _jwtService = GetJwtService(factory);
-    protected readonly ApplicationUser TestUser = new ApplicationUser { UserName = UserData.UsernameB, };
+    protected readonly ApplicationUser TestUser = GetTestUser(factory);
 
     protected static IJwtService GetJwtService(WebApplicationFactory<Program> factory)
     {
@@ -27,7 +28,15 @@ public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Progr
         return scope.ServiceProvider.GetRequiredService<IJwtService>();
     }
 
-    private void AddAuthorizationHeader(HttpRequestMessage request, string token)
+    private static ApplicationUser GetTestUser(WebApplicationFactory<Program> factory)
+    {
+        using var scope = factory.Services.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var user = userManager.FindByNameAsync(UserData.UsernameB).GetAwaiter().GetResult();
+        return user!;
+    }
+
+    private static void AddAuthorizationHeader(HttpRequestMessage request, string token)
     {
         request.Headers.Add("Authorization", $"Bearer {token}");
     }
