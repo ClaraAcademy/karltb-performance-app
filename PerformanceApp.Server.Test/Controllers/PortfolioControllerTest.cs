@@ -80,15 +80,15 @@ public class PortfolioControllerTest : ControllerTestBase
             new PortfolioBenchmarkDTO { PortfolioId = 2, BenchmarkName = "Benchmark 2" }
         };
 
-        _mockPortfolioService.Setup(s => s.GetPortfolioBenchmarksAsync())
+        _mockPortfolioService.Setup(s => s.GetPortfolioBenchmarksAsync(UserData.UsernameB))
             .ReturnsAsync(benchmarks);
 
         var controller = new PortfolioController(_mockPortfolioService.Object);
-        var user = CreateUserPrincipal("testuser");
+        var user = CreateUserPrincipal(UserData.UsernameB);
         controller.ControllerContext = CreateControllerContext(user);
 
         // Act
-        var result = await controller.GetPortfolioBenchmarks(null);
+        var result = await controller.GetPortfolioBenchmarks();
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
@@ -109,7 +109,7 @@ public class PortfolioControllerTest : ControllerTestBase
         controller.ControllerContext = CreateControllerContext(user);
 
         // Act
-        var result = await controller.GetPortfolioBenchmarks(null);
+        var result = await controller.GetPortfolioBenchmarks();
 
         // Assert
         var notFoundResult = Assert.IsType<NotFoundResult>(result.Result);

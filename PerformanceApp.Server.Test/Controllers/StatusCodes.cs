@@ -1,5 +1,6 @@
 namespace PerformanceApp.Server.Test.Controllers;
 
+// TODO: Replace these with built-in StatusCodes when available
 public static class StatusCodes
 {
     public const int OK = 200;

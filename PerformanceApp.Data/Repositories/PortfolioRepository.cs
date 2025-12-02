@@ -36,19 +36,32 @@ namespace PerformanceApp.Data.Repositories
                 .OfType<Portfolio>()
                 .ToListAsync();
         }
+        private bool IsProperPortfolio(Portfolio p)
+        {
+            return _context.Benchmarks
+                    .Select(b => b.PortfolioId)
+                    .Contains(p.Id);
+        }
         public async Task<IEnumerable<Portfolio>> GetProperPortfoliosAsync()
         {
-            return await _context.Portfolios
-                   .Where(
-                       p => _context.Benchmarks
-                               .Select(b => b.PortfolioId)
-                               .Contains(p.Id)
-                   ).ToListAsync();
+            var portfolios = await _context.Portfolios
+                .Include(p => p.BenchmarkPortfoliosNavigation)
+                    .ThenInclude(b => b.BenchmarkPortfolioNavigation)
+                .Include(p => p.BenchmarkBenchmarksNavigation)
+                    .ThenInclude(b => b.PortfolioPortfolioNavigation)
+                .ToListAsync();
+
+            return portfolios.Where(IsProperPortfolio);
         }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
         {
-            return await _context.Portfolios.ToListAsync();
+            return await _context.Portfolios
+                .Include(p => p.BenchmarkPortfoliosNavigation)
+                    .ThenInclude(b => b.BenchmarkPortfolioNavigation)
+                .Include(p => p.BenchmarkBenchmarksNavigation)
+                    .ThenInclude(b => b.PortfolioPortfolioNavigation)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(string userId)

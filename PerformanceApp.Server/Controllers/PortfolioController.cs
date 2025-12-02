@@ -34,7 +34,7 @@ namespace PerformanceApp.Server.Controllers
             var userID = GetUserId();
             if (userID == null)
             {
-                return NotFound();
+                return Ok(new List<PortfolioDTO>());
             }
 
             var dtos = await _service.GetPortfolioDTOsAsync(userID);
@@ -44,13 +44,17 @@ namespace PerformanceApp.Server.Controllers
 
         // GET: api/PortfolioBenchmark?portfolioId={portfolioId}
         [HttpGet("/api/PortfolioBenchmark")]
-        public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfolioBenchmarks([FromQuery] int? portfolioId)
+        public async Task<ActionResult<IEnumerable<PortfolioBenchmarkDTO>>> GetPortfolioBenchmarks()
         {
-            var result = portfolioId == null
-                ? await _service.GetPortfolioBenchmarksAsync()
-                : await _service.GetPortfolioBenchmarksAsync(portfolioId.Value);
+            var userID = GetUserId();
+            if (userID == null)
+            {
+                return Ok(new List<PortfolioBenchmarkDTO>());
+            }
 
-            return CheckReturn(result);
+            var dtos = await _service.GetPortfolioBenchmarksAsync(userID);
+
+            return CheckReturn(dtos);
         }
     }
 }

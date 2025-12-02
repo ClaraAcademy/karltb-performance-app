@@ -9,9 +9,7 @@ namespace PerformanceApp.Server.Test.Controllers.Integration;
 public class PortfolioControllerIntegrationTests(WebApplicationFactory<Program> factory) : BaseControllerIntegrationTests(factory)
 {
     private static readonly string PortfolioEndpoint = "/api/Portfolio";
-
-    private static string GetPortfolioBenchmarkEndpoint() => "/api/PortfolioBenchmark";
-    private static string GetPortfolioBenchmarkEndpoint(int portfolioId) => $"{GetPortfolioBenchmarkEndpoint()}?portfolioId={portfolioId}";
+    private static readonly string PortfolioBenchmarkEndpoint = "/api/PortfolioBenchmark";
 
     [Fact]
     public async Task GetPortfolios_Unauthenticated_ReturnsUnauthorized()
@@ -28,19 +26,13 @@ public class PortfolioControllerIntegrationTests(WebApplicationFactory<Program> 
     [Fact]
     public async Task GetPortfolioBenchmarks_Authorized_Returns200()
     {
-        await Get_Authenticated_Returns_Ok(GetPortfolioBenchmarkEndpoint());
-    }
-
-    [Fact]
-    public async Task GetPortfolioBenchmarks_WithPortfolioId_Authorized_Returns200()
-    {
-        await Get_Authenticated_Returns_Ok(GetPortfolioBenchmarkEndpoint(1));
+        await Get_Authenticated_Returns_Ok(PortfolioBenchmarkEndpoint);
     }
 
     [Fact]
     public async Task GetPortfolioBenchmarks_Unauthorized_Returns401()
     {
-        await Get_Unauthenticated_Returns_Unauthorized(GetPortfolioBenchmarkEndpoint());
+        await Get_Unauthenticated_Returns_Unauthorized(PortfolioBenchmarkEndpoint);
     }
 
 }

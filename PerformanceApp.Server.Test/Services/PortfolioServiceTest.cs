@@ -172,6 +172,35 @@ public class PortfolioServiceTest
     }
 
     [Fact]
+    public async Task GetPortfolioBenchmarksAsync_WithUserId_ReturnsExpectedResults()
+    {
+        // Arrange
+        var userId = "user-123";
+        var portfolio1 = new Portfolio { Id = 1, Name = "Portfolio 1", UserID = userId, BenchmarkPortfoliosNavigation = new List<Benchmark>
+        {
+            CreateBenchmark(1, "Portfolio 1", 101, "Benchmark 1"),
+            CreateBenchmark(1, "Portfolio 1", 102, "Benchmark 2")
+        }};
+
+        var portfolio2 = new Portfolio { Id = 2, Name = "Portfolio 2", UserID = "other-user", BenchmarkPortfoliosNavigation = new List<Benchmark>
+        {
+            CreateBenchmark(2, "Portfolio 2", 103, "Benchmark 3")
+        }};
+
+        _portfolioRepositoryMock.Setup(r => r.GetPortfoliosAsync(userId))
+            .ReturnsAsync(new List<Portfolio> { portfolio1 });
+
+        // Act
+        var result = await _portfolioService.GetPortfolioBenchmarksAsync(userId);
+
+        // Assert
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, dto => dto.BenchmarkName == "Benchmark 1");
+        Assert.Contains(result, dto => dto.BenchmarkName == "Benchmark 2");
+
+    }
+
+    [Fact]
     public async Task GetPortfolioBenchmarksAsync_WithPortfolioId_ReturnsEmptyList_WhenNoBenchmarks()
     {
         // Arrange
@@ -350,23 +379,7 @@ public class PortfolioServiceTest
     }
 
     [Fact]
-    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPerformances()
-    {
-        // Arrange
-        int portfolioId = 1;
-
-        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
-            .ReturnsAsync(new List<Benchmark>());
-
-        // Act
-        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPortfolio()
+    public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoBenchmarks()
     {
         // Arrange
         int portfolioId = 1;
