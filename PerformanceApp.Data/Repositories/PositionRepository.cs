@@ -10,6 +10,7 @@ namespace PerformanceApp.Data.Repositories
         Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetBondPositionsAsync(DateOnly bankday, int portfolioId);
         Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId);
+        Task AddPositionsAsync(IEnumerable<Position> positions);
     }
 
     public class PositionRepository(PadbContext context) : IPositionRepository
@@ -42,6 +43,11 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<Position>> GetPositionsAsync()
         {
             return await _context.Positions.ToListAsync();
+        }
+        public async Task AddPositionsAsync(IEnumerable<Position> positions)
+        {
+            await _context.Positions.AddRangeAsync(positions);
+            await _context.SaveChangesAsync();
         }
     }
 }
