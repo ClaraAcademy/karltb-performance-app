@@ -7,6 +7,7 @@ namespace PerformanceApp.Data.Repositories;
 public interface IPortfolioValueRepository
 {
     Task<IEnumerable<PortfolioValue>> GetPortfolioValuesAsync();
+    Task AddPortfolioValuesAsync(IEnumerable<PortfolioValue> portfolioValues);
 }
 
 public class PortfolioValueRepository(PadbContext context) : IPortfolioValueRepository
@@ -16,5 +17,10 @@ public class PortfolioValueRepository(PadbContext context) : IPortfolioValueRepo
     public async Task<IEnumerable<PortfolioValue>> GetPortfolioValuesAsync()
     {
         return await _context.PortfolioValues.ToListAsync();
+    }
+    public async Task AddPortfolioValuesAsync(IEnumerable<PortfolioValue> portfolioValues)
+    {
+        await _context.PortfolioValues.AddRangeAsync(portfolioValues);
+        await _context.SaveChangesAsync();
     }
 }
