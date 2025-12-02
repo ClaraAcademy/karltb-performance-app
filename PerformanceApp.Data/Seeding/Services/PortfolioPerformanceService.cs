@@ -40,38 +40,45 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
             Value = value
         };
     }
+    private static List<PortfolioValue> GetPortfolioValuesByBankday(List<Portfolio> portfolios, DateOnly bankday)
+    {
+        return portfolios
+            .SelectMany(p => p.PortfolioValuesNavigation)
+            .Where(pv => pv.Bankday == bankday)
+            .ToList();
+    }
+    private static int GetKey(PortfolioValue pv) => pv.PortfolioId;
+
+    private static PortfolioPerformance MapToPortfolioPerformance(PortfolioValue current, PortfolioValue previous, int performanceTypeId, decimal perfomanceValue)
+    {
+        return new PortfolioPerformance
+        {
+            PortfolioId = current.PortfolioId,
+            TypeId = performanceTypeId,
+            PeriodStart = current.Bankday,
+            PeriodEnd = current.Bankday,
+            Value = perfomanceValue
+        };
+    }
+    private PortfolioPerformance MapToPortfolioDayPerformance(PortfolioValue current, PortfolioValue previous)
+    {
+        var id = _performanceService.GetDayPerformanceIdAsync().Result;
+        var performanceValue = _performanceService.GetPerformanceValue(current.Value!.Value, previous.Value!.Value);
+        return MapToPortfolioPerformance(current, previous, id, performanceValue);
+    }
+
     private async Task<List<PortfolioPerformance>> GetProperPortfolioDayPerformances(List<Portfolio> portfolios, DateOnly bankday)
     {
         var previousBankday = await _dateInfoService.GetPreviousBankdayAsync(bankday);
 
-        var portfolioValues = portfolios
-            .SelectMany(p => p.PortfolioValuesNavigation)
+        var currValues = GetPortfolioValuesByBankday(portfolios, bankday);
+        var prevValues = GetPortfolioValuesByBankday(portfolios, previousBankday);
+
+        var performances = currValues
+            .Join(prevValues, GetKey, GetKey, MapToPortfolioDayPerformance)
             .ToList();
 
-        var currentValues = portfolioValues
-            .Where(pv => pv.Bankday == bankday)
-            .ToDictionary(pv => pv.PortfolioId, pv => pv.Value);
-
-        var previousValues = portfolioValues
-            .Where(pv => pv.Bankday == previousBankday)
-            .ToDictionary(pv => pv.PortfolioId, pv => pv.Value);
-
-        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
-
-        var portfolioPerformances = new List<PortfolioPerformance>();
-        foreach (var portfolio in portfolios)
-        {
-            if (
-                currentValues.TryGetValue(portfolio.Id, out var currentValue)
-                && previousValues.TryGetValue(portfolio.Id, out var previousValue)
-            )
-            {
-                var performanceValue = _performanceService.GetPerformanceValue(currentValue!.Value, previousValue!.Value);
-                var portfolioPerformance = MapToPortfolioPerformance(portfolio, bankday, bankday, performanceValue, dayPerformanceId);
-                portfolioPerformances.Add(portfolioPerformance);
-            }
-        }
-        return portfolioPerformances;
+        return performances;
     }
 
     private static int GetKey(Position p) => p.PortfolioId!.Value;
