@@ -10,6 +10,7 @@ public interface IPerformanceService
     Task<int> GetDayPerformanceIdAsync();
     Task<int> GetHalfYearPerformanceIdAsync();
     Task<int> GetMonthPerformanceIdAsync();
+    decimal GetPerformanceValue(decimal current, decimal previous);
 }
 
 public class PerformanceService(IPerformanceTypeRepository performanceTypeRepository) : IPerformanceService
@@ -39,5 +40,13 @@ public class PerformanceService(IPerformanceTypeRepository performanceTypeReposi
     public async Task<int> GetMonthPerformanceIdAsync()
     {
         return await GetPerformanceIdAsync(PerformanceTypeData.MonthPerformance);
+    }
+    public decimal GetPerformanceValue(decimal current, decimal previous)
+    {
+        if (previous == 0M)
+        {
+            return 0M;
+        }
+        return current / previous - 1M;
     }
 }
