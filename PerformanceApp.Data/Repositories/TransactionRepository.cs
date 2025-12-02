@@ -7,6 +7,7 @@ namespace PerformanceApp.Data.Repositories;
 public interface ITransactionRepository
 {
     Task<List<Transaction>> GetTransactionsAsync();
+    Task AddTransactionAsync(Transaction transaction);
 }
 
 public class TransactionRepository(PadbContext context) : ITransactionRepository
@@ -16,5 +17,10 @@ public class TransactionRepository(PadbContext context) : ITransactionRepository
     public async Task<List<Transaction>> GetTransactionsAsync()
     {
         return await _context.Transactions.ToListAsync();
+    }
+    public async Task AddTransactionAsync(Transaction transaction)
+    {
+        await _context.Transactions.AddAsync(transaction);
+        await _context.SaveChangesAsync();
     }
 }
