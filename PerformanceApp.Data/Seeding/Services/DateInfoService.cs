@@ -7,6 +7,7 @@ public interface IDateInfoService
 {
     Task<DateOnly> GetPreviousBankdayAsync(DateOnly date);
     Task<decimal> GetAnnualizationFactorAsync();
+    Task<bool> BankdayExistsAsync(DateOnly date);
 }
 
 public class DateInfoService(IDateInfoRepository dateInfoRepository) : IDateInfoService
@@ -37,5 +38,12 @@ public class DateInfoService(IDateInfoRepository dateInfoRepository) : IDateInfo
         var n = dateInfos.Count();
 
         return n == 0 ? 0M : BankdaysPerYear / n;
+    }
+
+    public async Task<bool> BankdayExistsAsync(DateOnly date)
+    {
+        var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
+
+        return dateInfos.Any(d => d.Bankday == date);
     }
 }
