@@ -10,16 +10,10 @@ public interface IInstrumentService
     Task<bool> InstrumentHasCorrectWeight(int id, int? count, decimal? amount, decimal? proportion, decimal? nominal);
 }
 
-public class InstrumentService : IInstrumentService
+public class InstrumentService(PadbContext context) : IInstrumentService
 {
-    private readonly IInstrumentRepository _instrumentRepository;
-    private readonly IInstrumentTypeRepository _instrumentTypeRepository;
-
-    public InstrumentService(PadbContext context)
-    {
-        _instrumentRepository = new InstrumentRepository(context);
-        _instrumentTypeRepository = new InstrumentTypeRepository(context);
-    }
+    private readonly IInstrumentRepository _instrumentRepository = new InstrumentRepository(context);
+    private readonly IInstrumentTypeRepository _instrumentTypeRepository = new InstrumentTypeRepository(context);
 
     private static string InstrumentNameErrorMessage(string name)
     {

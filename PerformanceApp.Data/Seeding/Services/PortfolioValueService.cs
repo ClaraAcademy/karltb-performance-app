@@ -9,20 +9,12 @@ public interface IPortfolioValueService
     Task<bool> UpdatePortfolioValuesAsync(DateOnly bankday);
 }
 
-public class PortfolioValueService : IPortfolioValueService
+public class PortfolioValueService(PadbContext context) : IPortfolioValueService
 {
-    private readonly IPortfolioValueRepository _portfolioValueRepository;
-    private readonly IDateInfoService _dateInfoService;
-    private readonly IPositionRepository _positionRepository;
-    private readonly IPositionValueRepository _positionValueRepository;
-
-    public PortfolioValueService(PadbContext context)
-    {
-        _portfolioValueRepository = new PortfolioValueRepository(context);
-        _dateInfoService = new DateInfoService(context);
-        _positionRepository = new PositionRepository(context);
-        _positionValueRepository = new PositionValueRepository(context);
-    }
+    private readonly IPortfolioValueRepository _portfolioValueRepository = new PortfolioValueRepository(context);
+    private readonly IDateInfoService _dateInfoService = new DateInfoService(context);
+    private readonly IPositionRepository _positionRepository = new PositionRepository(context);
+    private readonly IPositionValueRepository _positionValueRepository = new PositionValueRepository(context);
 
     private record Key(int PortfolioId, int InstrumentId);
 

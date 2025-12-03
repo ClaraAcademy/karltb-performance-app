@@ -9,22 +9,13 @@ public interface IPositionValueService
     Task<bool> UpdatePositionValuesAsync(DateOnly bankday);
 }
 
-public class PositionValueService : IPositionValueService
+public class PositionValueService(PadbContext context) : IPositionValueService
 {
-    private readonly IPositionValueRepository _positionValueRepository;
-    private readonly IInstrumentPriceRepository _instrumentPriceRepository;
-    private readonly IPositionRepository _positionRepository;
-    private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IDateInfoService _dateInfoService;
-
-    public PositionValueService(PadbContext context)
-    {
-        _positionValueRepository = new PositionValueRepository(context);
-        _instrumentPriceRepository = new InstrumentPriceRepository(context);
-        _positionRepository = new PositionRepository(context);
-        _portfolioRepository = new PortfolioRepository(context);
-        _dateInfoService = new DateInfoService(context);
-    }
+    private readonly IPositionValueRepository _positionValueRepository = new PositionValueRepository(context);
+    private readonly IInstrumentPriceRepository _instrumentPriceRepository = new InstrumentPriceRepository(context);
+    private readonly IPositionRepository _positionRepository = new PositionRepository(context);
+    private readonly IPortfolioRepository _portfolioRepository = new PortfolioRepository(context);
+    private readonly IDateInfoService _dateInfoService = new DateInfoService(context);
 
     private record Dto(
         int PositionId,

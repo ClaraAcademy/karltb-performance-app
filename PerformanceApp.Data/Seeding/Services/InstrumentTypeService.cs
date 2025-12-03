@@ -8,14 +8,9 @@ public interface IInstrumentTypeService
     Task<int> GetInstrumentTypeIdAsync(string name);
 }
 
-public class InstrumentTypeService : IInstrumentTypeService
+public class InstrumentTypeService(PadbContext context) : IInstrumentTypeService
 {
-    private readonly IInstrumentTypeRepository _instrumentTypeRepository;
-
-    public InstrumentTypeService(PadbContext context)
-    {
-        _instrumentTypeRepository = new InstrumentTypeRepository(context);
-    }
+    private readonly IInstrumentTypeRepository _instrumentTypeRepository = new InstrumentTypeRepository(context);
 
     public async Task<int> GetInstrumentTypeIdAsync(string name)
     {

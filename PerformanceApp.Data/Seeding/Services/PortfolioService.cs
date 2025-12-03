@@ -8,14 +8,9 @@ public interface IPortfolioService
     Task<int> GetPortfolioIdAsync(string name);
 }
 
-public class PortfolioService : IPortfolioService
+public class PortfolioService(PadbContext context) : IPortfolioService
 {
-    private readonly IPortfolioRepository _portfolioRepository;
-
-    public PortfolioService(PadbContext context)
-    {
-        _portfolioRepository = new PortfolioRepository(context);
-    }
+    private readonly IPortfolioRepository _portfolioRepository = new PortfolioRepository(context);
 
     public async Task<int> GetPortfolioIdAsync(string name)
     {

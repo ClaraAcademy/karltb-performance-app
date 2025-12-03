@@ -11,15 +11,10 @@ public interface IDateInfoService
     Task<bool> BankdayExistsAsync(DateOnly date);
 }
 
-public class DateInfoService : IDateInfoService
+public class DateInfoService(PadbContext context) : IDateInfoService
 {
-    private readonly IDateInfoRepository _dateInfoRepository;
+    private readonly IDateInfoRepository _dateInfoRepository = new DateInfoRepository(context);
     private const decimal BankdaysPerYear = 250;
-
-    public DateInfoService(PadbContext context)
-    {
-        _dateInfoRepository = new DateInfoRepository(context);
-    }
 
     public async Task<DateOnly> GetPreviousBankdayAsync(DateOnly date)
     {

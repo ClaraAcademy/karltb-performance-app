@@ -9,20 +9,13 @@ public interface IInstrumentPerformanceService
     Task<bool> UpdateInstrumentDayPerformancesAsync(DateOnly bankday);
 }
 
-public class InstrumentPerformanceService : IInstrumentPerformanceService
+public class InstrumentPerformanceService(PadbContext context) : IInstrumentPerformanceService
 {
-    private readonly IInstrumentPerformanceRepository _instrumentPerformanceRepository;
-    private readonly IInstrumentPriceRepository _instrumentPriceRepository;
-    private readonly IPerformanceService _performanceService;
-    private readonly IDateInfoService _dateInfoService;
+    private readonly IInstrumentPerformanceRepository _instrumentPerformanceRepository = new InstrumentPerformanceRepository(context);
+    private readonly IInstrumentPriceRepository _instrumentPriceRepository = new InstrumentPriceRepository(context);
+    private readonly IPerformanceService _performanceService = new PerformanceService(context);
+    private readonly IDateInfoService _dateInfoService = new DateInfoService(context);
 
-    public InstrumentPerformanceService(PadbContext context)
-    {
-        _instrumentPerformanceRepository = new InstrumentPerformanceRepository(context);
-        _instrumentPriceRepository = new InstrumentPriceRepository(context);
-        _performanceService = new PerformanceService(context);
-        _dateInfoService = new DateInfoService(context);
-    }
     private static int GetKey(InstrumentPrice ip) => ip.InstrumentId;
     private InstrumentPerformance MapToInstrumentPerformance(InstrumentPrice c, InstrumentPrice p, int performanceTypeId)
     {

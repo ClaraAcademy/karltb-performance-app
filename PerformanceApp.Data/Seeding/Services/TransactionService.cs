@@ -10,21 +10,14 @@ public interface ITransactionService
     Task<bool> BuyInstrumentAsync(Portfolio portfolio, Instrument instrument, DateOnly date, int? count, decimal? amount, decimal? proportion, decimal? nominal);
 }
 
-public class TransactionService : ITransactionService
+public class TransactionService(PadbContext context) : ITransactionService
 {
-    private readonly ITransactionRepository _transactionRepository;
-    private readonly IInstrumentService _instrumentService;
-    private readonly TransactionType _buyTransactionType;
-
-    public TransactionService(PadbContext context)
-    {
-        _transactionRepository = new TransactionRepository(context);
-        _instrumentService = new InstrumentService(context);
-        _buyTransactionType = new TransactionTypeRepository(context)
+    private readonly ITransactionRepository _transactionRepository = new TransactionRepository(context);
+    private readonly IInstrumentService _instrumentService = new InstrumentService(context);
+    private readonly TransactionType _buyTransactionType = new TransactionTypeRepository(context)
             .GetTransactionTypesAsync()
             .Result
             .First(tt => tt.Name == TransactionTypeData.Buy);
-    }
 
     public async Task<bool> BuyInstrumentAsync(Portfolio portfolio, Instrument instrument, DateOnly date, int? count, decimal? amount, decimal? proportion, decimal? nominal)
     {

@@ -13,33 +13,21 @@ public interface IKeyFigureValueService
     Task<bool> UpdateHalfYearPerformanceAsync();
 }
 
-public class KeyFigureValueService : IKeyFigureValueService
+public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 {
-    private readonly IKeyFigureValueRepository _keyFigureValueRepository;
-    private readonly IKeyFigureInfoService _keyFigureInfoService;
-    private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IPortfolioPerformanceService _portfolioPerformanceService;
-    private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository;
-    private readonly decimal AnnualizationFactor;
-    private readonly int DayPerformanceId;
-
-    public KeyFigureValueService(PadbContext context)
-    {
-        _keyFigureValueRepository = new KeyFigureValueRepository(context);
-        _keyFigureInfoService = new KeyFigureInfoService(context);
-        _portfolioRepository = new PortfolioRepository(context);
-        _portfolioPerformanceService = new PortfolioPerformanceService(context);
-        _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
-
-        AnnualizationFactor = new DateInfoService(context)
+    private readonly IKeyFigureValueRepository _keyFigureValueRepository = new KeyFigureValueRepository(context);
+    private readonly IKeyFigureInfoService _keyFigureInfoService = new KeyFigureInfoService(context);
+    private readonly IPortfolioRepository _portfolioRepository = new PortfolioRepository(context);
+    private readonly IPortfolioPerformanceService _portfolioPerformanceService = new PortfolioPerformanceService(context);
+    private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
+    private readonly decimal AnnualizationFactor = new DateInfoService(context)
             .GetAnnualizationFactorAsync()
             .GetAwaiter()
             .GetResult();
-        DayPerformanceId = new PerformanceService(context)
+    private readonly int DayPerformanceId = new PerformanceService(context)
             .GetDayPerformanceIdAsync()
             .GetAwaiter()
             .GetResult();
-    }
 
     private record Dto(int PortfolioId, int KeyFigureId, decimal Value);
     private static Dto Aggregate(IGrouping<int, PortfolioPerformance> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)

@@ -13,14 +13,9 @@ public interface IKeyFigureInfoService
     Task<int> GetHalfYearPerformanceIdAsync();
 }
 
-public class KeyFigureInfoService : IKeyFigureInfoService
+public class KeyFigureInfoService(PadbContext context) : IKeyFigureInfoService
 {
-    private readonly KeyFigureInfoRepository _keyFigureInfoRepository;
-
-    public KeyFigureInfoService(PadbContext context)
-    {
-        _keyFigureInfoRepository = new KeyFigureInfoRepository(context);
-    }
+    private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new KeyFigureInfoRepository(context);
 
     public async Task<int> GetIdAsync(string name)
     {

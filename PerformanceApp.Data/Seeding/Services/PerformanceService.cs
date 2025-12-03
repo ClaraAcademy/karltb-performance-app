@@ -14,14 +14,10 @@ public interface IPerformanceService
     decimal GetPerformanceValue(decimal current, decimal previous);
 }
 
-public class PerformanceService : IPerformanceService
+public class PerformanceService(PadbContext context) : IPerformanceService
 {
-    private readonly IPerformanceTypeRepository _performanceTypeRepository;
+    private readonly IPerformanceTypeRepository _performanceTypeRepository = new PerformanceTypeRepository(context);
 
-    public PerformanceService(PadbContext context)
-    {
-        _performanceTypeRepository = new PerformanceTypeRepository(context);
-    }
     public async Task<int> GetPerformanceIdAsync(string name)
     {
         var performances = await _performanceTypeRepository.GetPerformanceTypeInfosAsync();

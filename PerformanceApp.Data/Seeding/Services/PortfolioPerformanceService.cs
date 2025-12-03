@@ -14,19 +14,13 @@ public interface IPortfolioPerformanceService
     Task<List<PortfolioPerformance>> GetPortfolioDayPerformancesAsync();
 }
 
-public class PortfolioPerformanceService : IPortfolioPerformanceService
+public class PortfolioPerformanceService(PadbContext context) : IPortfolioPerformanceService
 {
-    private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository;
-    private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IPerformanceService _performanceService;
-    private readonly IDateInfoService _dateInfoService;
-    public PortfolioPerformanceService(PadbContext context)
-    {
-        _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
-        _portfolioRepository = new PortfolioRepository(context);
-        _performanceService = new PerformanceService(context);
-        _dateInfoService = new DateInfoService(context);
-    }
+    private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
+    private readonly IPortfolioRepository _portfolioRepository = new PortfolioRepository(context);
+    private readonly IPerformanceService _performanceService = new PerformanceService(context);
+    private readonly IDateInfoService _dateInfoService = new DateInfoService(context);
+
     private static PortfolioPerformance MapToPortfolioPerformance(int portfolioId, DateOnly periodStart, DateOnly periodEnd, decimal value, int typeId)
     {
         return new PortfolioPerformance
