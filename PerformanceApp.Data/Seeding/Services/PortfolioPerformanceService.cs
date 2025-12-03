@@ -6,6 +6,7 @@ namespace PerformanceApp.Data.Seeding.Services;
 public interface IPortfolioPerformanceService
 {
     Task<bool> UpdatePortfolioDayPerformancesAsync(DateOnly bankday);
+    Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday);
 }
 
 public class PortfolioPerformanceService : IPortfolioPerformanceService
@@ -136,6 +137,42 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
         var allPerformances = portfolioPerformances.Concat(benchmarkPerformancs).ToList();
 
         await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(allPerformances);
+        return true;
+    }
+
+    private static bool IsSameYear(DateOnly d1, DateOnly d2) => d1.Year == d2.Year;
+    private static bool IsSameMonth(DateOnly d1, DateOnly d2) => d1.Month == d2.Month;
+    private static bool IsSameYearAndMonth(DateOnly d1, DateOnly d2) => IsSameYear(d1, d2) && IsSameMonth(d1, d2);
+
+    private static bool IsSamePerformanceType(PortfolioPerformance pp, int typeId) => pp.TypeId == typeId;
+
+    public async Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday)
+    {
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+
+        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
+        var monthPerformanceId = await _performanceService.GetMonthPerformanceIdAsync();
+
+        var dayPerformancesInRange = performances
+            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
+            .Where(pp => IsSameYearAndMonth(pp.PeriodEnd, bankday))
+            .ToList();
+
+        var monthPerformances = dayPerformancesInRange
+            .GroupBy(dp => dp.PortfolioId)
+            .Select(
+                g => MapToPortfolioPerformance(
+                    g.First().PortfolioNavigation!,
+                    g.Min(pp => pp.PeriodStart),
+                    g.Max(pp => pp.PeriodEnd),
+                    g.Aggregate(1m, (acc, pp) => acc * (1 + pp.Value)) - 1, // Product(1 + daily_return) - 1
+                    monthPerformanceId
+                )
+            )
+            .ToList();
+
+        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(monthPerformances);
+
         return true;
     }
 }
