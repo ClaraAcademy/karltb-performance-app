@@ -28,23 +28,16 @@ public class InstrumentPerformanceService : IInstrumentPerformanceService
         _dateInfoService = dateInfoService;
     }
     private static int GetKey(InstrumentPrice ip) => ip.InstrumentId;
-    private static decimal GetPerformance(decimal current, decimal previous)
+    private InstrumentPerformance MapToInstrumentPerformance(InstrumentPrice c, InstrumentPrice p, int performanceTypeId)
     {
-        if (previous == 0)
-        {
-            return 0;
-        }
-        return (current - previous) / previous;
-    }
-    private static InstrumentPerformance MapToInstrumentPerformance(InstrumentPrice c, InstrumentPrice p, int performanceTypeId)
-    {
+        var value = _performanceService.GetPerformanceValue(c.Price, p.Price);
         return new InstrumentPerformance
         {
             InstrumentId = c.InstrumentId,
             TypeId = performanceTypeId,
             PeriodStart = c.Bankday,
             PeriodEnd = c.Bankday,
-            Value = GetPerformance(c.Price, p.Price)
+            Value = value
         };
     }
     private InstrumentPerformance MapToInstrumentDayPerformance(InstrumentPrice c, InstrumentPrice p)
@@ -62,16 +55,18 @@ public class InstrumentPerformanceService : IInstrumentPerformanceService
         }
         var previousBankday = await _dateInfoService.GetPreviousBankdayAsync(bankday);
 
+        static List<InstrumentPrice> Filter(IEnumerable<InstrumentPrice> ips, DateOnly date)
+        {
+            return ips.Where(ip => ip.Bankday == date).ToList();
+        }
         var instrumentPrices = await _instrumentPriceRepository.GetInstrumentPricesAsync();
-        var currentPrices = instrumentPrices
-            .Where(ip => ip.Bankday == bankday);
-        var previousPrices = instrumentPrices
-            .Where(ip => ip.Bankday == previousBankday);
+        var currPrices = Filter(instrumentPrices, bankday);
+        var prevPrices = Filter(instrumentPrices, previousBankday);
 
         var performanceTypeId = await _performanceService.GetDayPerformanceIdAsync();
 
-        var dayPerformances = currentPrices
-            .Join(previousPrices, GetKey, GetKey, MapToInstrumentDayPerformance)
+        var dayPerformances = currPrices
+            .Join(prevPrices, GetKey, GetKey, MapToInstrumentDayPerformance)
             .ToList();
 
         await _instrumentPerformanceRepository.AddInstrumentPerformancesAsync(dayPerformances);
