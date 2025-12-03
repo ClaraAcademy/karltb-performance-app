@@ -8,6 +8,7 @@ public interface IPortfolioPerformanceService
     Task<bool> UpdatePortfolioDayPerformancesAsync(DateOnly bankday);
     Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday);
     Task<bool> UpdatePortfolioHalfYearPerformancesAsync(DateOnly bankday);
+    Task<bool> UpdatePortfolioCumulativeDayPerformancesAsync(DateOnly bankday);
 }
 
 public class PortfolioPerformanceService : IPortfolioPerformanceService
@@ -223,6 +224,24 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
         var halfYearPerformances = AggregateDayPerformances(dayPerformancesInRange, halfYearPerformanceId);
 
         await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(halfYearPerformances);
+        return true;
+    }
+
+    public async Task<bool> UpdatePortfolioCumulativeDayPerformancesAsync(DateOnly bankday)
+    {
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+
+        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
+        var cumulativeDayPerformanceId = await _performanceService.GetCumulativeDayPerformanceIdAsync();
+
+        var dayPerformancesInRange = performances
+            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
+            .Where(pp => pp.PeriodEnd <= bankday)
+            .ToList();
+
+        var cumulativeDayPerformances = AggregateDayPerformances(dayPerformancesInRange, cumulativeDayPerformanceId);
+
+        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(cumulativeDayPerformances);
         return true;
     }
 
