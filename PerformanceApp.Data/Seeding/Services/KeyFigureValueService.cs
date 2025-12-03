@@ -9,6 +9,7 @@ public interface IKeyFigureValueService
     Task<bool> UpdateTrackingErrorAsync();
     Task<bool> UpdateAnnualisedCumulativeReturnAsync();
     Task<bool> UpdateInformationRatioAsync();
+    Task<bool> UpdateHalfYearPerformanceAsync();
 }
 
 public class KeyFigureValueService : IKeyFigureValueService
@@ -19,6 +20,7 @@ public class KeyFigureValueService : IKeyFigureValueService
     private readonly IPortfolioPerformanceService _portfolioPerformanceService;
     private readonly IPerformanceService _performanceService;
     private readonly IDateInfoService _dateInfoService;
+    private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository;
     private readonly decimal AnnualizationFactor;
     private readonly int DayPerformanceId;
 
@@ -28,7 +30,8 @@ public class KeyFigureValueService : IKeyFigureValueService
         IPortfolioRepository portfolioRepository,
         IPortfolioPerformanceService portfolioPerformanceService,
         IPerformanceService performanceService,
-        IDateInfoService dateInfoService
+        IDateInfoService dateInfoService,
+        IPortfolioPerformanceRepository portfolioPerformanceRepository
     )
     {
         _keyFigureValueRepository = keyFigureValueRepository;
@@ -37,6 +40,7 @@ public class KeyFigureValueService : IKeyFigureValueService
         _portfolioPerformanceService = portfolioPerformanceService;
         _performanceService = performanceService;
         _dateInfoService = dateInfoService;
+        _portfolioPerformanceRepository = portfolioPerformanceRepository;
         AnnualizationFactor = _dateInfoService.GetAnnualizationFactorAsync().GetAwaiter().GetResult();
         DayPerformanceId = _performanceService.GetDayPerformanceIdAsync().GetAwaiter().GetResult();
     }
@@ -220,6 +224,29 @@ public class KeyFigureValueService : IKeyFigureValueService
             .ToList();
 
         await _keyFigureValueRepository.AddKeyFigureValuesAsync(informationRatios);
+        return true;
+    }
+
+    private static KeyFigureValue MapToKeyFigureValue(PortfolioPerformance p, int keyFigureId)
+    {
+        return new KeyFigureValue
+        {
+            PortfolioId = p.PortfolioId,
+            KeyFigureId = keyFigureId,
+            Value = p.Value
+        };
+    }
+
+    public async Task<bool> UpdateHalfYearPerformanceAsync()
+    {
+        var id = await _keyFigureInfoService.GetHalfYearPerformanceIdAsync();
+
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+        var halfYearPerformances = performances
+            .Select(p => MapToKeyFigureValue(p, id))
+            .ToList();
+
+        await _keyFigureValueRepository.AddKeyFigureValuesAsync(halfYearPerformances);
         return true;
     }
 
