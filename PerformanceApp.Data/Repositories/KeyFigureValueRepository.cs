@@ -8,6 +8,7 @@ namespace PerformanceApp.Data.Repositories
     {
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId);
         Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync(); // This is in the wrong class
+        Task AddKeyFigureValuesAsync(IEnumerable<KeyFigureValue> keyFigureValues);
     }
 
     public class KeyFigureValueRepository(PadbContext context) : IKeyFigureValueRepository
@@ -24,6 +25,11 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
         {
             return await _context.KeyFigureInfos.ToListAsync();
+        }
+        public async Task AddKeyFigureValuesAsync(IEnumerable<KeyFigureValue> keyFigureValues)
+        {
+            await _context.KeyFigureValues.AddRangeAsync(keyFigureValues);
+            await _context.SaveChangesAsync();
         }
 
     }
