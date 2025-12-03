@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -9,6 +8,7 @@ public interface IKeyFigureValueService
     Task<bool> UpdateStandardDeviationAsync();
     Task<bool> UpdateTrackingErrorAsync();
     Task<bool> UpdateAnnualisedCumulativeReturnAsync();
+    Task<bool> UpdateInformationRatioAsync();
 }
 
 public class KeyFigureValueService : IKeyFigureValueService
@@ -57,6 +57,12 @@ public class KeyFigureValueService : IKeyFigureValueService
                 group.Select(dto => dto.Value)
             )
         );
+    }
+    private static Dto Aggregate(IGrouping<int, Dto> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)
+    {
+        var portfolioId = group.Key;
+        var values = group.Select(dto => dto.Value);
+        return new Dto(portfolioId, KeyFigureId, func(values));
     }
 
     private static KeyFigureValue MapToKeyFigureValue(int portfolioId, int keyFigureId, decimal value)
@@ -178,8 +184,6 @@ public class KeyFigureValueService : IKeyFigureValueService
 
         var dayPerformances = await _portfolioPerformanceService.GetPortfolioDayPerformancesAsync();
 
-        var annulaizationFactor = await _dateInfoService.GetAnnualizationFactorAsync();
-
         var annualisedCumulativeReturns = dayPerformances
             .GroupBy(pp => pp.PortfolioId)
             .Select(g => Aggregate(g, id, ComputeAnnualizedCumulativeReturn))
@@ -187,6 +191,35 @@ public class KeyFigureValueService : IKeyFigureValueService
             .ToList();
 
         await _keyFigureValueRepository.AddKeyFigureValuesAsync(annualisedCumulativeReturns);
+        return true;
+    }
+
+    private decimal ComputeInformationRatio(IEnumerable<decimal> activeReturns)
+    {
+        var average = activeReturns.Average();
+        var stdDev = ComputeStandardDeviation(activeReturns);
+
+        var factor = (decimal)Math.Sqrt((double)AnnualizationFactor);
+
+        return factor * average / stdDev;
+    }
+
+    public async Task<bool> UpdateInformationRatioAsync()
+    {
+        var id = await _keyFigureInfoService.GetInformationRatioIdAsync();
+
+        var actualPortfolios = await _portfolioRepository.GetProperPortfoliosAsync();
+        var portfolios = actualPortfolios.ToList();
+
+        var activeReturns = GetActiveReturns(portfolios);
+
+        var informationRatios = activeReturns
+            .GroupBy(ar => ar.PortfolioId)
+            .Select(g => Aggregate(g, id, ComputeInformationRatio))
+            .Select(MapToKeyFigureValue)
+            .ToList();
+
+        await _keyFigureValueRepository.AddKeyFigureValuesAsync(informationRatios);
         return true;
     }
 
