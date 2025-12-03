@@ -143,38 +143,6 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
     private static bool IsSameMonth(DateOnly d1, DateOnly d2) => d1.Month == d2.Month;
     private static bool IsSameYearAndMonth(DateOnly d1, DateOnly d2) => IsSameYear(d1, d2) && IsSameMonth(d1, d2);
 
-    private static bool IsSamePerformanceType(PortfolioPerformance pp, int typeId) => pp.TypeId == typeId;
-
-    public async Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday)
-    {
-        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
-
-        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
-        var monthPerformanceId = await _performanceService.GetMonthPerformanceIdAsync();
-
-        var dayPerformancesInRange = performances
-            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
-            .Where(pp => IsSameYearAndMonth(pp.PeriodEnd, bankday))
-            .ToList();
-
-        var monthPerformances = dayPerformancesInRange
-            .GroupBy(dp => dp.PortfolioId)
-            .Select(
-                g => MapToPortfolioPerformance(
-                    g.First().PortfolioNavigation!,
-                    g.Min(pp => pp.PeriodStart),
-                    g.Max(pp => pp.PeriodEnd),
-                    g.Aggregate(1m, (acc, pp) => acc * (1 + pp.Value)) - 1, // Product(1 + daily_return) - 1
-                    monthPerformanceId
-                )
-            )
-            .ToList();
-
-        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(monthPerformances);
-
-        return true;
-    }
-
     private static List<PortfolioPerformance> AggregateDayPerformances(List<PortfolioPerformance> performances, int performanceTypeId)
     {
         var aggregated = performances
@@ -190,6 +158,32 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
 
         return aggregated;
     }
+
+    private async Task<bool> UpdatePortfolioAggregatePerformancesAsync(Func<DateOnly, DateOnly, bool> filter, int typeId)
+    {
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
+        var dayPerformances = performances
+            .Where(pp => pp.TypeId == dayPerformanceId);
+        var filteredDayPerformances = dayPerformances
+            .Where(pp => filter(pp.PeriodStart, pp.PeriodEnd))
+            .ToList();
+
+        var aggregatedPerformances = AggregateDayPerformances(filteredDayPerformances, typeId);
+
+        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(aggregatedPerformances);
+        return true;
+    }
+
+    public async Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday)
+    {
+        var monthPerformanceId = await _performanceService.GetMonthPerformanceIdAsync();
+
+        bool filter(DateOnly start, DateOnly end) => IsSameYearAndMonth(end, bankday);
+
+        return await UpdatePortfolioAggregatePerformancesAsync(filter, monthPerformanceId);
+    }
+
     private (DateOnly Start, DateOnly End) GetHalfYearBound(DateOnly bankday)
     {
         int half = (bankday.Month - 1) / 6;
@@ -207,42 +201,24 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
 
         return (start, end);
     }
+
     public async Task<bool> UpdatePortfolioHalfYearPerformancesAsync(DateOnly bankday)
     {
-        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
-
-        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
         var halfYearPerformanceId = await _performanceService.GetHalfYearPerformanceIdAsync();
 
         var (halfYearStart, halfYearEnd) = GetHalfYearBound(bankday);
+        bool filter(DateOnly start, DateOnly end) => start >= halfYearStart && end <= halfYearEnd;
 
-        var dayPerformancesInRange = performances
-            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
-            .Where(pp => pp.PeriodEnd >= halfYearStart && pp.PeriodEnd <= halfYearEnd)
-            .ToList();
-
-        var halfYearPerformances = AggregateDayPerformances(dayPerformancesInRange, halfYearPerformanceId);
-
-        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(halfYearPerformances);
-        return true;
+        return await UpdatePortfolioAggregatePerformancesAsync(filter, halfYearPerformanceId);
     }
 
     public async Task<bool> UpdatePortfolioCumulativeDayPerformancesAsync(DateOnly bankday)
     {
-        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
-
-        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
         var cumulativeDayPerformanceId = await _performanceService.GetCumulativeDayPerformanceIdAsync();
 
-        var dayPerformancesInRange = performances
-            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
-            .Where(pp => pp.PeriodEnd <= bankday)
-            .ToList();
+        bool filter(DateOnly start, DateOnly end) => end <= bankday;
 
-        var cumulativeDayPerformances = AggregateDayPerformances(dayPerformancesInRange, cumulativeDayPerformanceId);
-
-        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(cumulativeDayPerformances);
-        return true;
+        return await UpdatePortfolioAggregatePerformancesAsync(filter, cumulativeDayPerformanceId);
     }
 
 }
