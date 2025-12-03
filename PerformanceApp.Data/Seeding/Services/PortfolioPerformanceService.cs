@@ -9,6 +9,8 @@ public interface IPortfolioPerformanceService
     Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday);
     Task<bool> UpdatePortfolioHalfYearPerformancesAsync(DateOnly bankday);
     Task<bool> UpdatePortfolioCumulativeDayPerformancesAsync(DateOnly bankday);
+
+    Task<List<PortfolioPerformance>> GetPortfolioDayPerformancesAsync();
 }
 
 public class PortfolioPerformanceService : IPortfolioPerformanceService
@@ -219,6 +221,17 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
         bool filter(DateOnly start, DateOnly end) => end <= bankday;
 
         return await UpdatePortfolioAggregatePerformancesAsync(filter, cumulativeDayPerformanceId);
+    }
+
+    public async Task<List<PortfolioPerformance>> GetPortfolioDayPerformancesAsync()
+    {
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
+        var dayPerformances = performances
+            .Where(pp => pp.TypeId == dayPerformanceId)
+            .ToList();
+
+        return dayPerformances;
     }
 
 }
