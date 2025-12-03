@@ -8,6 +8,7 @@ public interface IKeyFigureValueService
 {
     Task<bool> UpdateStandardDeviationAsync();
     Task<bool> UpdateTrackingErrorAsync();
+    Task<bool> UpdateAnnualisedCumulativeReturnAsync();
 }
 
 public class KeyFigureValueService : IKeyFigureValueService
@@ -41,16 +42,10 @@ public class KeyFigureValueService : IKeyFigureValueService
     }
 
     private record Dto(int PortfolioId, int KeyFigureId, decimal Value);
-    private static Dto Aggregate(IGrouping<int, PortfolioPerformance> group, int keyFigureId)
+    private static Dto Aggregate(IGrouping<int, PortfolioPerformance> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)
     {
-        return new Dto
-        (
-            group.Key,
-            keyFigureId,
-            ComputeStandardDeviation(
-                group.Select(pp => pp.Value)
-            )
-        );
+        var values = group.Select(pp => pp.Value);
+        return new Dto(group.Key, KeyFigureId, func(values));
     }
     private static Dto Aggregate(IGrouping<int, Dto> group, int KeyFigureId)
     {
@@ -106,7 +101,7 @@ public class KeyFigureValueService : IKeyFigureValueService
 
         var keyFigureValues = dayPerformances
             .GroupBy(pp => pp.PortfolioId)
-            .Select(g => Aggregate(g, id))
+            .Select(g => Aggregate(g, id, ComputeStandardDeviation))
             .Select(MapToKeyFigureValue)
             .ToList();
 
@@ -168,4 +163,31 @@ public class KeyFigureValueService : IKeyFigureValueService
         await _keyFigureValueRepository.AddKeyFigureValuesAsync(trackingErrors);
         return true;
     }
+
+    private decimal ComputeAnnualizedCumulativeReturn(IEnumerable<decimal> dailyReturns)
+    {
+        static decimal aggregator(decimal acc, decimal r) => acc * (1M + r);
+        var product = dailyReturns.Aggregate(1M, aggregator);
+
+        return (decimal)Math.Pow((double)product, (double)AnnualizationFactor) - 1M;
+    }
+
+    public async Task<bool> UpdateAnnualisedCumulativeReturnAsync()
+    {
+        var id = await _keyFigureInfoService.GetAnnualizedCumulativeReturnIdAsync();
+
+        var dayPerformances = await _portfolioPerformanceService.GetPortfolioDayPerformancesAsync();
+
+        var annulaizationFactor = await _dateInfoService.GetAnnualizationFactorAsync();
+
+        var annualisedCumulativeReturns = dayPerformances
+            .GroupBy(pp => pp.PortfolioId)
+            .Select(g => Aggregate(g, id, ComputeAnnualizedCumulativeReturn))
+            .Select(MapToKeyFigureValue)
+            .ToList();
+
+        await _keyFigureValueRepository.AddKeyFigureValuesAsync(annualisedCumulativeReturns);
+        return true;
+    }
+
 }
