@@ -1,5 +1,6 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding.Services;
 
@@ -27,7 +28,7 @@ public class TransactionService : ITransactionService
         _buyTransactionType = _transactionTypeRepository
             .GetTransactionTypesAsync()
             .Result
-            .First(tt => tt.Name == "Buy");
+            .First(tt => tt.Name == TransactionTypeData.Buy);
     }
 
     public async Task<bool> BuyInstrumentAsync(Portfolio portfolio, Instrument instrument, DateOnly date, int? count, decimal? amount, decimal? proportion, decimal? nominal)
