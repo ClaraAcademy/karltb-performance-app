@@ -5,6 +5,11 @@ namespace PerformanceApp.Data.Seeding.Services;
 public interface IKeyFigureInfoService
 {
     Task<int> GetIdAsync(string name);
+    Task<int> GetStandardDeviationIdAsync();
+    Task<int> GetTrackingErrorIdAsync();
+    Task<int> GetAnnualizedCumulativeReturnIdAsync();
+    Task<int> GetInformationRatioIdAsync();
+    Task<int> GetHalfYearPerformanceIdAsync();
 }
 
 public class KeyFigureInfoService(KeyFigureInfoRepository keyFigureInfoRepository) : IKeyFigureInfoService
@@ -19,6 +24,25 @@ public class KeyFigureInfoService(KeyFigureInfoRepository keyFigureInfoRepositor
             ?? throw new KeyNotFoundException($"KeyFigureInfo with name '{name}' not found.");
 
         return keyFigureInfo.Id;
-
+    }
+    public async Task<int> GetStandardDeviationIdAsync()
+    {
+        return await GetIdAsync(Constants.KeyFigureData.StandardDeviation);
+    }
+    public async Task<int> GetTrackingErrorIdAsync()
+    {
+        return await GetIdAsync(Constants.KeyFigureData.TrackingError);
+    }
+    public async Task<int> GetAnnualizedCumulativeReturnIdAsync()
+    {
+        return await GetIdAsync(Constants.KeyFigureData.AnnualisedCumulativeReturn);
+    }
+    public async Task<int> GetInformationRatioIdAsync()
+    {
+        return await GetIdAsync(Constants.KeyFigureData.InformationRatio);
+    }
+    public async Task<int> GetHalfYearPerformanceIdAsync()
+    {
+        return await GetIdAsync(Constants.KeyFigureData.HalfYearPerformance);
     }
 }
