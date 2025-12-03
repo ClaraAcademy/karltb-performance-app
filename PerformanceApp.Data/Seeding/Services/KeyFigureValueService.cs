@@ -41,8 +41,14 @@ public class KeyFigureValueService : IKeyFigureValueService
         _performanceService = performanceService;
         _dateInfoService = dateInfoService;
         _portfolioPerformanceRepository = portfolioPerformanceRepository;
-        AnnualizationFactor = _dateInfoService.GetAnnualizationFactorAsync().GetAwaiter().GetResult();
-        DayPerformanceId = _performanceService.GetDayPerformanceIdAsync().GetAwaiter().GetResult();
+        AnnualizationFactor = _dateInfoService
+            .GetAnnualizationFactorAsync()
+            .GetAwaiter()
+            .GetResult();
+        DayPerformanceId = _performanceService
+            .GetDayPerformanceIdAsync()
+            .GetAwaiter()
+            .GetResult();
     }
 
     private record Dto(int PortfolioId, int KeyFigureId, decimal Value);
@@ -103,7 +109,6 @@ public class KeyFigureValueService : IKeyFigureValueService
         return (decimal)Math.Sqrt(fraction);
     }
 
-
     public async Task<bool> UpdateStandardDeviationAsync()
     {
         var id = await _keyFigureInfoService.GetStandardDeviationIdAsync();
@@ -141,7 +146,9 @@ public class KeyFigureValueService : IKeyFigureValueService
 
         static DateOnly GetKey(PortfolioPerformance pp) => pp.PeriodStart;
         static Dto Map(PortfolioPerformance pp, PortfolioPerformance bp)
-            => new(pp.PortfolioId, -1, pp.Value - bp.Value);
+        {
+            return new(pp.PortfolioId, -1, pp.Value - bp.Value);
+        }
 
         var dtos = portfolioDayPerformances
             .Join(benchmarkDayPerformances, GetKey, GetKey, Map)
@@ -174,19 +181,20 @@ public class KeyFigureValueService : IKeyFigureValueService
         return true;
     }
 
-    private decimal ComputeAnnualizedCumulativeReturn(IEnumerable<decimal> dailyReturns)
-    {
-        static decimal aggregator(decimal acc, decimal r) => acc * (1M + r);
-        var product = dailyReturns.Aggregate(1M, aggregator);
-
-        return (decimal)Math.Pow((double)product, (double)AnnualizationFactor) - 1M;
-    }
+    private static decimal Product(decimal acc, decimal r) => acc * (1M + r);
 
     public async Task<bool> UpdateAnnualisedCumulativeReturnAsync()
     {
         var id = await _keyFigureInfoService.GetAnnualizedCumulativeReturnIdAsync();
 
         var dayPerformances = await _portfolioPerformanceService.GetPortfolioDayPerformancesAsync();
+
+        decimal ComputeAnnualizedCumulativeReturn(IEnumerable<decimal> dailyReturns)
+        {
+            var product = dailyReturns.Aggregate(1M, Product);
+
+            return (decimal)Math.Pow((double)product, (double)AnnualizationFactor) - 1M;
+        }
 
         var annualisedCumulativeReturns = dayPerformances
             .GroupBy(pp => pp.PortfolioId)
@@ -198,16 +206,6 @@ public class KeyFigureValueService : IKeyFigureValueService
         return true;
     }
 
-    private decimal ComputeInformationRatio(IEnumerable<decimal> activeReturns)
-    {
-        var average = activeReturns.Average();
-        var stdDev = ComputeStandardDeviation(activeReturns);
-
-        var factor = (decimal)Math.Sqrt((double)AnnualizationFactor);
-
-        return factor * average / stdDev;
-    }
-
     public async Task<bool> UpdateInformationRatioAsync()
     {
         var id = await _keyFigureInfoService.GetInformationRatioIdAsync();
@@ -216,6 +214,16 @@ public class KeyFigureValueService : IKeyFigureValueService
         var portfolios = actualPortfolios.ToList();
 
         var activeReturns = GetActiveReturns(portfolios);
+
+        decimal ComputeInformationRatio(IEnumerable<decimal> activeReturns)
+        {
+            var average = activeReturns.Average();
+            var stdDev = ComputeStandardDeviation(activeReturns);
+
+            var factor = (decimal)Math.Sqrt((double)AnnualizationFactor);
+
+            return factor * average / stdDev;
+        }
 
         var informationRatios = activeReturns
             .GroupBy(ar => ar.PortfolioId)
@@ -227,23 +235,24 @@ public class KeyFigureValueService : IKeyFigureValueService
         return true;
     }
 
-    private static KeyFigureValue MapToKeyFigureValue(PortfolioPerformance p, int keyFigureId)
-    {
-        return new KeyFigureValue
-        {
-            PortfolioId = p.PortfolioId,
-            KeyFigureId = keyFigureId,
-            Value = p.Value
-        };
-    }
 
     public async Task<bool> UpdateHalfYearPerformanceAsync()
     {
         var id = await _keyFigureInfoService.GetHalfYearPerformanceIdAsync();
 
+        KeyFigureValue MapToKeyFigureValue(PortfolioPerformance p)
+        {
+            return new KeyFigureValue
+            {
+                PortfolioId = p.PortfolioId,
+                KeyFigureId = id,
+                Value = p.Value
+            };
+        }
+
         var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
         var halfYearPerformances = performances
-            .Select(p => MapToKeyFigureValue(p, id))
+            .Select(MapToKeyFigureValue)
             .ToList();
 
         await _keyFigureValueRepository.AddKeyFigureValuesAsync(halfYearPerformances);
