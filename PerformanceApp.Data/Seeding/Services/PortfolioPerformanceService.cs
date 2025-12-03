@@ -7,6 +7,7 @@ public interface IPortfolioPerformanceService
 {
     Task<bool> UpdatePortfolioDayPerformancesAsync(DateOnly bankday);
     Task<bool> UpdatePortfolioMonthPerformancesAsync(DateOnly bankday);
+    Task<bool> UpdatePortfolioHalfYearPerformancesAsync(DateOnly bankday);
 }
 
 public class PortfolioPerformanceService : IPortfolioPerformanceService
@@ -30,16 +31,20 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
         _performanceService = performanceService;
         _dateInfoService = dateInfoService;
     }
-    private static PortfolioPerformance MapToPortfolioPerformance(Portfolio portfolio, DateOnly periodStart, DateOnly periodEnd, decimal value, int typeId)
+    private static PortfolioPerformance MapToPortfolioPerformance(int portfolioId, DateOnly periodStart, DateOnly periodEnd, decimal value, int typeId)
     {
         return new PortfolioPerformance
         {
-            PortfolioId = portfolio.Id,
+            PortfolioId = portfolioId,
             TypeId = typeId,
             PeriodStart = periodStart,
             PeriodEnd = periodEnd,
             Value = value
         };
+    }
+    private static PortfolioPerformance MapToPortfolioPerformance(Portfolio portfolio, DateOnly periodStart, DateOnly periodEnd, decimal value, int typeId)
+    {
+        return MapToPortfolioPerformance(portfolio.Id, periodStart, periodEnd, value, typeId);
     }
     private static List<PortfolioValue> GetPortfolioValuesByBankday(List<Portfolio> portfolios, DateOnly bankday)
     {
@@ -52,14 +57,7 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
 
     private static PortfolioPerformance MapToPortfolioPerformance(PortfolioValue current, PortfolioValue previous, int performanceTypeId, decimal perfomanceValue)
     {
-        return new PortfolioPerformance
-        {
-            PortfolioId = current.PortfolioId,
-            TypeId = performanceTypeId,
-            PeriodStart = current.Bankday,
-            PeriodEnd = current.Bankday,
-            Value = perfomanceValue
-        };
+        return MapToPortfolioPerformance(current.PortfolioId, current.Bankday, current.Bankday, perfomanceValue, performanceTypeId);
     }
     private PortfolioPerformance MapToPortfolioDayPerformance(PortfolioValue current, PortfolioValue previous)
     {
@@ -175,4 +173,57 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
 
         return true;
     }
+
+    private static List<PortfolioPerformance> AggregateDayPerformances(List<PortfolioPerformance> performances, int performanceTypeId)
+    {
+        var aggregated = performances
+            .GroupBy(pp => pp.PortfolioId)
+            .Select(g => MapToPortfolioPerformance(
+                g.First().PortfolioNavigation!.Id,
+                g.Min(pp => pp.PeriodStart),
+                g.Max(pp => pp.PeriodEnd),
+                g.Aggregate(1m, (acc, pp) => acc * (1 + pp.Value)) - 1, // Product(1 + daily_return) - 1
+                performanceTypeId
+            ))
+            .ToList();
+
+        return aggregated;
+    }
+    private (DateOnly Start, DateOnly End) GetHalfYearBound(DateOnly bankday)
+    {
+        int half = (bankday.Month - 1) / 6;
+
+        var startMonth = half * 6 + 1;
+        var endMonth = startMonth + 5;
+
+        var startDay = 1;
+        var endDay = DateTime.DaysInMonth(bankday.Year, endMonth);
+
+        var year = bankday.Year;
+
+        var start = new DateOnly(year, startMonth, startDay);
+        var end = new DateOnly(year, endMonth, endDay);
+
+        return (start, end);
+    }
+    public async Task<bool> UpdatePortfolioHalfYearPerformancesAsync(DateOnly bankday)
+    {
+        var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
+
+        var dayPerformanceId = await _performanceService.GetDayPerformanceIdAsync();
+        var halfYearPerformanceId = await _performanceService.GetHalfYearPerformanceIdAsync();
+
+        var (halfYearStart, halfYearEnd) = GetHalfYearBound(bankday);
+
+        var dayPerformancesInRange = performances
+            .Where(pp => IsSamePerformanceType(pp, dayPerformanceId))
+            .Where(pp => pp.PeriodEnd >= halfYearStart && pp.PeriodEnd <= halfYearEnd)
+            .ToList();
+
+        var halfYearPerformances = AggregateDayPerformances(dayPerformancesInRange, halfYearPerformanceId);
+
+        await _portfolioPerformanceRepository.AddPortfolioPerformancesAsync(halfYearPerformances);
+        return true;
+    }
+
 }
