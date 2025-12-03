@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seeding.Services;
@@ -7,9 +8,14 @@ public interface IPortfolioService
     Task<int> GetPortfolioIdAsync(string name);
 }
 
-public class PortfolioService(IPortfolioRepository portfolioRepository) : IPortfolioService
+public class PortfolioService : IPortfolioService
 {
-    private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
+    private readonly IPortfolioRepository _portfolioRepository;
+
+    public PortfolioService(PadbContext context)
+    {
+        _portfolioRepository = new PortfolioRepository(context);
+    }
 
     public async Task<int> GetPortfolioIdAsync(string name)
     {

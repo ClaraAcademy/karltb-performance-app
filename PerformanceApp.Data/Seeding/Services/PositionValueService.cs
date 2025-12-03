@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -16,19 +17,13 @@ public class PositionValueService : IPositionValueService
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IDateInfoService _dateInfoService;
 
-    public PositionValueService(
-        IPositionValueRepository positionValueRepository,
-        IInstrumentPriceRepository instrumentPriceRepository,
-        IPositionRepository positionRepository,
-        IPortfolioRepository portfolioRepository,
-        IDateInfoService dateInfoService
-    )
+    public PositionValueService(PadbContext context)
     {
-        _positionValueRepository = positionValueRepository;
-        _instrumentPriceRepository = instrumentPriceRepository;
-        _positionRepository = positionRepository;
-        _portfolioRepository = portfolioRepository;
-        _dateInfoService = dateInfoService;
+        _positionValueRepository = new PositionValueRepository(context);
+        _instrumentPriceRepository = new InstrumentPriceRepository(context);
+        _positionRepository = new PositionRepository(context);
+        _portfolioRepository = new PortfolioRepository(context);
+        _dateInfoService = new DateInfoService(context);
     }
 
     private record Dto(

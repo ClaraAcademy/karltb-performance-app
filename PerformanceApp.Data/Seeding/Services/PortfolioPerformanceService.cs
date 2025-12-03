@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -17,22 +18,14 @@ public class PortfolioPerformanceService : IPortfolioPerformanceService
 {
     private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository;
     private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IPortfolioValueRepository _portfolioValueRepository;
     private readonly IPerformanceService _performanceService;
     private readonly IDateInfoService _dateInfoService;
-    public PortfolioPerformanceService(
-        IPortfolioPerformanceRepository portfolioPerformanceRepository,
-        IPortfolioRepository portfolioRepository,
-        IPortfolioValueRepository portfolioValueRepository,
-        IPerformanceService performanceService,
-        IDateInfoService dateInfoService
-    )
+    public PortfolioPerformanceService(PadbContext context)
     {
-        _portfolioPerformanceRepository = portfolioPerformanceRepository;
-        _portfolioRepository = portfolioRepository;
-        _portfolioValueRepository = portfolioValueRepository;
-        _performanceService = performanceService;
-        _dateInfoService = dateInfoService;
+        _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
+        _portfolioRepository = new PortfolioRepository(context);
+        _performanceService = new PerformanceService(context);
+        _dateInfoService = new DateInfoService(context);
     }
     private static PortfolioPerformance MapToPortfolioPerformance(int portfolioId, DateOnly periodStart, DateOnly periodEnd, decimal value, int typeId)
     {

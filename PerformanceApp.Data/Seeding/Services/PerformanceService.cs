@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Constants;
 
@@ -13,9 +14,14 @@ public interface IPerformanceService
     decimal GetPerformanceValue(decimal current, decimal previous);
 }
 
-public class PerformanceService(IPerformanceTypeRepository performanceTypeRepository) : IPerformanceService
+public class PerformanceService : IPerformanceService
 {
-    private readonly IPerformanceTypeRepository _performanceTypeRepository = performanceTypeRepository;
+    private readonly IPerformanceTypeRepository _performanceTypeRepository;
+
+    public PerformanceService(PadbContext context)
+    {
+        _performanceTypeRepository = new PerformanceTypeRepository(context);
+    }
     public async Task<int> GetPerformanceIdAsync(string name)
     {
         var performances = await _performanceTypeRepository.GetPerformanceTypeInfosAsync();

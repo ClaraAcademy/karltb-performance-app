@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -14,23 +15,16 @@ public class PortfolioValueService : IPortfolioValueService
     private readonly IDateInfoService _dateInfoService;
     private readonly IPositionRepository _positionRepository;
     private readonly IPositionValueRepository _positionValueRepository;
-    private readonly IInstrumentService _instrumentService;
+
+    public PortfolioValueService(PadbContext context)
+    {
+        _portfolioValueRepository = new PortfolioValueRepository(context);
+        _dateInfoService = new DateInfoService(context);
+        _positionRepository = new PositionRepository(context);
+        _positionValueRepository = new PositionValueRepository(context);
+    }
 
     private record Key(int PortfolioId, int InstrumentId);
-
-    public PortfolioValueService(
-        IPortfolioValueRepository portfolioValueRepository,
-        IDateInfoService dateInfoService,
-        IPositionRepository positionRepository,
-        IPositionValueRepository positionValueRepository,
-        IInstrumentService instrumentService)
-    {
-        _portfolioValueRepository = portfolioValueRepository;
-        _dateInfoService = dateInfoService;
-        _positionRepository = positionRepository;
-        _positionValueRepository = positionValueRepository;
-        _instrumentService = instrumentService;
-    }
 
     private static int GetKey(IGrouping<int, PositionValue> g) => g.Key;
     private static int GetKey(Position p) => p.Id;

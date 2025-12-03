@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seeding.Services;
@@ -7,9 +8,14 @@ public interface IInstrumentTypeService
     Task<int> GetInstrumentTypeIdAsync(string name);
 }
 
-public class InstrumentTypeService(IInstrumentTypeRepository instrumentTypeRepository) : IInstrumentTypeService
+public class InstrumentTypeService : IInstrumentTypeService
 {
-    private readonly IInstrumentTypeRepository _instrumentTypeRepository = instrumentTypeRepository;
+    private readonly IInstrumentTypeRepository _instrumentTypeRepository;
+
+    public InstrumentTypeService(PadbContext context)
+    {
+        _instrumentTypeRepository = new InstrumentTypeRepository(context);
+    }
 
     public async Task<int> GetInstrumentTypeIdAsync(string name)
     {

@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 
 namespace PerformanceApp.Data.Seeding.Services;
@@ -12,9 +13,14 @@ public interface IKeyFigureInfoService
     Task<int> GetHalfYearPerformanceIdAsync();
 }
 
-public class KeyFigureInfoService(KeyFigureInfoRepository keyFigureInfoRepository) : IKeyFigureInfoService
+public class KeyFigureInfoService : IKeyFigureInfoService
 {
-    private readonly KeyFigureInfoRepository _keyFigureInfoRepository = keyFigureInfoRepository;
+    private readonly KeyFigureInfoRepository _keyFigureInfoRepository;
+
+    public KeyFigureInfoService(PadbContext context)
+    {
+        _keyFigureInfoRepository = new KeyFigureInfoRepository(context);
+    }
 
     public async Task<int> GetIdAsync(string name)
     {

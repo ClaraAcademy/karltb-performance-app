@@ -1,4 +1,5 @@
 using System.Numerics;
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -14,6 +15,13 @@ public class PositionService : IPositionService
     private readonly IPositionRepository _positionRepository;
     private readonly IDateInfoService _dateInfoService;
     private readonly ITransactionRepository _transactionRepository;
+
+    public PositionService(PadbContext context)
+    {
+        _positionRepository = new PositionRepository(context);
+        _dateInfoService = new DateInfoService(context);
+        _transactionRepository = new TransactionRepository(context);
+    }
 
     private record Dto(
         int PortfolioId,
@@ -81,15 +89,6 @@ public class PositionService : IPositionService
             || Check(position.Proportion);
     }
 
-    public PositionService(
-        IPositionRepository positionRepository,
-        IDateInfoService dateInfoService,
-        ITransactionRepository transactionRepository)
-    {
-        _positionRepository = positionRepository;
-        _dateInfoService = dateInfoService;
-        _transactionRepository = transactionRepository;
-    }
 
 
     public async Task<bool> UpdatePositionsAsync(DateOnly bankday)

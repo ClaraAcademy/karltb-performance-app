@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Constants;
 
@@ -13,6 +14,12 @@ public class InstrumentService : IInstrumentService
 {
     private readonly IInstrumentRepository _instrumentRepository;
     private readonly IInstrumentTypeRepository _instrumentTypeRepository;
+
+    public InstrumentService(PadbContext context)
+    {
+        _instrumentRepository = new InstrumentRepository(context);
+        _instrumentTypeRepository = new InstrumentTypeRepository(context);
+    }
 
     private static string InstrumentNameErrorMessage(string name)
     {
@@ -31,14 +38,6 @@ public class InstrumentService : IInstrumentService
         return $"Unknown InstrumentType '{name}' for Instrument with id '{id}'.";
     }
 
-    public InstrumentService(
-        IInstrumentRepository instrumentRepository,
-        IInstrumentTypeRepository instrumentTypeRepository
-    )
-    {
-        _instrumentRepository = instrumentRepository;
-        _instrumentTypeRepository = instrumentTypeRepository;
-    }
 
     public async Task<int> GetInstrumentIdAsync(string name)
     {

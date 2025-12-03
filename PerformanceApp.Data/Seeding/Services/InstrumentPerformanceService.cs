@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -15,17 +16,12 @@ public class InstrumentPerformanceService : IInstrumentPerformanceService
     private readonly IPerformanceService _performanceService;
     private readonly IDateInfoService _dateInfoService;
 
-    public InstrumentPerformanceService(
-        IInstrumentPerformanceRepository instrumentPerformanceRepository,
-        IInstrumentPriceRepository instrumentPriceRepository,
-        IPerformanceService performanceService,
-        IDateInfoService dateInfoService
-    )
+    public InstrumentPerformanceService(PadbContext context)
     {
-        _instrumentPerformanceRepository = instrumentPerformanceRepository;
-        _instrumentPriceRepository = instrumentPriceRepository;
-        _performanceService = performanceService;
-        _dateInfoService = dateInfoService;
+        _instrumentPerformanceRepository = new InstrumentPerformanceRepository(context);
+        _instrumentPriceRepository = new InstrumentPriceRepository(context);
+        _performanceService = new PerformanceService(context);
+        _dateInfoService = new DateInfoService(context);
     }
     private static int GetKey(InstrumentPrice ip) => ip.InstrumentId;
     private InstrumentPerformance MapToInstrumentPerformance(InstrumentPrice c, InstrumentPrice p, int performanceTypeId)

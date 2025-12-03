@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Constants;
 
@@ -10,10 +11,15 @@ public interface IDateInfoService
     Task<bool> BankdayExistsAsync(DateOnly date);
 }
 
-public class DateInfoService(IDateInfoRepository dateInfoRepository) : IDateInfoService
+public class DateInfoService : IDateInfoService
 {
-    private readonly IDateInfoRepository _dateInfoRepository = dateInfoRepository;
+    private readonly IDateInfoRepository _dateInfoRepository;
     private const decimal BankdaysPerYear = 250;
+
+    public DateInfoService(PadbContext context)
+    {
+        _dateInfoRepository = new DateInfoRepository(context);
+    }
 
     public async Task<DateOnly> GetPreviousBankdayAsync(DateOnly date)
     {

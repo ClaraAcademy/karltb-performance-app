@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 
@@ -18,34 +19,23 @@ public class KeyFigureValueService : IKeyFigureValueService
     private readonly IKeyFigureInfoService _keyFigureInfoService;
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioPerformanceService _portfolioPerformanceService;
-    private readonly IPerformanceService _performanceService;
-    private readonly IDateInfoService _dateInfoService;
     private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository;
     private readonly decimal AnnualizationFactor;
     private readonly int DayPerformanceId;
 
-    public KeyFigureValueService(
-        IKeyFigureValueRepository keyFigureValueRepository,
-        IKeyFigureInfoService keyFigureInfoService,
-        IPortfolioRepository portfolioRepository,
-        IPortfolioPerformanceService portfolioPerformanceService,
-        IPerformanceService performanceService,
-        IDateInfoService dateInfoService,
-        IPortfolioPerformanceRepository portfolioPerformanceRepository
-    )
+    public KeyFigureValueService(PadbContext context)
     {
-        _keyFigureValueRepository = keyFigureValueRepository;
-        _keyFigureInfoService = keyFigureInfoService;
-        _portfolioRepository = portfolioRepository;
-        _portfolioPerformanceService = portfolioPerformanceService;
-        _performanceService = performanceService;
-        _dateInfoService = dateInfoService;
-        _portfolioPerformanceRepository = portfolioPerformanceRepository;
-        AnnualizationFactor = _dateInfoService
+        _keyFigureValueRepository = new KeyFigureValueRepository(context);
+        _keyFigureInfoService = new KeyFigureInfoService(context);
+        _portfolioRepository = new PortfolioRepository(context);
+        _portfolioPerformanceService = new PortfolioPerformanceService(context);
+        _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
+
+        AnnualizationFactor = new DateInfoService(context)
             .GetAnnualizationFactorAsync()
             .GetAwaiter()
             .GetResult();
-        DayPerformanceId = _performanceService
+        DayPerformanceId = new PerformanceService(context)
             .GetDayPerformanceIdAsync()
             .GetAwaiter()
             .GetResult();
