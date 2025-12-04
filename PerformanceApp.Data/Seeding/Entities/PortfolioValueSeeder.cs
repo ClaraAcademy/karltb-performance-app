@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Queries;
+using PerformanceApp.Data.Seeding.Services;
 using PerformanceApp.Data.Seeding.Utilities;
 
 namespace PerformanceApp.Data.Seeding.Entities;
@@ -10,6 +11,7 @@ public class PortfolioValueSeeder(PadbContext context)
     private readonly PadbContext _context = context;
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private readonly PortfolioValueRepository _portfolioValueRepository = new(context);
+    private readonly IPortfolioValueService _portfolioValueService = new PortfolioValueService(context);
 
     private async Task<bool> IsPopulated()
     {
@@ -32,8 +34,7 @@ public class PortfolioValueSeeder(PadbContext context)
 
         foreach (var bankday in bankdays)
         {
-            var query = PerformanceQueries.UpdatePortfolioValue(bankday);
-            await SqlExecutor.ExecuteQueryAsync(_context, query);
+            await _portfolioValueService.UpdatePortfolioValuesAsync(bankday);
         }
     }
 }
