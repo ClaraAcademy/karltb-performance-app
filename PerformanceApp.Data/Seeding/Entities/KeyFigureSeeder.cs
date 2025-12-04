@@ -1,15 +1,13 @@
-using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Seeding.Constants;
-using PerformanceApp.Data.Seeding.Queries;
+using PerformanceApp.Data.Seeding.Services;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
 public class KeyFigureSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
+    private readonly IKeyFigureValueService _keyFigureValueService = new KeyFigureValueService(context);
 
     private async Task<bool> IsPopulated()
     {
@@ -17,8 +15,6 @@ public class KeyFigureSeeder(PadbContext context)
 
         return keyFigureInfos.Any();
     }
-
-    KeyFigureInfo MapToKeyFigureInfo(string name) => new KeyFigureInfo { Name = name };
 
     public async Task Seed()
     {
@@ -29,15 +25,11 @@ public class KeyFigureSeeder(PadbContext context)
             return;
         }
 
-        var raw = KeyFigureData.GetKeyFigures();
+        await _keyFigureValueService.UpdateStandardDeviationsAsync();
+        await _keyFigureValueService.UpdateTrackingErrorsAsync();
+        await _keyFigureValueService.UpdateAnnualisedCumulativeReturnsAsync();
+        await _keyFigureValueService.UpdateInformationRatiosAsync();
+        await _keyFigureValueService.UpdateHalfYearPerformancesAsync();
 
-        var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
-
-        await _keyFigureInfoRepository.AddKeyFigureInfosAsync(keyFigureInfos);
-
-        foreach (var query in KeyFigureQueries.Queries)
-        {
-            await SqlExecutor.ExecuteQueryAsync(_context, query);
-        }
     }
 }
