@@ -5,11 +5,12 @@ using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
+[Collection("Seeding collection")]
 public class PortfolioSeederTest : BaseSeederTest
 {
     private readonly PortfolioSeeder _portfolioSeeder;
     private readonly UserSeeder _userSeeder;
-    public PortfolioSeederTest() : base()
+    public PortfolioSeederTest(DatabaseFixture fixture) : base(fixture)
     {
         _userSeeder = new UserSeeder(_userManager);
         _portfolioSeeder = new PortfolioSeeder(_context, _userManager);

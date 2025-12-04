@@ -5,10 +5,11 @@ using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
+[Collection("Seeding collection")]
 public class UserSeederTest : BaseSeederTest
 {
     private readonly UserSeeder _seeder;
-    public UserSeederTest() : base()
+    public UserSeederTest(DatabaseFixture fixture) : base(fixture)
     {
         _seeder = new UserSeeder(_userManager);
     }
