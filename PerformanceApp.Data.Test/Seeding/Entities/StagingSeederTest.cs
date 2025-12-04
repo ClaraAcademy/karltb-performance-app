@@ -22,4 +22,19 @@ public class StagingSeederTest : BaseSeederTest
         var stagingDataCount = await _context.Stagings.CountAsync();
         Assert.True(stagingDataCount > 0);
     }
+
+    [Fact]
+    public async Task Seed_IsIdempotent()
+    {
+        // Arrange
+        await _stagingSeeder.Seed();
+        var initialCount = await _context.Stagings.CountAsync();
+
+        // Act
+        await _stagingSeeder.Seed();
+
+        // Assert
+        var finalCount = await _context.Stagings.CountAsync();
+        Assert.Equal(initialCount, finalCount);
+    }
 }
