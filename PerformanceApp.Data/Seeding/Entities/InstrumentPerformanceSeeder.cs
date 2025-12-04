@@ -1,15 +1,15 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Seeding.Queries;
+using PerformanceApp.Data.Seeding.Services;
 using PerformanceApp.Data.Seeding.Utilities;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
 public class InstrumentPerformanceSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private readonly InstrumentPerformanceRepository _instrumentPerformanceRepository = new(context);
+    private readonly IInstrumentPerformanceService _instrumentPerformanceService = new InstrumentPerformanceService(context);
 
     private async Task<bool> IsPopulated()
     {
@@ -32,10 +32,7 @@ public class InstrumentPerformanceSeeder(PadbContext context)
 
         foreach (var bankday in bankdays)
         {
-            var query = PerformanceQueries.UpdateInstrumentDayPerformance(bankday);
-            await SqlExecutor.ExecuteQueryAsync(_context, query);
+            await _instrumentPerformanceService.UpdateInstrumentDayPerformancesAsync(bankday);
         }
-
-
     }
 }
