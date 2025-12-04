@@ -1,37 +1,20 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Seeding.Queries;
+using PerformanceApp.Data.Seeding.Services;
 using PerformanceApp.Data.Seeding.Utilities;
 
 namespace PerformanceApp.Data.Seeding.Entities;
 
 public class PortfolioPerformanceSeeder(PadbContext context)
 {
-    private readonly PadbContext _context = context;
-
     private readonly DateInfoRepository _dateInfoRepository = new(context);
     private readonly PortfolioPerformanceRepository _portfolioPerformanceRepository = new(context);
+    private readonly IPortfolioPerformanceService _portfolioPerformanceService = new PortfolioPerformanceService(context);
 
     private async Task<bool> IsPopulated()
     {
         var portfolioPerformances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
         return portfolioPerformances.Any();
-    }
-
-    private static List<FormattableString> GetDailyQueries(DateOnly bankday)
-    {
-        return [
-            PerformanceQueries.UpdatePortfolioDayPerformance(bankday),
-            PerformanceQueries.UpdatePortfolioCumulativeDayPerformance(bankday)
-        ];
-    }
-
-    private static List<FormattableString> GetAggregateQueries()
-    {
-        return [
-            PerformanceQueries.UpdatePortfolioMontPerformance(),
-            PerformanceQueries.UpdatePortfolioHalfYearPerformance()
-        ];
     }
 
     public async Task Seed()
@@ -48,15 +31,32 @@ public class PortfolioPerformanceSeeder(PadbContext context)
 
         foreach (var bankday in bankdays)
         {
-            foreach (var query in GetDailyQueries(bankday))
-            {
-                await SqlExecutor.ExecuteQueryAsync(_context, query);
-            }
+            await _portfolioPerformanceService.UpdatePortfolioDayPerformancesAsync(bankday);
         }
 
-        foreach (var query in GetAggregateQueries())
+        foreach (var bankday in bankdays)
         {
-            await SqlExecutor.ExecuteQueryAsync(_context, query);
+            await _portfolioPerformanceService.UpdatePortfolioCumulativeDayPerformancesAsync(bankday);
+        }
+
+        var months = dateInfos
+            .Select(di => new DateOnly(di.Bankday.Year, di.Bankday.Month, 1))
+            .Distinct()
+            .OrderBy(d => d);
+
+        foreach (var month in months)
+        {
+            await _portfolioPerformanceService.UpdatePortfolioMonthPerformancesAsync(month);
+        }
+
+        var halfYears = dateInfos
+            .Select(di => new DateOnly(di.Bankday.Year, di.Bankday.Month <= 6 ? 1 : 7, 1))
+            .Distinct()
+            .OrderBy(d => d);
+
+        foreach (var halfYear in halfYears)
+        {
+            await _portfolioPerformanceService.UpdatePortfolioHalfYearPerformancesAsync(halfYear);
         }
     }
 }
