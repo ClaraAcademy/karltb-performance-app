@@ -14,9 +14,6 @@ public static class DatabaseInitializer
 
         context.Database.EnsureCreated();
 
-        await SqlExecutor.ExecuteFilesInDirectory(context, SqlPaths.Functions);
-        await SqlExecutor.ExecuteFilesInDirectory(context, SqlPaths.StoredProcedures);
-
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         var seeder = new DatabaseSeeder(context, userManager);
         await seeder.Seed();

@@ -1,6 +1,5 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Seeding.Queries;
 using PerformanceApp.Data.Seeding.Services;
 using PerformanceApp.Data.Seeding.Utilities;
 
