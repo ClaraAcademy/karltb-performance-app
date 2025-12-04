@@ -1,5 +1,7 @@
 namespace PerformanceApp.Data.Test.Seeding;
 
-[CollectionDefinition("Seeding collection")]
-public class Seedingcollection : ICollectionFixture<DatabaseFixture>
-{ }
+[CollectionDefinition(Name)]
+public class SeedingCollection : ICollectionFixture<DatabaseFixture>
+{
+    public const string Name = "Seeding collection";
+}

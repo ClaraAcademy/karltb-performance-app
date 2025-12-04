@@ -6,7 +6,7 @@ using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
-[Collection("Seeding collection")]
+[Collection(SeedingCollection.Name)]
 public class StagingSeederTest : BaseSeederTest
 {
     private readonly StagingSeeder _stagingSeeder;

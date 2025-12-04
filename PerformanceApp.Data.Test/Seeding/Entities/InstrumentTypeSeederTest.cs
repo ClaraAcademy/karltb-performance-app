@@ -4,7 +4,7 @@ using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
-[Collection("Seeding collection")]
+[Collection(SeedingCollection.Name)]
 public class InstrumentTypeSeederTest : BaseSeederTest
 {
     private readonly InstrumentTypeSeeder _instrumentTypeSeeder;
