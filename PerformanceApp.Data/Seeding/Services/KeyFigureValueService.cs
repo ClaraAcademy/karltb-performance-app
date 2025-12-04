@@ -6,11 +6,11 @@ namespace PerformanceApp.Data.Seeding.Services;
 
 public interface IKeyFigureValueService
 {
-    Task<bool> UpdateStandardDeviationAsync();
-    Task<bool> UpdateTrackingErrorAsync();
-    Task<bool> UpdateAnnualisedCumulativeReturnAsync();
-    Task<bool> UpdateInformationRatioAsync();
-    Task<bool> UpdateHalfYearPerformanceAsync();
+    Task<bool> UpdateStandardDeviationsAsync();
+    Task<bool> UpdateTrackingErrorsAsync();
+    Task<bool> UpdateAnnualisedCumulativeReturnsAsync();
+    Task<bool> UpdateInformationRatiosAsync();
+    Task<bool> UpdateHalfYearPerformancesAsync();
 }
 
 public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
@@ -87,7 +87,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         return (decimal)Math.Sqrt(fraction);
     }
 
-    public async Task<bool> UpdateStandardDeviationAsync()
+    public async Task<bool> UpdateStandardDeviationsAsync()
     {
         var id = await _keyFigureInfoService.GetStandardDeviationIdAsync();
         var dayPerformances = await _portfolioPerformanceService.GetPortfolioDayPerformancesAsync();
@@ -140,7 +140,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         return portfolios.SelectMany(GetActiveReturn).ToList();
     }
 
-    public async Task<bool> UpdateTrackingErrorAsync()
+    public async Task<bool> UpdateTrackingErrorsAsync()
     {
         var id = await _keyFigureInfoService.GetTrackingErrorIdAsync();
 
@@ -161,7 +161,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
     private static decimal Product(decimal acc, decimal r) => acc * (1M + r);
 
-    public async Task<bool> UpdateAnnualisedCumulativeReturnAsync()
+    public async Task<bool> UpdateAnnualisedCumulativeReturnsAsync()
     {
         var id = await _keyFigureInfoService.GetAnnualizedCumulativeReturnIdAsync();
 
@@ -184,7 +184,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         return true;
     }
 
-    public async Task<bool> UpdateInformationRatioAsync()
+    public async Task<bool> UpdateInformationRatiosAsync()
     {
         var id = await _keyFigureInfoService.GetInformationRatioIdAsync();
 
@@ -214,7 +214,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
     }
 
 
-    public async Task<bool> UpdateHalfYearPerformanceAsync()
+    public async Task<bool> UpdateHalfYearPerformancesAsync()
     {
         var id = await _keyFigureInfoService.GetHalfYearPerformanceIdAsync();
 
