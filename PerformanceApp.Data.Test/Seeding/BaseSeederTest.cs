@@ -90,9 +90,9 @@ public class BaseSeederTest
         await _positionValueSeeder.Seed();
         await _portfolioValueSeeder.Seed();
 
-        await _keyFigureSeeder.Seed();
         await _instrumentPerformanceSeeder.Seed();
         await _portfolioPerformanceSeeder.Seed();
+        await _keyFigureSeeder.Seed();
     }
 
 }
