@@ -7,14 +7,8 @@ using PerformanceApp.Data.Seeding.Entities;
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class StagingSeederTest : BaseSeederTest
+public class StagingSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly StagingSeeder _stagingSeeder;
-    public StagingSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _stagingSeeder = new StagingSeeder(_context);
-    }
-
     private static StagingDto MapToDto(Staging staging)
     {
         return new StagingDto(
@@ -36,7 +30,7 @@ public class StagingSeederTest : BaseSeederTest
         // Arrange
         var expected = StagingData.Stagings.OrderBy(OrderKey).ToList();
         // Act
-        await _stagingSeeder.Seed();
+        await Seed();
 
         var stagings = await _context.Stagings.ToListAsync();
         var actual = stagings
@@ -62,11 +56,11 @@ public class StagingSeederTest : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await _stagingSeeder.Seed();
+        await Seed();
         var initialCount = await _context.Stagings.CountAsync();
 
         // Act
-        await _stagingSeeder.Seed();
+        await Seed();
 
         // Assert
         var finalCount = await _context.Stagings.CountAsync();

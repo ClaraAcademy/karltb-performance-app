@@ -6,14 +6,8 @@ using PerformanceApp.Data.Seeding.Entities;
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class UserSeederTest : BaseSeederTest
+public class UserSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly UserSeeder _seeder;
-    public UserSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _seeder = new UserSeeder(_userManager);
-    }
-
     private static async Task AssertUserExists(UserManager<ApplicationUser> userManager, string username)
     {
         var user = await userManager.FindByNameAsync(username);
@@ -29,7 +23,7 @@ public class UserSeederTest : BaseSeederTest
         var usernameB = UserData.UsernameB;
 
         // Act
-        await _seeder.Seed();
+        await Seed();
 
         // Assert
         await AssertUserExists(_userManager, usernameA);

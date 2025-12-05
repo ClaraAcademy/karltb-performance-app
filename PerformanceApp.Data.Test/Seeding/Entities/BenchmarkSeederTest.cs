@@ -2,24 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Data.Seeding.Dtos;
-using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class BenchmarkSeederTest : BaseSeederTest
+public class BenchmarkSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly BenchmarkSeeder _benchmarkSeeder;
-    private readonly PortfolioSeeder _portfolioSeeder;
-    private readonly UserSeeder _userSeeder;
-
-    public BenchmarkSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _benchmarkSeeder = new BenchmarkSeeder(_context);
-        _portfolioSeeder = new PortfolioSeeder(_context, _userManager);
-        _userSeeder = new UserSeeder(_userManager);
-    }
-
     private static PortfolioBenchmarkDto MapToDto(Benchmark benchmark)
     {
         var portfolioName = benchmark.PortfolioPortfolioNavigation!.Name!;
@@ -45,9 +33,7 @@ public class BenchmarkSeederTest : BaseSeederTest
         .ToList();
 
         // Act
-        await _userSeeder.Seed();
-        await _portfolioSeeder.Seed();
-        await _benchmarkSeeder.Seed();
+        await Seed();
 
         var benchmarks = await _context.Benchmarks
             .Include(b => b.PortfolioPortfolioNavigation)
@@ -70,13 +56,11 @@ public class BenchmarkSeederTest : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await _userSeeder.Seed();
-        await _portfolioSeeder.Seed();
-        await _benchmarkSeeder.Seed();
+        await Seed();
         var initialCount = await _context.Benchmarks.CountAsync();
 
         // Act
-        await _benchmarkSeeder.Seed();
+        await Seed();
 
         // Assert
         var finalCount = await _context.Benchmarks.CountAsync();

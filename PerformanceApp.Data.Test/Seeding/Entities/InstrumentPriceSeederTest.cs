@@ -8,23 +8,8 @@ using PerformanceApp.Data.Seeding.Entities;
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class InstrumentPriceSeederTest : BaseSeederTest
+public class InstrumentPriceSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly InstrumentPriceSeeder _instrumentPriceSeeder;
-    private readonly InstrumentTypeSeeder _instrumentTypeSeeder;
-    private readonly InstrumentSeeder _instrumentSeeder;
-    private readonly DateInfoSeeder _dateInfoSeeder;
-    private readonly StagingSeeder _stagingSeeder;
-
-    public InstrumentPriceSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _instrumentPriceSeeder = new InstrumentPriceSeeder(_context);
-        _instrumentTypeSeeder = new InstrumentTypeSeeder(_context);
-        _instrumentSeeder = new InstrumentSeeder(_context);
-        _dateInfoSeeder = new DateInfoSeeder(_context);
-        _stagingSeeder = new StagingSeeder(_context);
-    }
-
     private static InstrumentPriceDto MapToDto(InstrumentPrice ip)
     {
         var bankday = ip.Bankday;
@@ -56,13 +41,8 @@ public class InstrumentPriceSeederTest : BaseSeederTest
             .OrderBy(OrderKey)
             .ToList();
 
-        await _stagingSeeder.Seed();
-        await _instrumentTypeSeeder.Seed();
-        await _dateInfoSeeder.Seed();
-        await _instrumentSeeder.Seed();
-
         // Act
-        await _instrumentPriceSeeder.Seed();
+        await Seed();
 
         var instrumentPrices = await _context.InstrumentPrices
             .Include(ip => ip.InstrumentNavigation)
@@ -92,12 +72,11 @@ public class InstrumentPriceSeederTest : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await _stagingSeeder.Seed();
-        await _instrumentPriceSeeder.Seed();
+        await Seed();
         var initialCount = await _context.InstrumentPrices.CountAsync();
 
         // Act
-        await _instrumentPriceSeeder.Seed();
+        await Seed();
 
         // Assert
         var finalCount = await _context.InstrumentPrices.CountAsync();

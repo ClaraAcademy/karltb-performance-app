@@ -5,17 +5,8 @@ using PerformanceApp.Data.Seeding.Entities;
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class InstrumentTypeSeederTest : BaseSeederTest
+public class InstrumentTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly InstrumentTypeSeeder _instrumentTypeSeeder;
-    private readonly StagingSeeder _stagingSeeder;
-
-    public InstrumentTypeSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _instrumentTypeSeeder = new InstrumentTypeSeeder(_context);
-        _stagingSeeder = new StagingSeeder(_context);
-    }
-
     [Fact]
     public async Task Seed_AddsInstrumentTypes()
     {
@@ -23,8 +14,7 @@ public class InstrumentTypeSeederTest : BaseSeederTest
         var expected = InstrumentTypeData.InstrumentTypes;
 
         // Act
-        await _stagingSeeder.Seed();
-        await _instrumentTypeSeeder.Seed();
+        await Seed();
 
         var instrumentTypes = await _context.InstrumentTypes.ToListAsync();
         var actual = instrumentTypes
@@ -42,11 +32,11 @@ public class InstrumentTypeSeederTest : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await _instrumentTypeSeeder.Seed();
+        await Seed();
         var initialCount = await _context.InstrumentTypes.CountAsync();
 
         // Act
-        await _instrumentTypeSeeder.Seed();
+        await Seed();
 
         // Assert
         var finalCount = await _context.InstrumentTypes.CountAsync();

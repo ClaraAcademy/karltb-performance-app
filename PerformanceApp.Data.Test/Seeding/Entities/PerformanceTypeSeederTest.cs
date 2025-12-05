@@ -5,15 +5,8 @@ using PerformanceApp.Data.Seeding.Entities;
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class PerformanceTypeSeederTest : BaseSeederTest
+public class PerformanceTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
-    private readonly PerformanceTypeSeeder _performanceTypeSeeder;
-
-    public PerformanceTypeSeederTest(DatabaseFixture fixture) : base(fixture)
-    {
-        _performanceTypeSeeder = new PerformanceTypeSeeder(_context);
-    }
-
     [Fact]
     public async Task Seed_AddsPerformanceTypes()
     {
@@ -21,7 +14,7 @@ public class PerformanceTypeSeederTest : BaseSeederTest
         var expected = PerformanceTypeData.PerformanceTypes;
 
         // Act
-        await _performanceTypeSeeder.Seed();
+        await Seed();
 
         var performanceTypes = await _context.PerformanceTypeInfos.ToListAsync();
         var actual = performanceTypes
@@ -40,11 +33,11 @@ public class PerformanceTypeSeederTest : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await _performanceTypeSeeder.Seed();
+        await Seed();
         var initialCount = await _context.PerformanceTypeInfos.CountAsync();
 
         // Act
-        await _performanceTypeSeeder.Seed();
+        await Seed();
 
         // Assert
         var finalCount = await _context.PerformanceTypeInfos.CountAsync();
