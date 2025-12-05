@@ -50,6 +50,7 @@ public class PortfolioPerformanceSeeder(PadbContext context)
         }
 
         var halfYears = dateInfos
+            .Where(di => di.Bankday.Year > 2016)
             .Select(di => new DateOnly(di.Bankday.Year, di.Bankday.Month <= 6 ? 1 : 7, 1))
             .Distinct()
             .OrderBy(d => d);
