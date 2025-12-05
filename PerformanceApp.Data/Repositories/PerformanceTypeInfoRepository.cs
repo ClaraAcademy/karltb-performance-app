@@ -7,7 +7,7 @@ namespace PerformanceApp.Data.Repositories;
 public interface IPerformanceTypeRepository
 {
     Task AddPerformanceTypesAsync(List<PerformanceType> performanceTypeInfos);
-    Task<IEnumerable<PerformanceType>> GetPerformanceTypeInfosAsync();
+    Task<List<PerformanceType>> GetPerformanceTypeInfosAsync();
 }
 
 public class PerformanceTypeRepository(PadbContext context) : IPerformanceTypeRepository
@@ -19,7 +19,7 @@ public class PerformanceTypeRepository(PadbContext context) : IPerformanceTypeRe
         await _context.PerformanceTypeInfos.AddRangeAsync(performanceTypeInfos);
         await _context.SaveChangesAsync();
     }
-    public async Task<IEnumerable<PerformanceType>> GetPerformanceTypeInfosAsync()
+    public async Task<List<PerformanceType>> GetPerformanceTypeInfosAsync()
     {
         return await _context.PerformanceTypeInfos.ToListAsync();
     }

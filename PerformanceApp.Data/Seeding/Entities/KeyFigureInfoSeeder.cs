@@ -1,0 +1,41 @@
+using PerformanceApp.Data.Context;
+using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Data.Seeding.Services;
+
+namespace PerformanceApp.Data.Seeding.Entities;
+
+public class KeyFigureInfoSeeder(PadbContext context)
+{
+    private readonly IKeyFigureInfoRepository _keyFigureInfoRepository = new KeyFigureInfoRepository(context);
+    private readonly IKeyFigureInfoService _keyFigureInfoService = new KeyFigureInfoService(context);
+
+    private async Task<bool> IsPopulated()
+    {
+        var keyFigureInfos = await _keyFigureInfoRepository.GetKeyFigureInfosAsync();
+
+        return keyFigureInfos.Any();
+    }
+
+    private static KeyFigureInfo MapToKeyFigureInfo(string s)
+    {
+        return new KeyFigureInfo { Name = s };
+    }
+
+    public async Task Seed()
+    {
+        var exists = await IsPopulated();
+
+        if (exists)
+        {
+            return;
+        }
+
+        var raw = KeyFigureData.GetKeyFigures();
+
+        var keyFigureInfos = raw.Select(MapToKeyFigureInfo).ToList();
+
+        await _keyFigureInfoRepository.AddKeyFigureInfosAsync(keyFigureInfos);
+    }
+}

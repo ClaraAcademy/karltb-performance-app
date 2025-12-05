@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Drawing.Charts;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
@@ -71,13 +72,17 @@ public class PortfolioPerformanceService(PadbContext context) : IPortfolioPerfor
     }
 
     private static int GetKey(Position p) => p.PortfolioId!.Value;
-    private static decimal GetValue(Position position, DateOnly bankday)
+    private static decimal GetValue(Position position, DateOnly bankday, int typeId)
     {
         var proportion = position.Proportion!;
         var price = position
             .InstrumentNavigation!
-            .InstrumentPricesNavigation
-            .FirstOrDefault(ip => ip.Bankday == bankday)?.Price ?? 0;
+            // .InstrumentPricesNavigation
+            .InstrumentPerformancesNavigation
+            .FirstOrDefault(
+                ip => ip.PeriodStart == bankday && ip.PeriodEnd == bankday && ip.TypeId == typeId
+            )?.Value ?? 0;
+
 
         return proportion.Value * price;
     }
@@ -100,7 +105,7 @@ public class PortfolioPerformanceService(PadbContext context) : IPortfolioPerfor
         var performances = benchmarkPortfolios
             .SelectMany(p => p.PositionsNavigation)
             .Where(pos => pos.Bankday == bankday)
-            .GroupBy(GetKey, pos => GetValue(pos, bankday))
+            .GroupBy(GetKey, pos => GetValue(pos, bankday, typeId))
             .Select(g => MapToPortfolioPerformance(g, bankday, typeId))
             .ToList();
 
@@ -140,7 +145,7 @@ public class PortfolioPerformanceService(PadbContext context) : IPortfolioPerfor
                 g.First().PortfolioNavigation!.Id,
                 g.Min(pp => pp.PeriodStart),
                 g.Max(pp => pp.PeriodEnd),
-                g.Aggregate(1m, (acc, pp) => acc * (1 + pp.Value)) - 1, // Product(1 + daily_return) - 1
+                g.Aggregate(1M, (acc, pp) => acc * (1M + pp.Value)) - 1M, // Product(1 + daily_return) - 1
                 performanceTypeId
             ))
             .ToList();

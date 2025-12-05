@@ -20,14 +20,8 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
     private readonly IPortfolioRepository _portfolioRepository = new PortfolioRepository(context);
     private readonly IPortfolioPerformanceService _portfolioPerformanceService = new PortfolioPerformanceService(context);
     private readonly IPortfolioPerformanceRepository _portfolioPerformanceRepository = new PortfolioPerformanceRepository(context);
-    private readonly decimal AnnualizationFactor = new DateInfoService(context)
-            .GetAnnualizationFactorAsync()
-            .GetAwaiter()
-            .GetResult();
-    private readonly int DayPerformanceId = new PerformanceService(context)
-            .GetDayPerformanceIdAsync()
-            .GetAwaiter()
-            .GetResult();
+    private readonly IPerformanceService _performanceService = new PerformanceService(context);
+    private readonly IDateInfoService _dateInfoService = new DateInfoService(context);
 
     private record Dto(int PortfolioId, int KeyFigureId, decimal Value);
     private static Dto Aggregate(IGrouping<int, PortfolioPerformance> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)
@@ -104,6 +98,10 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
     private IEnumerable<PortfolioPerformance> GetPortfolioDayPerformances(Portfolio portfolio)
     {
+        var DayPerformanceId = _performanceService
+            .GetDayPerformanceIdAsync()
+            .GetAwaiter()
+            .GetResult();
         return portfolio.PortfolioPerformancesNavigation
             .Where(pp => pp.TypeId == DayPerformanceId);
     }
@@ -171,7 +169,12 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         {
             var product = dailyReturns.Aggregate(1M, Product);
 
-            return (decimal)Math.Pow((double)product, (double)AnnualizationFactor) - 1M;
+            var annualizationFactor = _dateInfoService
+                .GetAnnualizationFactorAsync()
+                .GetAwaiter()
+                .GetResult(); 
+
+            return (decimal)Math.Pow((double)product, (double)annualizationFactor) - 1M;
         }
 
         var annualisedCumulativeReturns = dayPerformances
@@ -198,7 +201,12 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
             var average = activeReturns.Average();
             var stdDev = ComputeStandardDeviation(activeReturns);
 
-            var factor = (decimal)Math.Sqrt((double)AnnualizationFactor);
+            var annualizationFactor = _dateInfoService
+                .GetAnnualizationFactorAsync()
+                .GetAwaiter()
+                .GetResult();
+
+            var factor = (decimal)Math.Sqrt((double)annualizationFactor);
 
             return factor * average / stdDev;
         }
