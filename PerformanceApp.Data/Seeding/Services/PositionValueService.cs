@@ -27,10 +27,18 @@ public class PositionValueService(PadbContext context) : IPositionValueService
     private record Key(int PositionId, DateOnly Bankday);
     private static decimal GetWeight(Position position)
     {
-        var candidates = new[] { position.Count, position.Amount, position.Nominal, position.Proportion };
-        var value = candidates.FirstOrDefault(c => c.HasValue)
-            ?? throw new InvalidOperationException("Position has no weight defined.");
-        return value;
+        var candidates = new[] {
+            position.Count,
+            position.Amount,
+            position.Nominal,
+            position.Proportion
+        };
+
+        var weight = candidates
+            .Select(v => v ?? 0)
+            .FirstOrDefault(v => v != 0);
+
+        return weight;
     }
 
     private static Dto MapToDto(Position position, DateOnly bankday)
@@ -63,10 +71,14 @@ public class PositionValueService(PadbContext context) : IPositionValueService
         {
             return false;
         }
+        var portfolios = (await _portfolioRepository.GetProperPortfoliosAsync()).ToList();
+        var portfolioIds = portfolios.Select(p => p.Id).OfType<int>().ToHashSet();
 
         var positions = await _positionRepository.GetPositionsAsync();
         var currentPositions = positions
             .Where(p => p.Bankday == bankday)
+            .Select(p => MapToDto(p, bankday))
+            .Where(dto => portfolioIds.Contains(dto.PortfolioId)) // Only consider positions in proper portfolios
             .ToList();
 
         var instrumentPrices = await _instrumentPriceRepository.GetInstrumentPricesAsync();
@@ -74,13 +86,10 @@ public class PositionValueService(PadbContext context) : IPositionValueService
             .Where(ip => ip.Bankday == bankday)
             .ToList();
 
-        var portfolios = await _portfolioRepository.GetProperPortfoliosAsync();
-        var portfolioIds = portfolios.Select(p => p.Id).OfType<int>().ToHashSet();
 
         var positionValues = currentPositions
-            .Select(p => MapToDto(p, bankday))
-            .Where(dto => portfolioIds.Contains(dto.PortfolioId)) // Only consider positions in proper portfolios
             .Join(currentPrices, GetKey, GetKey, MapToPositionValue)
+            .Where(dto => dto.Value != 0) // Exclude zero values
             .ToList();
 
         await _positionValueRepository.AddPositionValuesAsync(positionValues);
