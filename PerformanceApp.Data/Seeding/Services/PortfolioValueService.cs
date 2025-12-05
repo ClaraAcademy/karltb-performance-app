@@ -18,6 +18,7 @@ public class PortfolioValueService(PadbContext context) : IPortfolioValueService
 
     private record Key(int PortfolioId, int InstrumentId);
 
+    private static int GetPortfolioId(PositionValue pv) => pv.PositionNavigation.PortfolioId!.Value;
     private static int GetKey(IGrouping<int, PositionValue> g) => g.Key;
     private static int GetKey(Position p) => p.Id;
     private static PortfolioValue MapToPortfolioValue(IGrouping<int, PositionValue> g, Position p, DateOnly bankday)
@@ -47,7 +48,7 @@ public class PortfolioValueService(PadbContext context) : IPortfolioValueService
             .ToList();
 
         var portfolioValues = currentPositionValues
-            .GroupBy(pv => pv.PositionId)
+            .GroupBy(GetPortfolioId)
             .Join(filteredPositions, GetKey, GetKey, (g, p) => MapToPortfolioValue(g, p, bankday))
             .ToList();
 
