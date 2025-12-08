@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Data.Seeding.Constants;
 
 namespace PerformanceApp.Data.Seeding.Services;
 
@@ -172,7 +173,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
             var annualizationFactor = _dateInfoService
                 .GetAnnualizationFactorAsync()
                 .GetAwaiter()
-                .GetResult(); 
+                .GetResult();
 
             return (decimal)Math.Pow((double)product, (double)annualizationFactor) - 1M;
         }
@@ -238,6 +239,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
         var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
         var halfYearPerformances = performances
+            .Where(pp => pp.PerformanceTypeNavigation.Name == PerformanceTypeData.HalfYearPerformance)
             .Select(MapToKeyFigureValue)
             .ToList();
 
