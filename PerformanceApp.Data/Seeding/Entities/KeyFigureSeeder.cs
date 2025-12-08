@@ -6,14 +6,14 @@ namespace PerformanceApp.Data.Seeding.Entities;
 
 public class KeyFigureSeeder(PadbContext context)
 {
-    private readonly KeyFigureInfoRepository _keyFigureInfoRepository = new(context);
+    private readonly KeyFigureValueRepository _keyFigureValueRepository = new(context);
     private readonly IKeyFigureValueService _keyFigureValueService = new KeyFigureValueService(context);
 
     private async Task<bool> IsPopulated()
     {
-        var keyFigureInfos = await _keyFigureInfoRepository.GetKeyFigureInfosAsync();
+        var keyFigureValues = await _keyFigureValueRepository.GetKeyFigureValuesAsync();
 
-        return keyFigureInfos.Any();
+        return keyFigureValues.Any();
     }
 
     public async Task Seed()
