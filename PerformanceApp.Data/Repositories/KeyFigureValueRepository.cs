@@ -7,6 +7,7 @@ namespace PerformanceApp.Data.Repositories
     public interface IKeyFigureValueRepository
     {
         Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync(int portfolioId);
+        Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync();
         Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync(); // This is in the wrong class
         Task AddKeyFigureValuesAsync(IEnumerable<KeyFigureValue> keyFigureValues);
     }
@@ -20,6 +21,13 @@ namespace PerformanceApp.Data.Repositories
             return await _context.KeyFigureValues
                    .Where(kfv => kfv.PortfolioId == portfolioId)
                    .Include(kfv => kfv.PortfolioNavigation)
+                   .ToListAsync();
+        }
+        public async Task<IEnumerable<KeyFigureValue>> GetKeyFigureValuesAsync()
+        {
+            return await _context.KeyFigureValues
+                   .Include(kfv => kfv.PortfolioNavigation)
+                   .Include(kfv => kfv.KeyFigureInfoNavigation)
                    .ToListAsync();
         }
         public async Task<IEnumerable<KeyFigureInfo>> GetKeyFigureInfosAsync()
