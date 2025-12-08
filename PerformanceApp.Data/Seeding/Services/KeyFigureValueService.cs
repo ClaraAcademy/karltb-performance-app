@@ -2,6 +2,7 @@ using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Data.Seeding.Utilities;
 
 namespace PerformanceApp.Data.Seeding.Services;
 
@@ -28,24 +29,15 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
     private static Dto Aggregate(IGrouping<int, PortfolioPerformance> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)
     {
         var values = group.Select(pp => pp.Value);
-        return new Dto(group.Key, KeyFigureId, func(values));
-    }
-    private static Dto Aggregate(IGrouping<int, Dto> group, int KeyFigureId)
-    {
-        return new Dto
-        (
-            group.Key,
-            KeyFigureId,
-            ComputeStandardDeviation(
-                group.Select(dto => dto.Value)
-            )
-        );
+        var aggregatedValues = func(values);
+        return new Dto(group.Key, KeyFigureId, aggregatedValues);
     }
     private static Dto Aggregate(IGrouping<int, Dto> group, int KeyFigureId, Func<IEnumerable<decimal>, decimal> func)
     {
         var portfolioId = group.Key;
         var values = group.Select(dto => dto.Value);
-        return new Dto(portfolioId, KeyFigureId, func(values));
+        var aggregatedValues = func(values);
+        return new Dto(portfolioId, KeyFigureId, aggregatedValues);
     }
 
     private static KeyFigureValue MapToKeyFigureValue(int portfolioId, int keyFigureId, decimal value)
@@ -62,30 +54,19 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         return MapToKeyFigureValue(dto.PortfolioId, dto.KeyFigureId, dto.Value);
     }
 
-    private static decimal ComputeStandardDeviation(IEnumerable<decimal> values)
-    {
-        var mean = values.Average();
-        var n = values.Count();
-
-        if (n < 2)
-        {
-            return 0M;
-        }
-
-        var sum = values
-            .Select(v => v - mean)
-            .Select(v => v * v)
-            .Sum();
-
-        var fraction = (double)sum / (n - 1);
-
-        return (decimal)Math.Sqrt(fraction);
-    }
-
     public async Task<bool> UpdateStandardDeviationsAsync()
     {
         var id = await _keyFigureInfoService.GetStandardDeviationIdAsync();
         var dayPerformances = await _portfolioPerformanceService.GetPortfolioDayPerformancesAsync();
+
+        decimal ComputeStandardDeviation(IEnumerable<decimal> dailyReturns)
+        {
+            var annualizationFactor = _dateInfoService
+                .GetAnnualizationFactorAsync()
+                .Result;
+            var stdDev = DecimalMath.StandardDeviation(dailyReturns);
+            return DecimalMath.SquareRoot(annualizationFactor) * stdDev;
+        }
 
         var keyFigureValues = dayPerformances
             .GroupBy(pp => pp.PortfolioId)
@@ -97,19 +78,10 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
         return true;
     }
 
-    private IEnumerable<PortfolioPerformance> GetPortfolioDayPerformances(Portfolio portfolio)
-    {
-        var DayPerformanceId = _performanceService
-            .GetDayPerformanceIdAsync()
-            .GetAwaiter()
-            .GetResult();
-        return portfolio.PortfolioPerformancesNavigation
-            .Where(pp => pp.TypeId == DayPerformanceId);
-    }
-
     private List<Dto> GetActiveReturn(Portfolio portfolio)
     {
-        var benchmark = portfolio.BenchmarkPortfoliosNavigation
+        var benchmark = portfolio
+            .BenchmarkPortfoliosNavigation
             .Select(b => b.BenchmarkPortfolioNavigation)
             .FirstOrDefault();
 
@@ -118,13 +90,27 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
             return [];
         }
 
+        IEnumerable<PortfolioPerformance> GetPortfolioDayPerformances(Portfolio portfolio)
+        {
+            var DayPerformanceId = _performanceService
+                .GetDayPerformanceIdAsync()
+                .Result;
+            return portfolio
+                .PortfolioPerformancesNavigation
+                .Where(pp => pp.TypeId == DayPerformanceId)
+                .ToList();
+        }
+
         var portfolioDayPerformances = GetPortfolioDayPerformances(portfolio);
         var benchmarkDayPerformances = GetPortfolioDayPerformances(benchmark);
 
-        static DateOnly GetKey(PortfolioPerformance pp) => pp.PeriodStart;
+        static (DateOnly, DateOnly) GetKey(PortfolioPerformance pp)
+        {
+            return (pp.PeriodStart, pp.PeriodEnd);
+        }
         static Dto Map(PortfolioPerformance pp, PortfolioPerformance bp)
         {
-            return new(pp.PortfolioId, -1, pp.Value - bp.Value);
+            return new Dto(pp.PortfolioId, -1, pp.Value - bp.Value);
         }
 
         var dtos = portfolioDayPerformances
@@ -148,17 +134,26 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
         var activeReturns = GetActiveReturns(portfolios);
 
+        decimal ComputeTrackingError(IEnumerable<decimal> activeReturns)
+        {
+            var annualizationFactor = _dateInfoService
+                .GetAnnualizationFactorAsync()
+                .Result;
+            var factor = DecimalMath.SquareRoot(annualizationFactor);
+            var dev = DecimalMath.StandardDeviation(activeReturns);
+
+            return factor * dev;
+        }
+
         var trackingErrors = activeReturns
             .GroupBy(ar => ar.PortfolioId)
-            .Select(g => Aggregate(g, id))
+            .Select(g => Aggregate(g, id, ComputeTrackingError))
             .Select(MapToKeyFigureValue)
             .ToList();
 
         await _keyFigureValueRepository.AddKeyFigureValuesAsync(trackingErrors);
         return true;
     }
-
-    private static decimal Product(decimal acc, decimal r) => acc * (1M + r);
 
     public async Task<bool> UpdateAnnualisedCumulativeReturnsAsync()
     {
@@ -168,14 +163,14 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
         decimal ComputeAnnualizedCumulativeReturn(IEnumerable<decimal> dailyReturns)
         {
-            var product = dailyReturns.Aggregate(1M, Product);
+            var plusOne = dailyReturns.Select(r => 1M + r);
+            var product = DecimalMath.Product(plusOne);
 
             var annualizationFactor = _dateInfoService
                 .GetAnnualizationFactorAsync()
-                .GetAwaiter()
-                .GetResult();
+                .Result;
 
-            return (decimal)Math.Pow((double)product, (double)annualizationFactor) - 1M;
+            return DecimalMath.Power(product, annualizationFactor) - 1M;
         }
 
         var annualisedCumulativeReturns = dayPerformances
@@ -199,17 +194,18 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
         decimal ComputeInformationRatio(IEnumerable<decimal> activeReturns)
         {
-            var average = activeReturns.Average();
-            var stdDev = ComputeStandardDeviation(activeReturns);
+            var avg = activeReturns.Average();
+            var dev = DecimalMath.StandardDeviation(activeReturns);
 
             var annualizationFactor = _dateInfoService
                 .GetAnnualizationFactorAsync()
-                .GetAwaiter()
-                .GetResult();
+                .Result;
+
+            var fraq = dev == 0M ? 0M : avg / dev;
 
             var factor = (decimal)Math.Sqrt((double)annualizationFactor);
 
-            return factor * average / stdDev;
+            return fraq * factor;
         }
 
         var informationRatios = activeReturns

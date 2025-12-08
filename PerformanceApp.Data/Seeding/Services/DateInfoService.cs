@@ -14,7 +14,7 @@ public interface IDateInfoService
 public class DateInfoService(PadbContext context) : IDateInfoService
 {
     private readonly IDateInfoRepository _dateInfoRepository = new DateInfoRepository(context);
-    private const decimal BankdaysPerYear = 250;
+    private const decimal BankdaysPerYear = 252M;
 
     public async Task<DateOnly> GetPreviousBankdayAsync(DateOnly date)
     {
@@ -38,7 +38,7 @@ public class DateInfoService(PadbContext context) : IDateInfoService
         var dateInfos = await _dateInfoRepository.GetDateInfosAsync();
         var n = dateInfos.Count();
 
-        return n == 0 ? 0M : BankdaysPerYear / n;
+        return n == 0 ? 0M : BankdaysPerYear / (n - 1M);
     }
 
     public async Task<bool> BankdayExistsAsync(DateOnly date)
