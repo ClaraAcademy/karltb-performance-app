@@ -22,9 +22,6 @@ public class UserSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
         var usernameA = UserData.UsernameA;
         var usernameB = UserData.UsernameB;
 
-        // Act
-        await Seed();
-
         // Assert
         await AssertUserExists(_userManager, usernameA);
         await AssertUserExists(_userManager, usernameB);

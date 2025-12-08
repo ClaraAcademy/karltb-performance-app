@@ -8,6 +8,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class InstrumentPerformanceSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
 
     private static InstrumentPerformanceDto MapToDto(InstrumentPerformance ip)
     {
@@ -35,7 +36,6 @@ public class InstrumentPerformanceSeederTest(DatabaseFixture fixture) : BaseSeed
             .ToList();
 
         // Act
-        await Seed();
 
         var instrumentPerformances = await _context
             .InstrumentPerformances
@@ -68,11 +68,10 @@ public class InstrumentPerformanceSeederTest(DatabaseFixture fixture) : BaseSeed
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var expectedCount = await _context.InstrumentPerformances.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
         var actualCount = await _context.InstrumentPerformances.CountAsync();
 
         // Assert

@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class PortfolioValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static PortfolioValueDto MapToDto(PortfolioValue portfolioValue)
     {
         var portfolioName = portfolioValue.PortfolioNavigation!.Name!;
@@ -33,8 +34,6 @@ public class PortfolioValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(
             .ToList();
 
         // Act
-        await Seed();
-
         var portfolioValues = await _context.PortfolioValues
             .Include(pv => pv.PortfolioNavigation)
             .ToListAsync();
@@ -55,12 +54,10 @@ public class PortfolioValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
-
         var countBefore = await _context.PortfolioValues.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         var countAfter = await _context.PortfolioValues.CountAsync();
 

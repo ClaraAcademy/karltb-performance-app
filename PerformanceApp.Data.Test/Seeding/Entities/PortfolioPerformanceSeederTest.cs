@@ -11,6 +11,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class PortfolioPerformanceSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static PortfolioPerformanceDto MapToDto(PortfolioPerformance pp)
     {
         return new PortfolioPerformanceDto(
@@ -37,7 +38,6 @@ public class PortfolioPerformanceSeederTest(DatabaseFixture fixture) : BaseSeede
             .ToList();
 
         // Act
-        await Seed();
 
         var portfolioPerformances = await _context
             .PortfolioPerformances
@@ -71,11 +71,10 @@ public class PortfolioPerformanceSeederTest(DatabaseFixture fixture) : BaseSeede
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var expectedCount = await _context.PortfolioPerformances.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
         var actualCount = await _context.PortfolioPerformances.CountAsync();
 
         // Assert

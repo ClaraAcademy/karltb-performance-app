@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class PositionValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static PositionValueDto MapToDto(PositionValue positionValue)
     {
         var portfolioName = positionValue
@@ -42,8 +43,6 @@ public class PositionValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(f
             .ToList();
 
         // Act
-        await Seed();
-
         var positionValues = await _context.PositionValues
             .Include(pv => pv.PositionNavigation)
                 .ThenInclude(p => p.PortfolioNavigation)
@@ -74,12 +73,10 @@ public class PositionValueSeederTest(DatabaseFixture fixture) : BaseSeederTest(f
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
-
         var countBefore = await _context.PositionValues.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var countAfter = await _context.PositionValues.CountAsync();

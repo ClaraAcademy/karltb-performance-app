@@ -10,6 +10,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class InstrumentPriceSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static InstrumentPriceDto MapToDto(InstrumentPrice ip)
     {
         var bankday = ip.Bankday;
@@ -42,7 +43,6 @@ public class InstrumentPriceSeederTest(DatabaseFixture fixture) : BaseSeederTest
             .ToList();
 
         // Act
-        await Seed();
 
         var instrumentPrices = await _context.InstrumentPrices
             .Include(ip => ip.InstrumentNavigation)
@@ -72,11 +72,10 @@ public class InstrumentPriceSeederTest(DatabaseFixture fixture) : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var initialCount = await _context.InstrumentPrices.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.InstrumentPrices.CountAsync();

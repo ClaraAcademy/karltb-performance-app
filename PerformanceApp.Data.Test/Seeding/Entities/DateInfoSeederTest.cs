@@ -6,6 +6,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class DateInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     [Fact]
     public async Task Seed_AddsDateInfos()
     {
@@ -13,8 +14,6 @@ public class DateInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtur
         var expected = BankdayData.ExpectedBankdays;
 
         // Act
-        await Seed();
-
         var dateInfos = await _context.DateInfos.ToListAsync();
         var actual = dateInfos.Select(di => di.Bankday).OrderBy(d => d).ToList();
 
@@ -28,11 +27,10 @@ public class DateInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtur
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var initialCount = await _context.DateInfos.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.DateInfos.CountAsync();

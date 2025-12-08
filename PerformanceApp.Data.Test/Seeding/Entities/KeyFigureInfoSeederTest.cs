@@ -6,6 +6,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class KeyFigureInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     [Fact]
     public async Task Seed_AddsKeyFigureInfos()
     {
@@ -15,8 +16,6 @@ public class KeyFigureInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(f
             .ToList();
 
         // Act
-        await Seed();
-
         var keyFigureInfos = await _context.KeyFigureInfos.ToListAsync();
         var actual = keyFigureInfos
             .Select(kf => kf.Name)
@@ -33,11 +32,10 @@ public class KeyFigureInfoSeederTest(DatabaseFixture fixture) : BaseSeederTest(f
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var expectedCount = await _context.KeyFigureInfos.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
         var actualCount = await _context.KeyFigureInfos.CountAsync();
 
         // Assert

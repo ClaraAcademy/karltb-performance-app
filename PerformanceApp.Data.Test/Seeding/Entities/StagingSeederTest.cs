@@ -9,6 +9,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class StagingSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static StagingDto MapToDto(Staging staging)
     {
         return new StagingDto(
@@ -30,8 +31,6 @@ public class StagingSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture
         // Arrange
         var expected = StagingData.Stagings.OrderBy(OrderKey).ToList();
         // Act
-        await Seed();
-
         var stagings = await _context.Stagings.ToListAsync();
         var actual = stagings
             .Select(MapToDto)
@@ -56,11 +55,10 @@ public class StagingSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var initialCount = await _context.Stagings.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.Stagings.CountAsync();

@@ -8,6 +8,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class PortfolioSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static void AssertPortfolioExists(IEnumerable<Portfolio> portfolios, string portfolioName, string username)
     {
         var portfolio = portfolios.FirstOrDefault(p => p.Name == portfolioName);
@@ -38,10 +39,12 @@ public class PortfolioSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
         };
 
         // Act
-        await Seed();
 
         // Assert
-        var portfolios = await _context.Portfolios.ToListAsync();
+        var portfolios = await _context
+            .Portfolios
+            .Include(p => p.User)
+            .ToListAsync();
         Assert.NotEmpty(portfolios);
         Assert.Equal(mappings.Count, portfolios.Count);
 
@@ -54,10 +57,11 @@ public class PortfolioSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
     [Fact]
     public async Task Seed_IsIdempotent()
     {
-        // Arrange & Act
-        await Seed();
+        // Arrange
         var initialCount = await _context.Portfolios.CountAsync();
-        await Seed();
+
+        // Act
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.Portfolios.CountAsync();

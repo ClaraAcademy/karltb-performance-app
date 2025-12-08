@@ -8,6 +8,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class BenchmarkSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static PortfolioBenchmarkDto MapToDto(Benchmark benchmark)
     {
         var portfolioName = benchmark.PortfolioPortfolioNavigation!.Name!;
@@ -33,8 +34,6 @@ public class BenchmarkSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
         .ToList();
 
         // Act
-        await Seed();
-
         var benchmarks = await _context.Benchmarks
             .Include(b => b.PortfolioPortfolioNavigation)
             .Include(b => b.BenchmarkPortfolioNavigation)
@@ -56,11 +55,10 @@ public class BenchmarkSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var initialCount = await _context.Benchmarks.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.Benchmarks.CountAsync();

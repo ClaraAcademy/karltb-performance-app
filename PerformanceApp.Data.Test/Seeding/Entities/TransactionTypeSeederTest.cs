@@ -7,6 +7,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class TransactionTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     [Fact]
     public async Task Seed_AddsTransactionTypes()
     {
@@ -14,8 +15,6 @@ public class TransactionTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest
         var expected = TransactionTypeData.TransactionTypes;
 
         // Act
-        await Seed();
-
         var transactionTypes = await _context.TransactionTypes.ToListAsync();
         var actual = transactionTypes
             .Select(tt => tt.Name)
@@ -33,11 +32,10 @@ public class TransactionTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var initialCount = await _context.TransactionTypes.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
 
         // Assert
         var finalCount = await _context.TransactionTypes.CountAsync();

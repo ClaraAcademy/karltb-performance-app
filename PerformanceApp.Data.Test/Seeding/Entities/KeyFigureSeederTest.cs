@@ -8,6 +8,7 @@ namespace PerformanceApp.Data.Test.Seeding.Entities;
 [Collection(SeedingCollection.Name)]
 public class KeyFigureSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
+    private readonly DatabaseFixture _fixture = fixture;
     private static KeyFigureValueDto MapToDto(KeyFigureValue kfv)
     {
         return new KeyFigureValueDto(
@@ -32,8 +33,6 @@ public class KeyFigureSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
             .ToList();
 
         // Act
-        await Seed();
-
         var keyFigures = await _context
             .KeyFigureValues
             .Include(kfv => kfv.PortfolioNavigation)
@@ -63,11 +62,10 @@ public class KeyFigureSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixtu
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        await Seed();
         var expected = await _context.KeyFigureValues.CountAsync();
 
         // Act
-        await Seed();
+        await _fixture.Seed();
         var actual = await _context.KeyFigureValues.CountAsync();
 
         // Assert
