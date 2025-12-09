@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Seeding;
+using PerformanceApp.Server.App;
+using PerformanceApp.Server.App.Development;
 using PerformanceApp.Server.Extensions;
-using PerformanceApp.Server.Swagger.Documentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,21 +19,11 @@ app.UseDefaultFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint($"/swagger/{Documentation.Info.Version}/swagger.json", Documentation.Info.Title);
-    }
-
-    );
+    app.AddDevelopmentServices();
 }
 
-app.UseCors();
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-app.MapFallbackToFile("/index.html");
+app.AddServices();
+
 app.Run();
 
 // Make the implicit Program class public so test projects can access it
