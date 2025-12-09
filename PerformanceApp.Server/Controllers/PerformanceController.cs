@@ -12,16 +12,6 @@ public class PerformanceController(IPerformanceService service) : MyControllerBa
 {
     private readonly IPerformanceService Service = service;
 
-    private ActionResult CheckReturn<T>(List<T>? values)
-    {
-        var valid = values != null && values.Count > 0;
-        if (valid)
-        {
-            return Ok(values);
-        }
-        return NotFound();
-    }
-
     // GET: api/performance?portfolioId={portfolioId}
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PortfolioBenchmarkKeyFigureDTO>>> GetKeyFigures([FromQuery] int portfolioId)

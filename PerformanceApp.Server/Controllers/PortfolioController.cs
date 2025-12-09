@@ -13,15 +13,6 @@ public class PortfolioController(IPortfolioService service) : MyControllerBase
 {
     private readonly IPortfolioService _service = service;
 
-    private ActionResult CheckReturn<T>(List<T>? ps)
-    {
-        if (ps == null || ps.Count == 0)
-        {
-            return NotFound();
-        }
-        return Ok(ps);
-    }
-
     private string? GetUserId()
     {
         return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
