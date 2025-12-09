@@ -10,12 +10,14 @@ using System.Net;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 
-[Collection("IntegrationTestCollection")]
-public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+[Collection(IntegrationCollection.Name)]
+public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Program> factory, DatabaseFixture fixture) 
 {
     protected readonly HttpClient _client = factory.CreateClient();
     protected readonly IJwtService _jwtService = GetJwtService(factory);
     protected readonly ApplicationUser TestUser = GetTestUser(factory);
+
+    private readonly DatabaseFixture _fixture = fixture;
 
     protected static IJwtService GetJwtService(WebApplicationFactory<Program> factory)
     {

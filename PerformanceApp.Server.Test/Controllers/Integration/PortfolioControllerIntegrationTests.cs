@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 
-public class PortfolioControllerIntegrationTests(WebApplicationFactory<Program> factory) : BaseControllerIntegrationTests(factory)
+[Collection(IntegrationCollection.Name)]
+public class PortfolioControllerIntegrationTests(WebApplicationFactory<Program> factory, DatabaseFixture fixture) 
+    : BaseControllerIntegrationTests(factory, fixture)
 {
     private static readonly string PortfolioEndpoint = "/api/Portfolio";
     private static readonly string PortfolioBenchmarkEndpoint = "/api/PortfolioBenchmark";

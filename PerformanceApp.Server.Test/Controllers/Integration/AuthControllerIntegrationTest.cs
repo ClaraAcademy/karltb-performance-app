@@ -5,7 +5,9 @@ using PerformanceApp.Server.Dtos;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 
-public class AuthControllerIntegrationTest(WebApplicationFactory<Program> factory) : BaseControllerIntegrationTests(factory)
+[Collection(IntegrationCollection.Name)]
+public class AuthControllerIntegrationTest(WebApplicationFactory<Program> factory, DatabaseFixture fixture)
+    : BaseControllerIntegrationTests(factory, fixture)
 {
     private static readonly string LoginEndpoint = "/api/Auth/login";
     private static readonly string LogoutEndpoint = "/api/Auth/logout";
@@ -64,9 +66,15 @@ public class AuthControllerIntegrationTest(WebApplicationFactory<Program> factor
     }
 
     [Fact]
-    public async Task Logout_Authorized_ReturnsOk() => await Post_Authenticated_Returns_Ok(LogoutEndpoint);
+    public async Task Logout_Authorized_ReturnsOk()
+    {
+        await Post_Authenticated_Returns_Ok(LogoutEndpoint);
+    }
 
     [Fact]
-    public async Task Logout_Unauthorized_Returns401() => await Post_Unauthenticated_Returns_Unauthorized(LogoutEndpoint);
+    public async Task Logout_Unauthorized_Returns401()
+    {
+        await Post_Unauthenticated_Returns_Unauthorized(LogoutEndpoint);
+    }
 
 }
