@@ -1,7 +1,7 @@
 using PerformanceApp.Data.Seeding;
-using PerformanceApp.Server.App;
-using PerformanceApp.Server.App.Development;
-using PerformanceApp.Server.Builder;
+using PerformanceApp.Server.Startup.App;
+using PerformanceApp.Server.Startup.App.Development;
+using PerformanceApp.Server.Startup.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
