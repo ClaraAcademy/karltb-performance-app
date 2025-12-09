@@ -3,7 +3,7 @@ using PerformanceApp.Server.Swagger.Requirements;
 using PerformanceApp.Server.Swagger.Schemes;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PerformanceApp.Server.Extensions;
+namespace PerformanceApp.Server.Builder.Services;
 
 public static class SwaggerExtensions
 {

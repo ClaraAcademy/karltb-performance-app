@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Extensions;
+namespace PerformanceApp.Server.Builder.Services;
 
 public static class AuthenticationExtensions
 {

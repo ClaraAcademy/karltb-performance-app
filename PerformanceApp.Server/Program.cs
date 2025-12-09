@@ -1,14 +1,11 @@
 using PerformanceApp.Data.Seeding;
 using PerformanceApp.Server.App;
 using PerformanceApp.Server.App.Development;
-using PerformanceApp.Server.Extensions;
+using PerformanceApp.Server.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAppServices(builder.Configuration);
-builder.Services.AddAppAuthentication(builder.Configuration);
-builder.Services.AddAppCors();
-builder.Services.AddAppSwagger();
+builder.AddServices();
 
 var app = builder.Build();
 

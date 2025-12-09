@@ -1,7 +1,7 @@
 using PerformanceApp.Server.Services;
 using PerformanceApp.Data;
 
-namespace PerformanceApp.Server.Extensions;
+namespace PerformanceApp.Server.Builder.Services;
 
 public static class ServiceExtensions
 {
