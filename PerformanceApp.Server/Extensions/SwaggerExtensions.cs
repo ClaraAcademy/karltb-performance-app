@@ -1,3 +1,4 @@
+using PerformanceApp.Server.Swagger.Documentation;
 using PerformanceApp.Server.Swagger.Requirements;
 using PerformanceApp.Server.Swagger.Schemes;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -19,6 +20,7 @@ public static class SwaggerExtensions
     {
         c.AddSecurityDefinition("Bearer", BearerSecurityProvider.Scheme);
         c.AddSecurityRequirement(BearerSecurityRequirement.Requirement);
+        c.SwaggerDoc(Documentation.Info.Version, Documentation.Info);
     }
 
 }

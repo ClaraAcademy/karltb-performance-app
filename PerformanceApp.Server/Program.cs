@@ -1,5 +1,6 @@
 using PerformanceApp.Data.Seeding;
 using PerformanceApp.Server.Extensions;
+using PerformanceApp.Server.Swagger.Documentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,12 @@ app.UseDefaultFiles();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint($"/swagger/{Documentation.Info.Version}/swagger.json", Documentation.Info.Title);
+    }
+
+    );
 }
 
 app.UseCors();
