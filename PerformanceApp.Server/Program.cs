@@ -1,12 +1,4 @@
-using Microsoft.AspNetCore.Identity;
-using PerformanceApp.Data.Context;
-using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Services;
-using PerformanceApp.Data;
 using PerformanceApp.Data.Seeding;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,17 +22,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.MapFallbackToFile("/index.html");
-
 app.Run();
 
 // Make the implicit Program class public so test projects can access it

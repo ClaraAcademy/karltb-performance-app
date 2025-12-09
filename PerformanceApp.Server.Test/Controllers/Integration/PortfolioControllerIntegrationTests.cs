@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Services;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 

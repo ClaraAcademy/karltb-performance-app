@@ -1,7 +1,4 @@
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Net;
-using PerformanceApp.Server.Dtos;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 

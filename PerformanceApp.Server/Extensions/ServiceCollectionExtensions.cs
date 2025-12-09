@@ -1,14 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using PerformanceApp.Data.Context;
-using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Services;
 using PerformanceApp.Data;
-using PerformanceApp.Data.Seeding;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.OpenApi.Models;
 
 namespace PerformanceApp.Server.Extensions;
 

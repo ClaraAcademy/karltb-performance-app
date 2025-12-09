@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Seeding.Constants;
-using PerformanceApp.Data.Seeding.Entities;
 
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 

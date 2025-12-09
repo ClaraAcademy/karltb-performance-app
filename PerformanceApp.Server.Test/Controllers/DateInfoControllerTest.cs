@@ -2,7 +2,6 @@ using PerformanceApp.Server.Controllers;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using Moq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 namespace PerformanceApp.Server.Test.Controllers;
 

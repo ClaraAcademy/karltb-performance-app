@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;

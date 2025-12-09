@@ -1,16 +1,11 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Xunit;
 
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;

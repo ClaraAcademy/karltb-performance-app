@@ -3,9 +3,6 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Data.Seeding.Dtos;
 
-using Newtonsoft.Json;
-using System.IO;
-
 namespace PerformanceApp.Data.Test.Seeding.Entities;
 
 [Collection(SeedingCollection.Name)]

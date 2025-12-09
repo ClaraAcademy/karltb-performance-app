@@ -13,8 +13,8 @@ public static class AuthenticationExtensions
     {
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
-           .AddEntityFrameworkStores<PadbContext>()
-           .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<PadbContext>()
+            .AddDefaultTokenProviders();
 
         services
             .AddAuthentication(AddAuthenticationScheme)

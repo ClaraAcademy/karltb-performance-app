@@ -1,11 +1,8 @@
-using Xunit;
 using Moq;
 using PerformanceApp.Server.Controllers;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 namespace PerformanceApp.Server.Test.Controllers;
 
 public class AuthControllerTest : ControllerTestBase
