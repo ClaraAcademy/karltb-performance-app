@@ -2,32 +2,31 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PerformanceApp.Server.Services;
 
-namespace PerformanceApp.Server.Controllers
+namespace PerformanceApp.Server.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
+public class SvgController(ISvgService service) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class SvgController(ISvgService service) : ControllerBase
+    private readonly ISvgService _service = service;
+
+
+    // Get: /api/svg?portfolioId={portfolioID}&width={width}&height={height}
+    [HttpGet]
+    public async Task<ActionResult<string>> GetCumulativePerformanceGraph(
+        [FromQuery] int portfolioId,
+        [FromQuery] int? width = null,
+        [FromQuery] int? height = null
+    )
     {
-        private readonly ISvgService _service = service;
+        var svg = await _service.GetLineChart(portfolioId, width, height);
 
-
-        // Get: /api/svg?portfolioId={portfolioID}&width={width}&height={height}
-        [HttpGet]
-        public async Task<ActionResult<string>> GetCumulativePerformanceGraph(
-            [FromQuery] int portfolioId,
-            [FromQuery] int? width = null,
-            [FromQuery] int? height = null
-        )
+        if (svg == string.Empty)
         {
-            var svg = await _service.GetLineChart(portfolioId, width, height);
-
-            if (svg == string.Empty)
-            {
-                return NotFound();
-            }
-
-            return Content(svg, "image/svg+xml");
+            return NotFound();
         }
+
+        return Content(svg, "image/svg+xml");
     }
 }
