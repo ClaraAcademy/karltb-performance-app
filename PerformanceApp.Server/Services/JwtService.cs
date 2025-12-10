@@ -1,7 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Server.Jwt;
+using PerformanceApp.Server.Jwt.Keys;
+using PerformanceApp.Server.Jwt.Keys.Constants;
+using PerformanceApp.Server.Jwt.Validation;
 
 namespace PerformanceApp.Server.Services;
 
@@ -11,59 +14,38 @@ public interface IJwtService
     bool ValidateJwtToken(string token);
 }
 
-public class JwtService(IConfiguration configuration) : IJwtService
+public class JwtService : IJwtService
 {
-    private readonly JwtSecurityTokenHandler _tokenHandler = new();
-    private readonly byte[] _key = System.Text.Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!);
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+    private readonly SymmetricSecurityKey _key;
+    private readonly JwtTokenFactory _tokenFactory;
 
-    private static List<Claim> GetUserClaims(ApplicationUser user)
+    public JwtService(IConfiguration configuration)
     {
-        return [
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.UserName ?? string.Empty)
-        ];
-    }
-
-    private static SecurityTokenDescriptor GetTokenDescriptor(ApplicationUser user, byte[] key)
-    {
-        var claims = GetUserClaims(user);
-
-        return new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(1),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
+        _tokenHandler = new JwtSecurityTokenHandler();
+        var dictionaryKey = SymmetricSecurityKeyConstants.DefaultDictionaryKey;
+        var keyString = configuration[dictionaryKey]!;
+        _key = SymmetricSecurityKeyFactory.CreateSymmetricSecurityKey(keyString);
+        _tokenFactory = new JwtTokenFactory(_key);
     }
 
     public string GenerateJwtToken(ApplicationUser user)
     {
-        var tokenDescriptor = GetTokenDescriptor(user, _key);
+        var descriptor = _tokenFactory.CreateTokenDescriptor(user);
+        var token = _tokenHandler.CreateToken(descriptor);
 
-        var token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
     }
-
-    private static TokenValidationParameters GetTokenValidationParameters(byte[] key)
-    {
-        return new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ClockSkew = TimeSpan.Zero
-        };
-    }
-
 
     public bool ValidateJwtToken(string token)
     {
         try
         {
+            var parameters = TokenValidationParametersFactory.CreateTokenValidationParameters(_key);
+
             _tokenHandler.ValidateToken(
                 token,
-                GetTokenValidationParameters(_key),
+                parameters,
                 out SecurityToken _
             );
 
