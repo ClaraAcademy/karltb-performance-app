@@ -21,8 +21,22 @@ public class PositionController(IPositionService service) : ControllerBase
         return Ok(dtos);
     }
 
-    // GET: /api/position/stocks&portfolioId=123&date=2025-10-31
+    /// <summary>
+    /// Gets a list of stock positions for a specific portfolio on a given date.
+    /// </summary>
+    /// <param name="portfolioId">The ID of the portfolio.</param>
+    /// <param name="date">The date for which to retrieve the positions.</param>
+    /// <returns>A list of StockPositionDTO objects representing the stock positions.</returns>
+    /// <remarks>
+    /// Sample request:
+    /// <code>
+    /// GET /api/position/stocks?portfolioId=123&amp;date=2025-10-31
+    /// Authorization: Bearer {token}
+    /// </code>
+    /// </remarks>
+    /// <response code="200">Returns the list of stock positions</response>
     [HttpGet("stocks")]
+    [ProducesResponseType(typeof(List<StockPositionDTO>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<StockPositionDTO>>> GetStockPositions(
         [FromQuery] int portfolioId, [FromQuery] string date
     )
@@ -31,8 +45,22 @@ public class PositionController(IPositionService service) : ControllerBase
         return await GetPositionsAsync(method, portfolioId, date);
     }
 
-    // GET: /api/position/bonds&portfolioId=123&date=2025-10-31
+    /// <summary>
+    /// Gets a list of bond positions for a specific portfolio on a given date.
+    /// </summary>
+    /// <param name="portfolioId">The ID of the portfolio.</param>
+    /// <param name="date">The date for which to retrieve the positions.</param>
+    /// <returns>A list of BondPositionDTO objects representing the bond positions.</returns>
+    /// <remarks>
+    /// Sample request:
+    /// <code>
+    /// GET /api/position/bonds?portfolioId=123&amp;date=2025-10-31
+    /// Authorization: Bearer {token}
+    /// </code>
+    /// </remarks>
+    /// <response code="200">Returns the list of bond positions</response>
     [HttpGet("bonds")]
+    [ProducesResponseType(typeof(List<BondPositionDTO>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<BondPositionDTO>>> GetBondPositions(
         [FromQuery] int portfolioId, [FromQuery] string date
     )
@@ -41,8 +69,22 @@ public class PositionController(IPositionService service) : ControllerBase
         return await GetPositionsAsync(method, portfolioId, date);
     }
 
-    // GET: /api/position/indexes&portfolioId=123&date=2025-10-31
+    /// <summary>
+    /// Gets a list of index positions for a specific portfolio on a given date.
+    /// </summary>
+    /// <param name="portfolioId">The ID of the portfolio.</param>
+    /// <param name="date">The date for which to retrieve the positions.</param>
+    /// <returns>A list of IndexPositionDTO objects representing the index positions.</returns>
+    /// <remarks>
+    /// Sample request:
+    /// <code>
+    /// GET /api/position/indexes?portfolioId=123&amp;date=2025-10-31
+    /// Authorization: Bearer {token}
+    /// </code>
+    /// </remarks>
+    /// <response code="200">Returns the list of index positions</response>
     [HttpGet("indexes")]
+    [ProducesResponseType(typeof(List<IndexPositionDTO>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<IndexPositionDTO>>> GetIndexPositions(
         [FromQuery] int portfolioId, [FromQuery] string date
     )
