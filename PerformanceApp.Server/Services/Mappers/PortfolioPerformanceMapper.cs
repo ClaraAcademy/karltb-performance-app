@@ -43,6 +43,24 @@ public static class PortfolioPerformanceMapper
         };
     }
 
+    public static List<DataPoint2> MapToDataPoint2s(
+        IEnumerable<PortfolioBenchmarkPerformanceDTO> dtos
+    )
+    {
+        return dtos
+            .Select(MapToDataPoint2)
+            .ToList();
+    }
+
+    public static DataPoint2 MapToDataPoint2(PortfolioBenchmarkPerformanceDTO dto)
+    {
+        var x = dto.Bankday;
+        var y1 = (float)dto.PortfolioValue;
+        var y2 = (float)dto.BenchmarkValue;
+
+        return new(x, y1, y2);
+    }
+
 
 
 }
