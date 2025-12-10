@@ -12,7 +12,26 @@ public class AuthController(IAuthService service) : MyControllerBase
     private readonly IAuthService _service = service;
     private readonly string LogoutErrorMessage = "Logout failed";
 
+    /// <summary>
+    /// Logs in a user with the provided credentials.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>A newly created LoginResponse</returns>
+    /// <remarks>
+    /// Sample request:
+    ///     
+    ///     POST /api/auth/login
+    ///     {
+    ///        "username": "user1",
+    ///        "password": "SuperSecretPassword123"
+    ///     }
+    /// 
+    /// </remarks>
+    /// <response code="200">Login successful</response>
+    /// <response code="401">Invalid username or password</response>
     [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         var result = await _service.LoginAsync(request.Username, request.Password);
