@@ -8,4 +8,7 @@ public static class SwaggerConstants
     public static readonly string Endpoint = $"/swagger/{_version}/swagger.json";
     public static readonly string Name = DocumentationConstants.Title;
 
+    private const string _xmlCommentsFile = "PerformanceApp.Server.xml";
+    public static readonly string XmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, _xmlCommentsFile);
+
 }

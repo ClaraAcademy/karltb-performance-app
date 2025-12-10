@@ -1,3 +1,4 @@
+using PerformanceApp.Server.Startup.Swagger.Constants;
 using PerformanceApp.Server.Startup.Swagger.Documentation;
 using PerformanceApp.Server.Startup.Swagger.Requirements;
 using PerformanceApp.Server.Startup.Swagger.Schemes;
@@ -21,6 +22,7 @@ public static class SwaggerExtensions
         c.AddSecurityDefinition("Bearer", BearerSecurityProvider.Scheme);
         c.AddSecurityRequirement(BearerSecurityRequirement.Requirement);
         c.SwaggerDoc(Documentation.Info.Version, Documentation.Info);
+        c.IncludeXmlComments(SwaggerConstants.XmlCommentsFullPath);
     }
 
 }
