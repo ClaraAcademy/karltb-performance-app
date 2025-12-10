@@ -51,8 +51,23 @@ public class AuthController(IAuthService service) : MyControllerBase
         return Ok(new LoginResponse(token));
     }
 
+    /// <summary>
+    /// Logs out the currently authenticated user.
+    /// </summary>
+    /// <returns>Nothing</returns>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     POST /api/auth/logout
+    ///     Authorization: Bearer {token}
+    /// 
+    /// </remarks>
+    /// <response code="200">Logout successful</response>
+    /// <response code="400">Logout failed</response>
     [HttpPost("logout")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Logout()
     {
         var result = await _service.LogoutAsync();
