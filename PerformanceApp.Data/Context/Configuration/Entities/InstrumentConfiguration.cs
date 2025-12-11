@@ -21,18 +21,9 @@ public static class InstrumentConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Id)
-            .HasColumnName(Constants.IdColumnName);
-
         entity.Property(e => e.Created)
             .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
-        entity.Property(e => e.Name)
-            .HasColumnName(Constants.NameColumnName);
-
-        entity.Property(e => e.TypeId)
-            .HasColumnName(Constants.InstrumentTypeIdColumnName);
 
         entity.HasOne(d => d.InstrumentTypeNavigation)
             .WithMany(p => p.InstrumentsNavigation)
