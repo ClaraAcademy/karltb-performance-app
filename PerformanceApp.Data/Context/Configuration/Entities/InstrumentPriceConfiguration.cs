@@ -20,9 +20,6 @@ public static class InstrumentPriceConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.Property(e => e.Price)
             .HasColumnType(Constants.PriceColumnType);
 

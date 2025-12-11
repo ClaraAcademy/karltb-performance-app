@@ -19,8 +19,5 @@ public static class DateInfoConfiguration
         entity.HasKey(e => e.Bankday);
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
     }
 }

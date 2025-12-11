@@ -17,9 +17,6 @@ public static class PositionConfiguration
     {
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.Property(e => e.Amount)
             .HasColumnType(Constants.AmountType);
 

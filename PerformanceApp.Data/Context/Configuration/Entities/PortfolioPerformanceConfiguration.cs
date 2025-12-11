@@ -22,9 +22,6 @@ public static class PortfolioPerformanceConfiguration
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.HasOne(d => d.PortfolioNavigation)
             .WithMany(p => p.PortfolioPerformancesNavigation)
             .HasForeignKey(d => d.PortfolioId)

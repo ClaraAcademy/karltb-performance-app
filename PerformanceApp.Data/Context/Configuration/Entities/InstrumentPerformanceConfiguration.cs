@@ -23,9 +23,6 @@ public static class InstrumentPerformanceConfiguration
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.HasOne(d => d.InstrumentNavigation)
             .WithMany(p => p.InstrumentPerformancesNavigation)
             .HasForeignKey(d => d.InstrumentId)

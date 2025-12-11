@@ -21,9 +21,6 @@ public static class PortfolioValueConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 

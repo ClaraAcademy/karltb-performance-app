@@ -20,9 +20,6 @@ public static class BenchmarkConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.HasOne(d => d.BenchmarkPortfolioNavigation)
             .WithMany(p => p.BenchmarkBenchmarksNavigation)
             .HasForeignKey(d => d.BenchmarkId)

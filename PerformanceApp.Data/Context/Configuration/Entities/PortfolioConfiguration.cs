@@ -21,9 +21,6 @@ public static class PortfolioConfiguration
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.HasOne(p => p.User)
             .WithMany(u => u.PortfoliosNavigation)
             .HasForeignKey(p => p.UserID)

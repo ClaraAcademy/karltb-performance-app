@@ -21,9 +21,6 @@ public static class InstrumentConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.HasOne(d => d.InstrumentTypeNavigation)
             .WithMany(p => p.InstrumentsNavigation)
             .HasForeignKey(d => d.TypeId)

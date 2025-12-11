@@ -21,9 +21,6 @@ public static class TransactionConfiguration
         entity.Property(e => e.Amount)
             .HasColumnType(Constants.AmountType);
 
-        entity.Property(e => e.Created)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
-
         entity.Property(e => e.Nominal)
             .HasColumnType(Constants.NominalType);
 

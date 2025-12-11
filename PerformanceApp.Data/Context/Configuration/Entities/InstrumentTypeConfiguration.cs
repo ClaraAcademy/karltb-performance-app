@@ -17,10 +17,6 @@ public static class InstrumentTypeConfiguration
     static void Configure(EntityTypeBuilder<InstrumentType> entity)
     {
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
-        entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
-            .HasDefaultValueSql(Constants.CreatedDefaultValue);
     }
 
 }
