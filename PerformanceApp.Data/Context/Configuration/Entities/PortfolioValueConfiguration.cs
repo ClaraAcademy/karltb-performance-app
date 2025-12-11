@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -28,12 +29,12 @@ public static class PortfolioValueConfiguration
             .WithMany(p => p.PortfolioValuesNavigation)
             .HasForeignKey(d => d.Bankday)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName(Constants.BankdayForeignKeyName);
+            .HasConstraintName(FkPortfolioValue.Bankday);
 
         entity.HasOne(d => d.PortfolioNavigation)
             .WithMany(p => p.PortfolioValuesNavigation)
             .HasForeignKey(d => d.PortfolioId)
-            .HasConstraintName(Constants.PortfolioIdForeignKeyName);
+            .HasConstraintName(FkPortfolioValue.PortfolioId);
     }
 
 }
