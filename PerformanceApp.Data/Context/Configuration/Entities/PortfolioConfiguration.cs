@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -24,7 +25,7 @@ public static class PortfolioConfiguration
         entity.HasOne(p => p.User)
             .WithMany(u => u.PortfoliosNavigation)
             .HasForeignKey(p => p.UserID)
-            .HasConstraintName(Constants.UserIdForeignKeyName);
+            .HasConstraintName(FkPortfolio.UserID);
     }
 
 }
