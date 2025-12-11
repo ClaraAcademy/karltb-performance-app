@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
@@ -25,7 +26,6 @@ public static class InstrumentConfiguration
             .WithMany(p => p.InstrumentsNavigation)
             .HasForeignKey(d => d.TypeId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.InstrumentTypeForeignKeyName);
-
+            .HasConstraintName(FkInstrument.InstrumentType);
     }
 }
