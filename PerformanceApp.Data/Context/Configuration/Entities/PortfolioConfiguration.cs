@@ -17,6 +17,8 @@ public static class PortfolioConfiguration
 
     static void Configure(EntityTypeBuilder<Portfolio> entity)
     {
+        entity.HasKey(e => e.Id);
+
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 

@@ -17,8 +17,7 @@ public static class InstrumentConfiguration
 
     static void Configure(EntityTypeBuilder<Instrument> entity)
     {
-        entity.HasIndex(e => e.Name, Constants.IndexName)
-            .IsUnique();
+        entity.HasKey(e => e.Id);
 
         entity.HasOne(d => d.InstrumentTypeNavigation)
             .WithMany(p => p.InstrumentsNavigation)

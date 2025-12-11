@@ -18,6 +18,8 @@ public static class TransactionConfiguration
 
     static void Configure(EntityTypeBuilder<Transaction> entity)
     {
+        entity.HasKey(e => e.Id);
+
         entity.Property(e => e.Amount)
             .HasColumnType(Amount.SqlType);
 

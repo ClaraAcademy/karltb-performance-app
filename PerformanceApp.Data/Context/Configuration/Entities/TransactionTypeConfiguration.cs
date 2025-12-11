@@ -16,6 +16,8 @@ public static class TransactionTypeConfiguration
 
     static void Configure(EntityTypeBuilder<TransactionType> entity)
     {
+        entity.HasKey(e => e.Id);
+
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 

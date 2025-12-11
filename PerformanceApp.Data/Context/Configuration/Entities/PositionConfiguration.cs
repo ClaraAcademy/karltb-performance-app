@@ -17,6 +17,8 @@ public static class PositionConfiguration
     }
     static void Configure(EntityTypeBuilder<Position> entity)
     {
+        entity.HasKey(e => e.Id);
+
         entity.Property(e => e.Amount)
             .HasColumnType(Amount.SqlType);
 

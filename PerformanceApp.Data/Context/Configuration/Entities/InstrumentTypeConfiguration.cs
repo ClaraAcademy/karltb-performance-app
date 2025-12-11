@@ -16,6 +16,7 @@ public static class InstrumentTypeConfiguration
 
     static void Configure(EntityTypeBuilder<InstrumentType> entity)
     {
+        entity.HasKey(e => e.Id);
     }
 
 }
