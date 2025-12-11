@@ -20,18 +20,6 @@ public static class InstrumentPerformanceConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.InstrumentId)
-            .HasColumnName(Constants.IdColumnName);
-
-        entity.Property(e => e.TypeId)
-            .HasColumnName(Constants.TypeIdColumnName);
-
-        entity.Property(e => e.PeriodStart)
-            .HasColumnName(Constants.PeriodStartColumnName);
-
-        entity.Property(e => e.PeriodEnd)
-            .HasColumnName(Constants.PeriodEndColumnName);
-
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType)
             .HasColumnName(Constants.ValueColumnName);
