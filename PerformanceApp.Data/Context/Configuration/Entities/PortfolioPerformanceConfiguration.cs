@@ -9,7 +9,7 @@ using Constants = PortfolioPerformanceConstants;
 
 public static class PortfolioPerformanceConfiguration
 {
-    public static void ConfigurePortfolioPerformances(this ModelBuilder modelBuilder)
+    public static void ConfigurePortfolioPerformance(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<PortfolioPerformance>(Configure);
     }
