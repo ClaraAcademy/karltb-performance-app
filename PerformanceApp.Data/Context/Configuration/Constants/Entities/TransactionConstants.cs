@@ -4,12 +4,6 @@ namespace PerformanceApp.Data.Context.Configuration.Constants.Entities;
 
 public class TransactionConstants : EntityConstants<Transaction>
 {
-    private const string _amountColumnName = "Amount";
-    private const string _nominalColumnName = "Nominal";
-    private const string _proportionColumnName = "Proportion";
-    private const string _instrumentIdColumnName = "InstrumentID";
-    private const string _portfolioIdColumnName = "PortfolioID";
-    private const string _transactionTypeIdColumnName = "TransactionTypeID";
     private const string _amountType = "decimal(19, 4)";
     private const string _nominalType = "decimal(19, 4)";
     private const string _proportionType = "decimal(5, 4)";
@@ -19,12 +13,6 @@ public class TransactionConstants : EntityConstants<Transaction>
     private const string _transactionTypeForeignKeyName = "FK_Transaction_TransactionTypeID";
 
 
-    public const string AmountColumnName = _amountColumnName;
-    public const string NominalColumnName = _nominalColumnName;
-    public const string ProportionColumnName = _proportionColumnName;
-    public const string InstrumentIdColumnName = _instrumentIdColumnName;
-    public const string PortfolioIdColumnName = _portfolioIdColumnName;
-    public const string TransactionTypeIdColumnName = _transactionTypeIdColumnName;
     public const string AmountType = _amountType;
     public const string NominalType = _nominalType;
     public const string ProportionType = _proportionType;

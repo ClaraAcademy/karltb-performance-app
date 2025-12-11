@@ -21,11 +21,7 @@ public static class TransactionTypeConfiguration
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 
-        entity.Property(e => e.Id)
-            .HasColumnName(Constants.IdColumnName);
-
         entity.Property(e => e.Name)
-            .HasColumnName(Constants.NameColumnName)
             .HasMaxLength(20);
     }
 }

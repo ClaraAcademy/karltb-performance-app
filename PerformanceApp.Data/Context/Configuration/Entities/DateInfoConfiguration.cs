@@ -21,7 +21,6 @@ public static class DateInfoConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
     }
 }

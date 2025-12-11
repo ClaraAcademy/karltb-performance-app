@@ -20,15 +20,10 @@ public static class InstrumentPriceConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.InstrumentId)
-            .HasColumnName(Constants.InstrumentIdColumnName);
-
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.Property(e => e.Price)
-            .HasColumnName(Constants.PriceColumnName)
             .HasColumnType(Constants.PriceColumnType);
 
         entity.HasOne(d => d.BankdayNavigation)

@@ -23,14 +23,7 @@ public static class PerformanceTypeConfiguration
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 
-        entity.Property(e => e.Id)
-            .HasColumnName(Constants.IdColumnName);
-
-        entity.Property(e => e.Name)
-            .HasColumnName(Constants.NameColumnName);
-
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
     }
 

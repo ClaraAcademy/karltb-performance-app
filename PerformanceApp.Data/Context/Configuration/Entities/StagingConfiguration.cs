@@ -21,19 +21,15 @@ public static class StagingConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.Property(e => e.InstrumentName)
-            .HasColumnName(Constants.InstrumentNameColumnName)
             .HasMaxLength(100);
 
         entity.Property(e => e.InstrumentType)
-            .HasColumnName(Constants.InstrumentTypeColumnName)
             .HasMaxLength(100);
 
         entity.Property(e => e.Price)
-            .HasColumnName(Constants.PriceColumnName)
             .HasColumnType(Constants.PriceColumnType);
     }
 }

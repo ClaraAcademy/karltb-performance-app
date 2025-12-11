@@ -19,24 +19,10 @@ public static class PortfolioPerformanceConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.PortfolioId)
-            .HasColumnName(Constants.PortfolioIdColumnName);
-
-        entity.Property(e => e.TypeId)
-            .HasColumnName(Constants.TypeIdColumnName);
-
-        entity.Property(e => e.PeriodStart)
-            .HasColumnName(Constants.PeriodStartColumnName);
-
-        entity.Property(e => e.PeriodEnd)
-            .HasColumnName(Constants.PeriodEndColumnName);
-
         entity.Property(e => e.Value)
-            .HasColumnName(Constants.ValueColumnName)
             .HasColumnType(Constants.ValueColumnType);
 
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.HasOne(d => d.PortfolioNavigation)

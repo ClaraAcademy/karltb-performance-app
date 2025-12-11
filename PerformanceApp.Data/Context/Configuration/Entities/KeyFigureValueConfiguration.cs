@@ -20,19 +20,11 @@ public static class KeyFigureValueConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.PortfolioId)
-            .HasColumnName(Constants.PortfolioIdColumnName);
-
-        entity.Property(e => e.KeyFigureId)
-            .HasColumnName(Constants.KeyFigureIdColumnName);
-
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType)
-            .HasColumnName(Constants.ValueColumnName);
+            .HasColumnType(Constants.ValueColumnType);
 
         entity.HasOne(d => d.KeyFigureInfoNavigation)
             .WithMany(p => p.KeyFigureValuesNavigation)

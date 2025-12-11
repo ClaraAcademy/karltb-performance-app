@@ -21,16 +21,11 @@ public static class PortfolioValueConfiguration
 
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.PortfolioId)
-            .HasColumnName(Constants.PortfolioIdColumnName);
-
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType)
-            .HasColumnName(Constants.ValueColumnName);
+            .HasColumnType(Constants.ValueColumnType);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.PortfolioValuesNavigation)

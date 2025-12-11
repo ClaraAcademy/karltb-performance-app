@@ -18,33 +18,17 @@ public static class TransactionConfiguration
     {
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
-        entity.Property(e => e.Id)
-            .HasColumnName(Constants.IdColumnName);
-
         entity.Property(e => e.Amount)
-            .HasColumnName(Constants.AmountColumnName)
             .HasColumnType(Constants.AmountType);
 
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
-        entity.Property(e => e.InstrumentId)
-            .HasColumnName(Constants.InstrumentIdColumnName);
-
         entity.Property(e => e.Nominal)
-            .HasColumnName(Constants.NominalColumnName)
             .HasColumnType(Constants.NominalType);
 
-        entity.Property(e => e.PortfolioId)
-            .HasColumnName(Constants.PortfolioIdColumnName);
-
         entity.Property(e => e.Proportion)
-            .HasColumnName(Constants.ProportionColumnName)
             .HasColumnType(Constants.ProportionType);
-
-        entity.Property(e => e.TransactionTypeId)
-            .HasColumnName(Constants.TransactionTypeIdColumnName);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.TransactionsNavigation)

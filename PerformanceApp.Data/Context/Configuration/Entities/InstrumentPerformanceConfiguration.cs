@@ -21,11 +21,9 @@ public static class InstrumentPerformanceConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType)
-            .HasColumnName(Constants.ValueColumnName);
+            .HasColumnType(Constants.ValueColumnType);
 
         entity.Property(e => e.Created)
-            .HasColumnName(Constants.CreatedColumnName)
             .HasDefaultValueSql(Constants.CreatedDefaultValue);
 
         entity.HasOne(d => d.InstrumentNavigation)
