@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Context.Configuration.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Context;
 using PerformanceApp.Data.Context.Configuration.Entities;
@@ -37,20 +38,9 @@ public class PadbContext : IdentityDbContext<ApplicationUser, ApplicationRole, s
 
         modelBuilder.HasDefaultSchema(ContextConstants.Schema);
 
-        var entityTypes = modelBuilder.Model.GetEntityTypes();
-        foreach (var entityType in entityTypes)
-        {
-            var clr = entityType.ClrType;
-            var created = clr.GetProperty(Created.Name);
-            var isValid = created != null && created.PropertyType == typeof(DateTime);
-            if (isValid)
-            {
-                modelBuilder.Entity(clr)
-                    .Property(Created.Name)
-                    .HasDefaultValueSql(Created.DefaultValue);
-            }
-
-        }
+        // Configure columns
+        modelBuilder.ConfigureCreatedColumns();
+        modelBuilder.ConfigureIdColumns();
 
         // Initialize models
         modelBuilder.ConfigureBenchmark();
