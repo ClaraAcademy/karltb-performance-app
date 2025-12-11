@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
@@ -27,25 +28,25 @@ public static class InstrumentPerformanceConfiguration
             .WithMany(p => p.InstrumentPerformancesNavigation)
             .HasForeignKey(d => d.InstrumentId)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.InstrumentForeignKeyName);
+            .HasConstraintName(FkInstrumentPerformance.Instrument);
 
         entity.HasOne(d => d.PerformanceTypeNavigation)
             .WithMany(p => p.InstrumentPerformancesNavigation)
             .HasForeignKey(d => d.TypeId)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PerformanceTypeForeignKeyName);
+            .HasConstraintName(FkInstrumentPerformance.PerformanceType);
 
         entity.HasOne(d => d.PeriodStartNavigation)
             .WithMany(p => p.InstrumentPerformancesPeriodStartNavigation)
             .HasForeignKey(d => d.PeriodStart)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PeriodStartForeignKeyName);
+            .HasConstraintName(FkInstrumentPerformance.PeriodStart);
 
         entity.HasOne(d => d.PeriodEndNavigation)
             .WithMany(p => p.InstrumentPerformancesPeriodEndNavigation)
             .HasForeignKey(d => d.PeriodEnd)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PeriodEndForeignKeyName);
+            .HasConstraintName(FkInstrumentPerformance.PeriodEnd);
     }
 
 }
