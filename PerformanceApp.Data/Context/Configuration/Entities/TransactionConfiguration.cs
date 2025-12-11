@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -31,24 +32,24 @@ public static class TransactionConfiguration
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.TransactionsNavigation)
             .HasForeignKey(d => d.Bankday)
-            .HasConstraintName(Constants.BankdayForeignKeyName);
+            .HasConstraintName(FkTransaction.Bankday);
 
         entity.HasOne(d => d.InstrumentNavigation)
             .WithMany(p => p.TransactionsNavigation)
             .HasForeignKey(d => d.InstrumentId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.InstrumentForeignKeyName);
+            .HasConstraintName(FkTransaction.InstrumentId);
 
         entity.HasOne(d => d.PortfolioNavigation)
             .WithMany(p => p.TransactionsNavigation)
             .HasForeignKey(d => d.PortfolioId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.PortfolioForeignKeyName);
+            .HasConstraintName(FkTransaction.PortfolioId);
 
         entity.HasOne(d => d.TransactionTypeNavigation)
             .WithMany(p => p.TransactionsNavigation)
             .HasForeignKey(d => d.TransactionTypeId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.TransactionTypeForeignKeyName);
+            .HasConstraintName(FkTransaction.TransactionTypeId);
     }
 }
