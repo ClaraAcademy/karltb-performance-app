@@ -19,13 +19,13 @@ public static class PositionConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Amount)
-            .HasColumnType(Amount.Type);
+            .HasColumnType(Amount.SqlType);
 
         entity.Property(e => e.Nominal)
-            .HasColumnType(Nominal.Type);
+            .HasColumnType(Nominal.SqlType);
 
         entity.Property(e => e.Proportion)
-            .HasColumnType(Proportion.Type);
+            .HasColumnType(Proportion.SqlType);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.PositionsNavigation)
