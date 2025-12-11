@@ -1,0 +1,8 @@
+namespace PerformanceApp.Data.Context.Configuration.Constants.Columns;
+
+public static class Amount
+{
+    private const string _type = "decimal(19,4)";
+
+    public static string Type => _type;
+}

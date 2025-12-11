@@ -2,6 +2,7 @@ using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -19,13 +20,13 @@ public static class TransactionConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Amount)
-            .HasColumnType(Constants.AmountType);
+            .HasColumnType(Amount.Type);
 
         entity.Property(e => e.Nominal)
-            .HasColumnType(Constants.NominalType);
+            .HasColumnType(Nominal.Type);
 
         entity.Property(e => e.Proportion)
-            .HasColumnType(Constants.ProportionType);
+            .HasColumnType(Proportion.Type);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.TransactionsNavigation)
