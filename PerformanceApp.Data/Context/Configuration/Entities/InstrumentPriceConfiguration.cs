@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Models;
 
@@ -21,7 +22,7 @@ public static class InstrumentPriceConfiguration
         entity.ToTable(Constants.TableName, Constants.DefaultSchema);
 
         entity.Property(e => e.Price)
-            .HasColumnType(Constants.PriceColumnType);
+            .HasColumnType(Price.SqlType);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.InstrumentPricesNavigation)

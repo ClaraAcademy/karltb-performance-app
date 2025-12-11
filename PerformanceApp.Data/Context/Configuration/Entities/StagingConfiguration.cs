@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -27,6 +28,6 @@ public static class StagingConfiguration
             .HasMaxLength(100);
 
         entity.Property(e => e.Price)
-            .HasColumnType(Constants.PriceColumnType);
+            .HasColumnType(Price.SqlType);
     }
 }
