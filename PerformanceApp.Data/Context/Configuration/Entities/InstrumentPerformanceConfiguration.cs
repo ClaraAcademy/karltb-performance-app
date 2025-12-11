@@ -19,8 +19,6 @@ public static class InstrumentPerformanceConfiguration
     {
         entity.HasKey(e => new { e.InstrumentId, e.PeriodStart, e.PeriodEnd, e.TypeId });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 

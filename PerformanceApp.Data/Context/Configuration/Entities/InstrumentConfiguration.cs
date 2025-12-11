@@ -20,8 +20,6 @@ public static class InstrumentConfiguration
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasOne(d => d.InstrumentTypeNavigation)
             .WithMany(p => p.InstrumentsNavigation)
             .HasForeignKey(d => d.TypeId)

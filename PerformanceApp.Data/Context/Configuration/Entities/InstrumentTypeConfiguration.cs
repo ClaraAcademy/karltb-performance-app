@@ -16,7 +16,6 @@ public static class InstrumentTypeConfiguration
 
     static void Configure(EntityTypeBuilder<InstrumentType> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
     }
 
 }

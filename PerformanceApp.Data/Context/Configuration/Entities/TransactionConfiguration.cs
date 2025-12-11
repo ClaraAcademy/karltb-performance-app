@@ -18,8 +18,6 @@ public static class TransactionConfiguration
 
     static void Configure(EntityTypeBuilder<Transaction> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Amount)
             .HasColumnType(Amount.SqlType);
 

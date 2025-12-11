@@ -16,8 +16,6 @@ public static class PerformanceTypeConfiguration
 
     private static void Configure(EntityTypeBuilder<PerformanceType> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasKey(e => e.Id);
 
         entity.HasIndex(e => e.Name, Constants.IndexName)

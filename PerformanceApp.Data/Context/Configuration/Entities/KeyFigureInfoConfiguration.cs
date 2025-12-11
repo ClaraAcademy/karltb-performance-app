@@ -18,8 +18,6 @@ public static class KeyFigureInfoConfiguration
     {
         entity.HasKey(e => e.Id);
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
     }

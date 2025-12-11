@@ -19,8 +19,6 @@ public static class StagingConfiguration
     {
         entity.HasKey(e => new { e.Bankday, e.InstrumentName, e.InstrumentType });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.InstrumentName)
             .HasMaxLength(100);
 

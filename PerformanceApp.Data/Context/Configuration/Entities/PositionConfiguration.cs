@@ -17,8 +17,6 @@ public static class PositionConfiguration
     }
     static void Configure(EntityTypeBuilder<Position> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Amount)
             .HasColumnType(Amount.SqlType);
 

@@ -17,8 +17,6 @@ public static class PortfolioConfiguration
 
     static void Configure(EntityTypeBuilder<Portfolio> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 

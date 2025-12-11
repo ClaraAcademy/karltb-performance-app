@@ -19,8 +19,6 @@ public static class KeyFigureValueConfiguration
     {
         entity.HasKey(e => new { e.PortfolioId, e.KeyFigureId });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 

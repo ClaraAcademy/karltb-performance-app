@@ -17,7 +17,5 @@ public static class DateInfoConfiguration
     static void Configure(EntityTypeBuilder<DateInfo> entity)
     {
         entity.HasKey(e => e.Bankday);
-
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
     }
 }

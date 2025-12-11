@@ -18,8 +18,6 @@ public static class BenchmarkConfiguration
     {
         entity.HasKey(e => new { e.PortfolioId, e.BenchmarkId });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasOne(d => d.BenchmarkPortfolioNavigation)
             .WithMany(p => p.BenchmarkBenchmarksNavigation)
             .HasForeignKey(d => d.BenchmarkId)

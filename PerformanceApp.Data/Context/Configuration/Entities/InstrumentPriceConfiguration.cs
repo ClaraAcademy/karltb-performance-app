@@ -20,8 +20,6 @@ public static class InstrumentPriceConfiguration
     {
         entity.HasKey(e => new { e.InstrumentId, e.Bankday });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Price)
             .HasColumnType(Price.SqlType);
 

@@ -16,8 +16,6 @@ public static class TransactionTypeConfiguration
 
     static void Configure(EntityTypeBuilder<TransactionType> entity)
     {
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.HasIndex(e => e.Name, Constants.IndexName)
             .IsUnique();
 

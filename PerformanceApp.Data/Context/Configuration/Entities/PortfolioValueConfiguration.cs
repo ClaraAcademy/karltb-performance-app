@@ -20,8 +20,6 @@ public static class PortfolioValueConfiguration
     {
         entity.HasKey(e => new { e.PortfolioId, e.Bankday });
 
-        entity.ToTable(Constants.TableName, Constants.DefaultSchema);
-
         entity.Property(e => e.Value)
             .HasColumnType(Constants.ValueColumnType);
 
