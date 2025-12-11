@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -30,19 +31,19 @@ public static class PositionConfiguration
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.PositionsNavigation)
             .HasForeignKey(d => d.Bankday)
-            .HasConstraintName(Constants.BankdayForeignKeyName);
+            .HasConstraintName(FkPosition.Bankday);
 
         entity.HasOne(d => d.InstrumentNavigation)
             .WithMany(p => p.PositionsNavigation)
             .HasForeignKey(d => d.InstrumentId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.InstrumentIdForeignKeyName);
+            .HasConstraintName(FkPosition.InstrumentId);
 
         entity.HasOne(d => d.PortfolioNavigation)
             .WithMany(p => p.PositionsNavigation)
             .HasForeignKey(d => d.PortfolioId)
             .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName(Constants.PortfolioIdForeignKeyName);
+            .HasConstraintName(FkPosition.PortfolioId);
     }
 
 }
