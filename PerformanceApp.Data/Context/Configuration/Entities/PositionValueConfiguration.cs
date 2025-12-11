@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
 
@@ -27,11 +28,11 @@ public static class PositionValueConfiguration
             .WithMany(p => p.PositionValuesNavigation)
             .HasForeignKey(d => d.Bankday)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName(Constants.BankdayForeignKeyName);
+            .HasConstraintName(FkPositionValue.Bankday);
 
         entity.HasOne(d => d.PositionNavigation)
             .WithMany(p => p.PositionValuesNavigation)
             .HasForeignKey(d => d.PositionId)
-            .HasConstraintName(Constants.PositionForeignKeyName);
+            .HasConstraintName(FkPositionValue.PositionId);
     }
 }
