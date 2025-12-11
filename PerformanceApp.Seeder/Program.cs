@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Data.Seeding;
 using PerformanceApp.Data;
+using PerformanceApp.Data.Context;
 
 namespace PerformanceApp.Seeder;
 
@@ -18,6 +19,15 @@ public class Program
         services.AddDataServices(configuration);
 
         var serviceProvider = services.BuildServiceProvider();
+
+        /* BEGIN DELETE BEFORE SEEDING */
+        using var scope = serviceProvider.CreateScope();
+        var context = scope
+            .ServiceProvider
+            .GetRequiredService<PadbContext>();
+        
+        context.Database.EnsureDeleted();
+        /* END DELETE BEFORE SEEDING */
 
         await DatabaseInitializer.Initialize(serviceProvider);
     }
