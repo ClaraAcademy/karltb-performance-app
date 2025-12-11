@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
@@ -28,11 +29,11 @@ public static class InstrumentPriceConfiguration
             .WithMany(p => p.InstrumentPricesNavigation)
             .HasForeignKey(d => d.Bankday)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName(Constants.BankdayForeignKeyName);
+            .HasConstraintName(FkInstrumentPrice.Bankday);
 
         entity.HasOne(d => d.InstrumentNavigation)
             .WithMany(p => p.InstrumentPricesNavigation)
             .HasForeignKey(d => d.InstrumentId)
-            .HasConstraintName(Constants.InstrumentForeignKeyName);
+            .HasConstraintName(FkInstrumentPrice.Instrument);
     }
 }
