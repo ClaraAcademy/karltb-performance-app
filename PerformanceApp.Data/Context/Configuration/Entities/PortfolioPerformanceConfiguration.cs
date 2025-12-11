@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
@@ -26,24 +27,24 @@ public static class PortfolioPerformanceConfiguration
             .WithMany(p => p.PortfolioPerformancesNavigation)
             .HasForeignKey(d => d.PortfolioId)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PortfolioIdForeignKeyName);
+            .HasConstraintName(FkPortfolioPerformance.PortfolioId);
 
         entity.HasOne(d => d.PerformanceTypeNavigation)
             .WithMany(p => p.PortfolioPerformancesNavigation)
             .HasForeignKey(d => d.TypeId)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.TypeIdForeignKeyName);
+            .HasConstraintName(FkPortfolioPerformance.TypeId);
 
         entity.HasOne(d => d.PeriodStartNavigation)
             .WithMany(p => p.PortfolioPerformancesPeriodStartNavigation)
             .HasForeignKey(d => d.PeriodStart)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PeriodStartForeignKeyName);
+            .HasConstraintName(FkPortfolioPerformance.PeriodStart);
 
         entity.HasOne(d => d.PeriodEndNavigation)
             .WithMany(p => p.PortfolioPerformancesPeriodEndNavigation)
             .HasForeignKey(d => d.PeriodEnd)
             .OnDelete(DeleteBehavior.ClientCascade)
-            .HasConstraintName(Constants.PeriodEndForeignKeyName);
+            .HasConstraintName(FkPortfolioPerformance.PeriodEnd);
     }
 }
