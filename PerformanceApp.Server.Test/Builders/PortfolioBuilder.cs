@@ -10,6 +10,7 @@ public class PortfolioBuilder : IBuilder<Portfolio>
     private ApplicationUser _user = new ApplicationUser { Id = "userId1", UserName = "userName1" };
     private List<Portfolio> _benchmarks = new List<Portfolio>();
     private List<KeyFigureValue> _keyFigureValues = new List<KeyFigureValue>();
+    private List<PortfolioPerformance> _performances = new List<PortfolioPerformance>();
 
     private List<Benchmark> _benchmarkEntities =>
         new List<Benchmark>(
@@ -52,6 +53,12 @@ public class PortfolioBuilder : IBuilder<Portfolio>
         return this;
     }
 
+    public PortfolioBuilder WithPerformances(List<PortfolioPerformance> performances)
+    {
+        _performances = performances;
+        return this;
+    }
+
     public Portfolio Clone()
     {
         return new PortfolioBuilder()
@@ -60,6 +67,7 @@ public class PortfolioBuilder : IBuilder<Portfolio>
             .WithUser(_user)
             .WithBenchmarks(new List<Portfolio>(_benchmarks))
             .WithKeyFigureValues(new List<KeyFigureValue>(_keyFigureValues))
+            .WithPerformances(new List<PortfolioPerformance>(_performances))
             .Build();
     }
 
@@ -74,7 +82,8 @@ public class PortfolioBuilder : IBuilder<Portfolio>
                 Name = $"Portfolio {i}",
                 User = _user,
                 PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
-                KeyFigureValuesNavigation = new List<KeyFigureValue>()
+                KeyFigureValuesNavigation = _keyFigureValues,
+                PortfolioPerformancesNavigation = _performances
             }
             );
         }
@@ -89,8 +98,8 @@ public class PortfolioBuilder : IBuilder<Portfolio>
             Name = _name,
             User = _user,
             PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
-            KeyFigureValuesNavigation = _keyFigureValues
-
+            KeyFigureValuesNavigation = _keyFigureValues,
+            PortfolioPerformancesNavigation = _performances
         };
 
     }
