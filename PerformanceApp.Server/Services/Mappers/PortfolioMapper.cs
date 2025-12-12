@@ -44,4 +44,27 @@ public static class PortfolioMapper
         return new PortfolioDTO { PortfolioId = id, PortfolioName = name };
     }
 
+    public static PortfolioBenchmarkKeyFigureDTO MapToPortfolioBenchmarkKeyFigureDTO(Portfolio portfolio, Portfolio Benchmark, KeyFigureInfo kfi)
+    {
+        var portfolioValue = portfolio
+            .KeyFigureValuesNavigation
+            .SingleOrDefault(kfv => kfv.KeyFigureId == kfi.Id)?.Value;
+
+        var benchmarkValue = Benchmark
+            .KeyFigureValuesNavigation
+            .SingleOrDefault(kfv => kfv.KeyFigureId == kfi.Id)?.Value;
+
+        return new PortfolioBenchmarkKeyFigureDTO
+        {
+            KeyFigureId = kfi.Id,
+            KeyFigureName = kfi.Name,
+            PortfolioId = portfolio.Id,
+            PortfolioName = portfolio.Name,
+            PortfolioValue = portfolioValue,
+            BenchmarkId = Benchmark.Id,
+            BenchmarkName = Benchmark.Name,
+            BenchmarkValue = benchmarkValue
+        };
+    }
+
 }
