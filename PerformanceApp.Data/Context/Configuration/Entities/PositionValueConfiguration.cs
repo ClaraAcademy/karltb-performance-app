@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 
