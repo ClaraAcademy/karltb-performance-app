@@ -135,7 +135,7 @@ public class PortfolioServiceTest
                 {
                     Id = 1,
                     Name = "Portfolio 1",
-                    BenchmarkPortfoliosNavigation = new List<Benchmark>
+                    PortfolioPortfolioBenchmarkEntityNavigation = new List<Benchmark>
                     {
                         benchmarkMappings[0]
                     }
@@ -144,7 +144,7 @@ public class PortfolioServiceTest
                 {
                     Id = 2,
                     Name = "Portfolio 2",
-                    BenchmarkPortfoliosNavigation = new List<Benchmark>
+                    PortfolioPortfolioBenchmarkEntityNavigation = new List<Benchmark>
                     {
                         benchmarkMappings[1]
                     }
@@ -202,7 +202,7 @@ public class PortfolioServiceTest
             Id = 1,
             Name = "Portfolio 1",
             UserID = userId,
-            BenchmarkPortfoliosNavigation = new List<Benchmark>
+            PortfolioPortfolioBenchmarkEntityNavigation = new List<Benchmark>
         {
             CreateBenchmark(1, "Portfolio 1", 101, "Benchmark 1"),
             CreateBenchmark(1, "Portfolio 1", 102, "Benchmark 2")
@@ -214,7 +214,7 @@ public class PortfolioServiceTest
             Id = 2,
             Name = "Portfolio 2",
             UserID = "other-user",
-            BenchmarkPortfoliosNavigation = new List<Benchmark>
+            PortfolioPortfolioBenchmarkEntityNavigation = new List<Benchmark>
         {
             CreateBenchmark(2, "Portfolio 2", 103, "Benchmark 3")
         }

@@ -81,7 +81,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
     private List<Dto> GetActiveReturn(Portfolio portfolio)
     {
         var benchmark = portfolio
-            .BenchmarkPortfoliosNavigation
+            .PortfolioPortfolioBenchmarkEntityNavigation
             .Select(b => b.BenchmarkPortfolioNavigation)
             .FirstOrDefault();
 

@@ -51,9 +51,9 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
         {
             return await _context.Portfolios
-                .Include(p => p.BenchmarkPortfoliosNavigation)
+                .Include(p => p.PortfolioPortfolioBenchmarkEntityNavigation)
                     .ThenInclude(b => b.BenchmarkPortfolioNavigation)
-                .Include(p => p.BenchmarkBenchmarksNavigation)
+                .Include(p => p.BenchmarkPortfolioBenchmarkEntityNavigation)
                     .ThenInclude(b => b.PortfolioPortfolioNavigation)
                 .ToListAsync();
         }

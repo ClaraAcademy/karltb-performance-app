@@ -17,13 +17,13 @@ public static class BenchmarkConfiguration
         entity.HasKey(e => new { e.PortfolioId, e.BenchmarkId });
 
         entity.HasOne(d => d.BenchmarkPortfolioNavigation)
-            .WithMany(p => p.BenchmarkBenchmarksNavigation)
+            .WithMany(p => p.BenchmarkPortfolioBenchmarkEntityNavigation)
             .HasForeignKey(d => d.BenchmarkId)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName(FkBenchmark.BenchmarkPortfolio);
 
         entity.HasOne(d => d.PortfolioPortfolioNavigation)
-            .WithMany(p => p.BenchmarkPortfoliosNavigation)
+            .WithMany(p => p.PortfolioPortfolioBenchmarkEntityNavigation)
             .HasForeignKey(d => d.PortfolioId)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName(FkBenchmark.PortfolioPortfolio);
