@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Indexes;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = TransactionTypeConstants;
 
 public static class TransactionTypeConfiguration
 {
@@ -18,7 +16,7 @@ public static class TransactionTypeConfiguration
     {
         entity.HasKey(e => e.Id);
 
-        entity.HasIndex(e => e.Name, Constants.IndexName)
+        entity.HasIndex(e => e.Name, IndexTransactionType.Name)
             .IsUnique();
 
         entity.Property(e => e.Name)
