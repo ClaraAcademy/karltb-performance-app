@@ -20,10 +20,22 @@ public static class PortfolioMapper
         return MapToPortfolioDTO(id, name);
     }
 
+    public static PortfolioBenchmarkDTO MapToPortfolioBenchmarkDTO(Portfolio portfolio, Portfolio benchmark)
+    {
+        return new PortfolioBenchmarkDTO
+        {
+            PortfolioId = portfolio.Id,
+            PortfolioName = portfolio.Name,
+            BenchmarkId = benchmark.Id,
+            BenchmarkName = benchmark.Name
+        };
+    }
+
     public static List<PortfolioBenchmarkDTO> MapToPortfolioBenchmarkDTOs(Portfolio portfolio)
     {
-        return portfolio.BenchmarkPortfoliosNavigation
-            .Select(BenchmarkMapper.MapToPortfolioBenchmarkDTO)
+        return portfolio
+            .BenchmarksNavigation
+            .Select(benchmark => MapToPortfolioBenchmarkDTO(portfolio, benchmark))
             .ToList();
     }
 
