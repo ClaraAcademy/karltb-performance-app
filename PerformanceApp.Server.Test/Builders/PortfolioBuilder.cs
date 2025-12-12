@@ -11,6 +11,11 @@ public class PortfolioBuilder : IBuilder<Portfolio>
     private List<Portfolio> _benchmarks = new List<Portfolio>();
     private List<KeyFigureValue> _keyFigureValues = new List<KeyFigureValue>();
 
+    private List<Benchmark> _benchmarkEntities =>
+        new List<Benchmark>(
+            _benchmarks.Select(b => new Benchmark { PortfolioId = _id, BenchmarkId = b.Id })
+        );
+
     public PortfolioBuilder WithId(int id)
     {
         _id = id;
@@ -60,13 +65,20 @@ public class PortfolioBuilder : IBuilder<Portfolio>
 
     public IEnumerable<Portfolio> Many(int count)
     {
-        return Enumerable.Range(1, count).Select(i => new PortfolioBuilder()
-            .WithId(_id + i - 1)
-            .WithName($"{_name} {i}")
-            .WithUser(_user)
-            .WithBenchmarks(new List<Portfolio>(_benchmarks))
-            .WithKeyFigureValues(new List<KeyFigureValue>(_keyFigureValues))
-            .Build());
+        var portfolios = new List<Portfolio>();
+        for (int i = 1; i <= count; i++)
+        {
+            portfolios.Add(new Portfolio
+            {
+                Id = i,
+                Name = $"Portfolio {i}",
+                User = _user,
+                PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
+                KeyFigureValuesNavigation = new List<KeyFigureValue>()
+            }
+            );
+        }
+        return portfolios;
     }
 
     public Portfolio Build()
@@ -76,9 +88,7 @@ public class PortfolioBuilder : IBuilder<Portfolio>
             Id = _id,
             Name = _name,
             User = _user,
-            PortfolioPortfolioBenchmarkEntityNavigation = new List<Benchmark>(
-                _benchmarks.Select(b => new Benchmark { PortfolioId = _id, BenchmarkId = b.Id })
-            ),
+            PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
             KeyFigureValuesNavigation = _keyFigureValues
 
         };
