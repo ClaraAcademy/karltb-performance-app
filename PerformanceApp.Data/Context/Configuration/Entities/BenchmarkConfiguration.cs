@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
@@ -21,14 +22,14 @@ public static class BenchmarkConfiguration
         entity.HasOne(d => d.BenchmarkPortfolioNavigation)
             .WithMany(p => p.BenchmarkBenchmarksNavigation)
             .HasForeignKey(d => d.BenchmarkId)
-            .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName(Constants.BenchmarkPortfolioForeignKey);
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName(FkBenchmark.BenchmarkPortfolio);
 
         entity.HasOne(d => d.PortfolioPortfolioNavigation)
             .WithMany(p => p.BenchmarkPortfoliosNavigation)
             .HasForeignKey(d => d.PortfolioId)
-            .HasConstraintName(Constants.PortfolioPortfolioForeignKey);
-
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName(FkBenchmark.PortfolioPortfolio);
     }
 
 }
