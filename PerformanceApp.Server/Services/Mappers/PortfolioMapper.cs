@@ -44,20 +44,23 @@ public static class PortfolioMapper
         return new PortfolioDTO { PortfolioId = id, PortfolioName = name };
     }
 
-    public static PortfolioBenchmarkKeyFigureDTO MapToPortfolioBenchmarkKeyFigureDTO(Portfolio portfolio, Portfolio Benchmark, KeyFigureInfo kfi)
+    public static PortfolioBenchmarkKeyFigureDTO MapToPortfolioBenchmarkKeyFigureDTO(Portfolio portfolio, Portfolio Benchmark, KeyFigureValue portfolioKfv)
     {
+        var keyFigureId = portfolioKfv.KeyFigureInfoNavigation.Id;
+        var keyFigureName = portfolioKfv.KeyFigureInfoNavigation.Name;
+
         var portfolioValue = portfolio
             .KeyFigureValuesNavigation
-            .SingleOrDefault(kfv => kfv.KeyFigureId == kfi.Id)?.Value;
+            .SingleOrDefault(kfv => kfv.KeyFigureId == keyFigureId)?.Value;
 
         var benchmarkValue = Benchmark
             .KeyFigureValuesNavigation
-            .SingleOrDefault(kfv => kfv.KeyFigureId == kfi.Id)?.Value;
+            .SingleOrDefault(kfv => kfv.KeyFigureId == keyFigureId)?.Value;
 
         return new PortfolioBenchmarkKeyFigureDTO
         {
-            KeyFigureId = kfi.Id,
-            KeyFigureName = kfi.Name,
+            KeyFigureId = keyFigureId,
+            KeyFigureName = keyFigureName,
             PortfolioId = portfolio.Id,
             PortfolioName = portfolio.Name,
             PortfolioValue = portfolioValue,
