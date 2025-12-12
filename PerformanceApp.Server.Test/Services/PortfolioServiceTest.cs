@@ -127,8 +127,29 @@ public class PortfolioServiceTest
         // Arrange
         var benchmarkMappings = GetBenchmarks(2);
 
-        _benchmarkRepositoryMock.Setup(r => r.GetBenchmarkMappingsAsync())
-            .ReturnsAsync(benchmarkMappings);
+        _portfolioRepositoryMock
+            .Setup(r => r.GetProperPortfoliosAsync())
+            .ReturnsAsync(new List<Portfolio>
+            {
+                new Portfolio
+                {
+                    Id = 1,
+                    Name = "Portfolio 1",
+                    BenchmarkPortfoliosNavigation = new List<Benchmark>
+                    {
+                        benchmarkMappings[0]
+                    }
+                },
+                new Portfolio
+                {
+                    Id = 2,
+                    Name = "Portfolio 2",
+                    BenchmarkPortfoliosNavigation = new List<Benchmark>
+                    {
+                        benchmarkMappings[1]
+                    }
+                }
+            });
 
         // Act
         var result = await _portfolioService.GetPortfolioBenchmarksAsync();
@@ -176,16 +197,28 @@ public class PortfolioServiceTest
     {
         // Arrange
         var userId = "user-123";
-        var portfolio1 = new Portfolio { Id = 1, Name = "Portfolio 1", UserID = userId, BenchmarkPortfoliosNavigation = new List<Benchmark>
+        var portfolio1 = new Portfolio
+        {
+            Id = 1,
+            Name = "Portfolio 1",
+            UserID = userId,
+            BenchmarkPortfoliosNavigation = new List<Benchmark>
         {
             CreateBenchmark(1, "Portfolio 1", 101, "Benchmark 1"),
             CreateBenchmark(1, "Portfolio 1", 102, "Benchmark 2")
-        }};
+        }
+        };
 
-        var portfolio2 = new Portfolio { Id = 2, Name = "Portfolio 2", UserID = "other-user", BenchmarkPortfoliosNavigation = new List<Benchmark>
+        var portfolio2 = new Portfolio
+        {
+            Id = 2,
+            Name = "Portfolio 2",
+            UserID = "other-user",
+            BenchmarkPortfoliosNavigation = new List<Benchmark>
         {
             CreateBenchmark(2, "Portfolio 2", 103, "Benchmark 3")
-        }};
+        }
+        };
 
         _portfolioRepositoryMock.Setup(r => r.GetPortfoliosAsync(userId))
             .ReturnsAsync(new List<Portfolio> { portfolio1 });

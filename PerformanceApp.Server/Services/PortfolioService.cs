@@ -53,10 +53,10 @@ namespace PerformanceApp.Server.Services
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync()
         {
-            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+            var portfolios = await _portfolioRepository.GetProperPortfoliosAsync();
 
-            return benchmarkMappings
-                .Select(BenchmarkMapper.MapToPortfolioBenchmarkDTO)
+            return portfolios
+                .SelectMany(PortfolioMapper.MapToPortfolioBenchmarkDTOs)
                 .ToList();
         }
 
