@@ -22,6 +22,7 @@ namespace PerformanceApp.Data.Repositories
             await _context.Portfolios.AddRangeAsync(portfolios);
             await _context.SaveChangesAsync();
         }
+
         public async Task<Portfolio?> GetPortfolioAsync(int portfolioId)
         {
             return await _context.Portfolios
@@ -29,6 +30,7 @@ namespace PerformanceApp.Data.Repositories
                     .ThenInclude(pp => pp.PerformanceTypeNavigation)
                 .SingleOrDefaultAsync(p => p.Id == portfolioId);
         }
+
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names)
         {
             return await _context.Portfolios
@@ -36,22 +38,14 @@ namespace PerformanceApp.Data.Repositories
                 .OfType<Portfolio>()
                 .ToListAsync();
         }
-        private bool IsProperPortfolio(Portfolio p)
-        {
-            return _context.Benchmarks
-                    .Select(b => b.PortfolioId)
-                    .Contains(p.Id);
-        }
+
         public async Task<IEnumerable<Portfolio>> GetProperPortfoliosAsync()
         {
-            var portfolios = await _context.Portfolios
-                .Include(p => p.BenchmarkPortfoliosNavigation)
-                    .ThenInclude(b => b.BenchmarkPortfolioNavigation)
-                .Include(p => p.BenchmarkBenchmarksNavigation)
-                    .ThenInclude(b => b.PortfolioPortfolioNavigation)
-                .ToListAsync();
+            var portfolios = await GetPortfoliosAsync();
+            
+            var filtered = portfolios.Where(p => p.BenchmarksNavigation.Count() > 0);
 
-            return portfolios.Where(IsProperPortfolio);
+            return filtered;
         }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
