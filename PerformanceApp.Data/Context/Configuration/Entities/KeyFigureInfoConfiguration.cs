@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Indexes;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = KeyFigureInfoConstants;
 
 public static class KeyFigureInfoConfiguration
 {
@@ -18,7 +16,7 @@ public static class KeyFigureInfoConfiguration
     {
         entity.HasKey(e => e.Id);
 
-        entity.HasIndex(e => e.Name, Constants.IndexName)
+        entity.HasIndex(e => e.Name, IndexKeyFigureInfo.Name)
             .IsUnique();
     }
 }
