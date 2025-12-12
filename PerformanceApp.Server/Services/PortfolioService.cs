@@ -15,14 +15,12 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync();
         Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId);
         Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId);
-        Task<Benchmark?> GetBenchmarkAsync(int portfolioId);
         Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId);
     }
 
-    public class PortfolioService(IPortfolioRepository portfolioRepository, IBenchmarkRepository benchmarkRepository) : IPortfolioService
+    public class PortfolioService(IPortfolioRepository portfolioRepository) : IPortfolioService
     {
         private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
-        private readonly IBenchmarkRepository _benchmarkRepository = benchmarkRepository;
 
         public async Task<List<PortfolioDTO>> GetPortfolioDTOsAsync()
         {
@@ -62,12 +60,18 @@ namespace PerformanceApp.Server.Services
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId)
         {
-            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
+            var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
 
-            return benchmarkMappings
-                .Where(b => b.PortfolioId == portfolioId)
-                .Select(BenchmarkMapper.MapToPortfolioBenchmarkDTO)
+            if (portfolio == null)
+            {
+                return [];
+            }
+
+            var dtos = PortfolioMapper
+                .MapToPortfolioBenchmarkDTOs(portfolio)
                 .ToList();
+
+            return dtos;
         }
 
         public async Task<List<PortfolioPerformanceDTO>> GetPortfolioCumulativeDayPerformanceDTOsAsync(int portfolioId)
@@ -85,43 +89,29 @@ namespace PerformanceApp.Server.Services
                 .ToList();
         }
 
-        public async Task<Benchmark?> GetBenchmarkAsync(int portfolioId)
-        {
-            var benchmarkMappings = await _benchmarkRepository.GetBenchmarkMappingsAsync();
-            var benchmark = benchmarkMappings.SingleOrDefault(b => b.PortfolioId == portfolioId);
-
-            return benchmark;
-        }
-
         public async Task<List<PortfolioBenchmarkPerformanceDTO>> GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(int portfolioId)
         {
-            var benchmark = await GetBenchmarkAsync(portfolioId);
+            var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
+            if (portfolio == null)
+            {
+                return [];
+            }
 
+            var benchmark = portfolio.BenchmarksNavigation.SingleOrDefault();
             if (benchmark == null)
             {
                 return [];
             }
 
-            var benchmarkId = benchmark.BenchmarkId;
-
-            var portfolioPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
-            var benchmarkPerformance = await GetPortfolioCumulativeDayPerformanceDTOsAsync(benchmarkId);
-
-            var empty = !portfolioPerformance.Any() || !benchmarkPerformance.Any();
+            var portfolioPerformances = portfolio.GetCumulativeDayPerformanceDtos();
+            var benchmarkPerformances = benchmark.GetCumulativeDayPerformanceDtos();
+            var empty = !portfolioPerformances.Any() && !benchmarkPerformances.Any();
             if (empty)
             {
                 return [];
             }
 
-            return portfolioPerformance
-                .Join(
-                    benchmarkPerformance,
-                    PortfolioPerformanceHelper.GetBankday,
-                    PortfolioPerformanceHelper.GetBankday,
-                    PortfolioPerformanceMapper.MapToPortfolioBenchmarkPerformanceDTO
-                )
-                .OrderBy(dto => dto.Bankday)
-                .ToList();
+            return PortfolioPerformanceHelper.Join(portfolioPerformances, benchmarkPerformances);
         }
     }
 
