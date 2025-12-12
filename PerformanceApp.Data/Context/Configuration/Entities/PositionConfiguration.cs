@@ -1,13 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = PositionConstants;
 
 public static class PositionConfiguration
 {
