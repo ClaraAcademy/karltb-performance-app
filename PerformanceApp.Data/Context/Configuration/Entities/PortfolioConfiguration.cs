@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
+using PerformanceApp.Data.Context.Configuration.Constants.Indexes;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = PortfolioConstants;
 
 public static class PortfolioConfiguration
 {
@@ -19,7 +17,7 @@ public static class PortfolioConfiguration
     {
         entity.HasKey(e => e.Id);
 
-        entity.HasIndex(e => e.Name, Constants.IndexName)
+        entity.HasIndex(e => e.Name, IndexPortfolio.Name)
             .IsUnique();
 
         entity.HasOne(p => p.User)
