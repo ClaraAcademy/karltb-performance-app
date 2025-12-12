@@ -26,6 +26,10 @@ public static class PortfolioConfiguration
             .WithMany(u => u.PortfoliosNavigation)
             .HasForeignKey(p => p.UserID)
             .HasConstraintName(FkPortfolio.UserID);
+
+        // Ignore shorthand navigations
+        entity.Ignore(e => e.BenchmarksNavigation);
+        entity.Ignore(e => e.PortfoliosNavigation);
     }
 
 }

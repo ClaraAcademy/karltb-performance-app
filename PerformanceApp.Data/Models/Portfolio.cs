@@ -10,6 +10,10 @@ public partial class Portfolio
 
     public string? UserID { get; set; }
 
+    public IEnumerable<Portfolio> BenchmarksNavigation => BenchmarkPortfoliosNavigation.Select(b => b.BenchmarkPortfolioNavigation);
+
+    public IEnumerable<Portfolio> PortfoliosNavigation => BenchmarkBenchmarksNavigation.Select(b => b.PortfolioPortfolioNavigation);
+
     public virtual ApplicationUser? User { get; set; }
 
     public virtual ICollection<Benchmark> BenchmarkBenchmarksNavigation { get; set; } = [];
