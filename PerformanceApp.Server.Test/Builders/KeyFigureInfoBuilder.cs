@@ -1,9 +1,10 @@
 using PerformanceApp.Data.Models;
+using PerformanceApp.Server.Test.Builders.Interface;
 
 namespace PerformanceApp.Server.Test.Builders;
 
-public class KeyFigureInfoBuilder
-{
+public class KeyFigureInfoBuilder : IBuilder<KeyFigureInfo>
+{ 
     private int _id = 1;
     private string _name = "Default Key Figure";
 
@@ -19,6 +20,23 @@ public class KeyFigureInfoBuilder
         return this;
     }
 
+    public KeyFigureInfo Clone()
+    {
+        return new KeyFigureInfoBuilder()
+            .WithId(_id)
+            .WithName(_name)
+            .Build();
+    }
+
+    public IEnumerable<KeyFigureInfo> Many(int count)
+    {
+        return Enumerable.Range(1, count).Select(i => new KeyFigureInfoBuilder()
+            .WithId(_id + i - 1)
+            .WithName($"{_name} {i}")
+            .Build());
+        
+    }
+
     public KeyFigureInfo Build()
     {
         return new KeyFigureInfo
@@ -27,4 +45,5 @@ public class KeyFigureInfoBuilder
             Name = _name
         };
     }
+
 }
