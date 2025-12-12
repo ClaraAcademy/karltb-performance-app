@@ -1,6 +1,6 @@
 using PerformanceApp.Server.Dtos;
-using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
+using PerformanceApp.Server.Services.Mappers;
 namespace PerformanceApp.Server.Services
 {
     public interface IPerformanceService
@@ -8,88 +8,26 @@ namespace PerformanceApp.Server.Services
         Task<List<PortfolioBenchmarkKeyFigureDTO>> GetPortfolioBenchmarkKeyFigureValues(int portfolioId);
     }
 
-    public class PerformanceService(IKeyFigureValueRepository keyFigureValueRepository, IPortfolioService portfolioService) : IPerformanceService
+    public class PerformanceService(IPortfolioRepository portfolioRepository)
+        : IPerformanceService
     {
-        private readonly IKeyFigureValueRepository KeyFigureValueRepository = keyFigureValueRepository;
-        private readonly IPortfolioService PortfolioService = portfolioService;
-
-        private static PortfolioBenchmarkKeyFigureDTO MapInitial(KeyFigureInfo kfi, PortfolioBenchmarkDTO pb)
-            => new PortfolioBenchmarkKeyFigureDTO
-            {
-                KeyFigureId = kfi.Id,
-                KeyFigureName = kfi.Name,
-                PortfolioId = pb.PortfolioId,
-                PortfolioName = pb.PortfolioName,
-                PortfolioValue = null,
-                BenchmarkId = pb.BenchmarkId,
-                BenchmarkName = pb.BenchmarkName,
-                BenchmarkValue = null
-            };
-
-        private static PortfolioBenchmarkKeyFigureDTO MapFinal(PortfolioBenchmarkKeyFigureDTO c, KeyFigureValue pv, KeyFigureValue bv)
-                => new PortfolioBenchmarkKeyFigureDTO
-                {
-                    KeyFigureId = c.KeyFigureId,
-                    KeyFigureName = c.KeyFigureName,
-                    PortfolioId = c.PortfolioId,
-                    PortfolioName = c.PortfolioName,
-                    PortfolioValue = pv?.Value,
-                    BenchmarkId = c.BenchmarkId,
-                    BenchmarkName = c.BenchmarkName,
-                    BenchmarkValue = bv?.Value
-                };
-
-        private record Key(int PortfolioId, int KeyFigureId);
-
-        private static Key GetPortfolioKey(PortfolioBenchmarkKeyFigureDTO pb) => new(pb.PortfolioId, pb.KeyFigureId);
-        private static Key GetBenchmarkKey(PortfolioBenchmarkKeyFigureDTO pb) => new(pb.BenchmarkId, pb.KeyFigureId);
-        private static Key GetPortfolioKey(KeyFigureValue v) => new(v.PortfolioId, v.KeyFigureId);
-        private static Key GetBenchmarkKey(KeyFigureValue v) => new(v.PortfolioId, v.KeyFigureId);
-
+        private readonly IPortfolioRepository _portfolioRepository = portfolioRepository;
 
         public async Task<List<PortfolioBenchmarkKeyFigureDTO>> GetPortfolioBenchmarkKeyFigureValues(int portfolioId)
         {
-            var dtos = await PortfolioService.GetPortfolioBenchmarksAsync(portfolioId);
+            var portfolio = await _portfolioRepository.GetPortfolioAsync(portfolioId);
 
-            if (dtos.Count != 1)
+            if (portfolio == null)
             {
                 return [];
             }
 
-            var dto = dtos.Single();
+            var dtos =
+                from benchmark in portfolio.BenchmarksNavigation
+                from kfi in portfolio.KeyFigureValuesNavigation
+                select PortfolioMapper.MapToPortfolioBenchmarkKeyFigureDTO(portfolio, benchmark, kfi);
 
-            var benchmarkId = dto.BenchmarkId;
-            var keyFigureInfos = await KeyFigureValueRepository.GetKeyFigureInfosAsync();
-
-            if (!keyFigureInfos.Any())
-            {
-                return [];
-            }
-
-            var portfolioKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(portfolioId);
-            var benchmarkKeyFigureValues = await KeyFigureValueRepository.GetKeyFigureValuesAsync(benchmarkId);
-
-            var empty = !portfolioKeyFigureValues.Any() && !benchmarkKeyFigureValues.Any();
-
-            if (empty)
-            {
-                return [];
-            }
-
-            var combinations = keyFigureInfos.Select(kfi => MapInitial(kfi, dto)).ToList();
-
-            return (
-                from c in combinations
-
-                join pv in portfolioKeyFigureValues on GetPortfolioKey(c) equals GetPortfolioKey(pv) into psg
-                from pv in psg.DefaultIfEmpty() // Left Join portfolio values
-
-                join bv in benchmarkKeyFigureValues on GetBenchmarkKey(c) equals GetBenchmarkKey(bv) into bsg
-                from bv in bsg.DefaultIfEmpty() // Left Join benchmark values
-
-                select MapFinal(c, pv, bv)
-            ).ToList();
+            return dtos.ToList();
         }
     }
-
 }
