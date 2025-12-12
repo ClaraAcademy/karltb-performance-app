@@ -9,14 +9,12 @@ namespace PerformanceApp.Server.Test.Services;
 public class PortfolioServiceTest
 {
     private readonly Mock<IPortfolioRepository> _portfolioRepositoryMock;
-    private readonly Mock<IBenchmarkRepository> _benchmarkRepositoryMock;
     private readonly PortfolioService _portfolioService;
 
     public PortfolioServiceTest()
     {
         _portfolioRepositoryMock = new Mock<IPortfolioRepository>();
-        _benchmarkRepositoryMock = new Mock<IBenchmarkRepository>();
-        _portfolioService = new PortfolioService(_portfolioRepositoryMock.Object, _benchmarkRepositoryMock.Object);
+        _portfolioService = new PortfolioService(_portfolioRepositoryMock.Object);
     }
 
 
@@ -87,38 +85,6 @@ public class PortfolioServiceTest
         return Enumerable.Range(1, count)
             .Select(i => CreatePortfolioPerformance(new DateOnly(2025, 1, i), i * 100m, type))
             .ToList();
-    }
-
-    [Fact]
-    public async Task GetPortfolioDTOsAsync_ReturnsExpectedResults()
-    {
-        // Arrange
-        var portfolios = GetPortfolios(2);
-
-        _portfolioRepositoryMock.Setup(r => r.GetProperPortfoliosAsync())
-            .ReturnsAsync(portfolios);
-
-        // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync();
-
-        // Assert
-        Assert.Equal(2, result.Count);
-        Assert.Equal("Portfolio 1", result[0].PortfolioName);
-        Assert.Equal("Portfolio 2", result[1].PortfolioName);
-    }
-
-    [Fact]
-    public async Task GetPortfolioDTOsAsync_ReturnsEmptyList_WhenNoPortfolios()
-    {
-        // Arrange
-        _portfolioRepositoryMock.Setup(r => r.GetProperPortfoliosAsync())
-            .ReturnsAsync([]);
-
-        // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync();
-
-        // Assert
-        Assert.Empty(result);
     }
 
     [Fact]
@@ -441,49 +407,4 @@ public class PortfolioServiceTest
         Assert.Empty(result);
     }
 
-    [Fact]
-    public async Task GetPortfolioDTOSAsync_ByUserId_ReturnsExpectedResults()
-    {
-        // Arrange
-        var userId = "user-123";
-        var nExpected = 2;
-        var portfolio1 = new Portfolio { Id = 1, Name = "Portfolio 1", UserID = userId };
-        var portfolio2 = new Portfolio { Id = 2, Name = "Portfolio 2", UserID = userId };
-        var portfolio3 = new Portfolio { Id = 3, Name = "Portfolio 3", UserID = "other-user" };
-
-        var portfolios = new List<Portfolio> { portfolio1, portfolio2, portfolio3 };
-
-        _portfolioRepositoryMock.Setup(r => r.GetProperPortfoliosAsync())
-            .ReturnsAsync(portfolios);
-        _portfolioRepositoryMock.Setup(r => r.GetPortfoliosAsync(userId))
-            .ReturnsAsync(portfolios.Where(p => p.UserID == userId).ToList());
-
-        // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync(userId);
-
-        // Assert
-        var nActual = result.Count;
-        Assert.Equal(nExpected, nActual);
-        for (int i = 1; i <= nExpected; i++)
-        {
-            Assert.Contains(result, p => p.PortfolioName == $"Portfolio {i}");
-            Assert.Contains(result, p => p.PortfolioId == i);
-        }
-    }
-
-    [Fact]
-    public async Task GetPortfolioDTOSAsync_ByUserId_ReturnsEmptyList_WhenNoMatchingPortfolios()
-    {
-        // Arrange
-        var userId = "nonexistent-user";
-
-        _portfolioRepositoryMock.Setup(r => r.GetProperPortfoliosAsync())
-            .ReturnsAsync(new List<Portfolio>());
-
-        // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync(userId);
-
-        // Assert
-        Assert.Empty(result);
-    }
 }
