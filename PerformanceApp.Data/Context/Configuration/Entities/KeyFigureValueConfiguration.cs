@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = KeyFigureValueConstants;
 
 public static class KeyFigureValueConfiguration
 {
@@ -20,7 +18,7 @@ public static class KeyFigureValueConfiguration
         entity.HasKey(e => new { e.PortfolioId, e.KeyFigureId });
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType);
+            .HasColumnType(Value.SqlType);
 
         entity.HasOne(d => d.KeyFigureInfoNavigation)
             .WithMany(p => p.KeyFigureValuesNavigation)

@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = PositionValueConstants;
 
 public static class PositionValueConfiguration
 {
@@ -20,7 +19,7 @@ public static class PositionValueConfiguration
         entity.HasKey(e => new { e.PositionId, e.Bankday });
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType);
+            .HasColumnType(Value.SqlType);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.PositionValuesNavigation)

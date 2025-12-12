@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PerformanceApp.Data.Context.Configuration.Constants.Entities;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = InstrumentPerformanceConstants;
 
 public static class InstrumentPerformanceConfiguration
 {
@@ -20,7 +18,7 @@ public static class InstrumentPerformanceConfiguration
         entity.HasKey(e => new { e.InstrumentId, e.PeriodStart, e.PeriodEnd, e.TypeId });
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType);
+            .HasColumnType(Value.SqlType);
 
         entity.HasOne(d => d.InstrumentNavigation)
             .WithMany(p => p.InstrumentPerformancesNavigation)

@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context.Configuration.Constants.Entities;
 using PerformanceApp.Data.Context.Configuration.Constants.Fks;
+using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 
 namespace PerformanceApp.Data.Context.Configuration.Entities;
-
-using Constants = PortfolioValueConstants;
 
 public static class PortfolioValueConfiguration
 {
@@ -21,7 +20,7 @@ public static class PortfolioValueConfiguration
         entity.HasKey(e => new { e.PortfolioId, e.Bankday });
 
         entity.Property(e => e.Value)
-            .HasColumnType(Constants.ValueColumnType);
+            .HasColumnType(Value.SqlType);
 
         entity.HasOne(d => d.BankdayNavigation)
             .WithMany(p => p.PortfolioValuesNavigation)
