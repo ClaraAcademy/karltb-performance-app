@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Server.Controllers;
-using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 
 namespace PerformanceApp.Server.Test.Controllers;

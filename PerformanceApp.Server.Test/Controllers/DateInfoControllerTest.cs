@@ -1,8 +1,8 @@
 using PerformanceApp.Server.Controllers;
-using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using PerformanceApp.Data.Dtos;
 namespace PerformanceApp.Server.Test.Controllers;
 
 public class DateInfoControllerTest : ControllerTestBase

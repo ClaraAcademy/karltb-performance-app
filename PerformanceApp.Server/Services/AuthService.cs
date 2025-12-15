@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Auth.Result;
-using PerformanceApp.Server.Dtos;
 
 namespace PerformanceApp.Server.Services;
 

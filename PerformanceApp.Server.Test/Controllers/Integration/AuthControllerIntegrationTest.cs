@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Seeder.Constants;
-using PerformanceApp.Server.Dtos;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 

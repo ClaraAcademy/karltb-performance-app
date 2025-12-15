@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PerformanceApp.Server.Dtos;
+namespace PerformanceApp.Data.Dtos;
 public class PositionDTO
 {
     public int? PortfolioId { get; set; }

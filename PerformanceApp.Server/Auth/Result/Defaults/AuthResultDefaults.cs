@@ -1,5 +1,5 @@
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Server.Auth.Constants;
-using PerformanceApp.Server.Dtos;
 
 namespace PerformanceApp.Server.Auth.Result.Defaults;
 

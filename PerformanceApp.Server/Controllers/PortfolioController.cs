@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PerformanceApp.Server.Dtos;
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Server.Services;
 
 namespace PerformanceApp.Server.Controllers;

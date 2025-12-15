@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.Dtos;
+namespace PerformanceApp.Data.Dtos;
 
 public class PortfolioBenchmarkKeyFigureDTO
 {

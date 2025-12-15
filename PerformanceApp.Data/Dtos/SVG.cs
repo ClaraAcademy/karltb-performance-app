@@ -1,7 +1,7 @@
 using System.Xml.Linq;
 using System.Globalization;
 
-namespace PerformanceApp.Server.Dtos;
+namespace PerformanceApp.Data.Dtos;
 
 public class SVG
 {
