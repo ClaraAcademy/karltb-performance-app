@@ -1,6 +1,6 @@
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 
 namespace PerformanceApp.Seeder.Entities;
 

@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Seeder.Services;
 using PerformanceApp.Seeder.Utilities;

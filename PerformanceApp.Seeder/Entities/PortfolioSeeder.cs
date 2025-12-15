@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Repositories;
 using PerformanceApp.Seeder.Constants;

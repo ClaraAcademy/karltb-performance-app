@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Seeder.Entities;
 
 namespace PerformanceApp.Seeder;

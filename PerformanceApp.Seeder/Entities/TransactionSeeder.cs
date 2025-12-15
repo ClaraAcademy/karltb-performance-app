@@ -1,5 +1,5 @@
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Seeder.Constants;

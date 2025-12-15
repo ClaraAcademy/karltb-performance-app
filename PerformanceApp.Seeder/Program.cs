@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Data;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 
 namespace PerformanceApp.Seeder;
 

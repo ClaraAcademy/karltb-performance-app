@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PerformanceApp.Data.Context;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Infrastructure.Repositories;
