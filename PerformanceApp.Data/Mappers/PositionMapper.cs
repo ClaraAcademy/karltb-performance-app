@@ -2,7 +2,7 @@ using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Services.Helpers;
 
-namespace PerformanceApp.Server.Services.Mappers;
+namespace PerformanceApp.Data.Mappers;
 
 public static class PositionMapper
 {

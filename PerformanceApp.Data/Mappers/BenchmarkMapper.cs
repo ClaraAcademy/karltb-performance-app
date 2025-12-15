@@ -1,7 +1,7 @@
 using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Services.Mappers;
+namespace PerformanceApp.Data.Mappers;
 
 public static class BenchmarkMapper
 {

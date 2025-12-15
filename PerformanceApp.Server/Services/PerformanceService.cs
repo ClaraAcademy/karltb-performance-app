@@ -1,6 +1,6 @@
 using PerformanceApp.Data.Repositories;
-using PerformanceApp.Server.Services.Mappers;
 using PerformanceApp.Data.Dtos;
+using PerformanceApp.Data.Mappers;
 namespace PerformanceApp.Server.Services
 {
     public interface IPerformanceService
