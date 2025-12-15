@@ -25,24 +25,25 @@ namespace PerformanceApp.Data.Repositories
 
         public async Task<Portfolio?> GetPortfolioAsync(int portfolioId)
         {
-            return await _context.Portfolios
-                .Include(p => p.PortfolioPerformancesNavigation)
-                    .ThenInclude(pp => pp.PerformanceTypeNavigation)
-                .SingleOrDefaultAsync(p => p.Id == portfolioId);
+            var portfolios = await GetPortfoliosAsync();
+
+            return portfolios.SingleOrDefault(p => p.Id == portfolioId);
         }
 
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync(List<string> names)
         {
-            return await _context.Portfolios
+            var portfolios = await GetPortfoliosAsync();
+
+            return portfolios
                 .Where(p => names.Contains(p.Name))
                 .OfType<Portfolio>()
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<IEnumerable<Portfolio>> GetProperPortfoliosAsync()
         {
             var portfolios = await GetPortfoliosAsync();
-            
+
             var filtered = portfolios.Where(p => p.BenchmarksNavigation.Count() > 0);
 
             return filtered;
@@ -51,6 +52,10 @@ namespace PerformanceApp.Data.Repositories
         public async Task<IEnumerable<Portfolio>> GetPortfoliosAsync()
         {
             return await _context.Portfolios
+                .Include(p => p.KeyFigureValuesNavigation)
+                    .ThenInclude(kfv => kfv.KeyFigureInfoNavigation)
+                .Include(p => p.PortfolioPerformancesNavigation)
+                    .ThenInclude(pp => pp.PerformanceTypeNavigation)
                 .Include(p => p.PortfolioPortfolioBenchmarkEntityNavigation)
                     .ThenInclude(b => b.BenchmarkPortfolioNavigation)
                 .Include(p => p.BenchmarkPortfolioBenchmarkEntityNavigation)
