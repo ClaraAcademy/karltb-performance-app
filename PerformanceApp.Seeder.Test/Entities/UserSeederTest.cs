@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 
-namespace PerformanceApp.Data.Test.Seeding.Entities;
+namespace PerformanceApp.Seeder.Test.Entities;
 
 [Collection(SeedingCollection.Name)]
 public class UserSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)

@@ -3,7 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Constants;
 using PerformanceApp.Data.Seeding.Dtos;
 
-namespace PerformanceApp.Data.Test.Seeding.Entities;
+namespace PerformanceApp.Seeder.Test.Entities;
 
 [Collection(SeedingCollection.Name)]
 public class StagingSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)

@@ -1,45 +1,43 @@
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Seeding.Constants;
 
-namespace PerformanceApp.Data.Test.Seeding.Entities;
+namespace PerformanceApp.Seeder.Test.Entities;
 
 [Collection(SeedingCollection.Name)]
-public class InstrumentSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
+public class InstrumentTypeSeederTest(DatabaseFixture fixture) : BaseSeederTest(fixture)
 {
     private readonly DatabaseFixture _fixture = fixture;
     [Fact]
-    public async Task Seed_AddsInstruments()
+    public async Task Seed_AddsInstrumentTypes()
     {
         // Arrange
-        var expected = InstrumentData.Instruments;
+        var expected = InstrumentTypeData.InstrumentTypes;
 
         // Act
 
-        var instruments = await _context.Instruments.ToListAsync();
-        var actual = instruments
-            .Select(i => i.Name)
+        var instrumentTypes = await _context.InstrumentTypes.ToListAsync();
+        var actual = instrumentTypes
+            .Select(it => it.Name)
             .OrderBy(n => n)
             .ToList();
 
         // Assert
-        Assert.NotNull(actual);
         Assert.NotEmpty(actual);
         Assert.Equal(expected.Count, actual.Count);
-        Assert.Equal(expected, actual!);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
     public async Task Seed_IsIdempotent()
     {
         // Arrange
-        var initialCount = await _context.Instruments.CountAsync();
+        var initialCount = await _context.InstrumentTypes.CountAsync();
 
         // Act
         await _fixture.Seed();
 
         // Assert
-        var finalCount = await _context.Instruments.CountAsync();
+        var finalCount = await _context.InstrumentTypes.CountAsync();
         Assert.Equal(initialCount, finalCount);
     }
-
 }

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Entities;
+using PerformanceApp.Seeder.Entities;
 
-namespace PerformanceApp.Data.Test.Seeding;
+namespace PerformanceApp.Seeder.Test;
 
 public class DatabaseFixture : IAsyncLifetime
 {

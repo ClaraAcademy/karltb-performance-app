@@ -1,4 +1,4 @@
-namespace PerformanceApp.Data.Test.Seeding;
+namespace PerformanceApp.Seeder.Test;
 
 [CollectionDefinition(Name)]
 public class SeedingCollection : ICollectionFixture<DatabaseFixture>

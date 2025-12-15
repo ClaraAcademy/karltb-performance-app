@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Data.Test.Seeding;
+namespace PerformanceApp.Seeder.Test;
 
 public class BaseSeederTest : IDisposable
 {
