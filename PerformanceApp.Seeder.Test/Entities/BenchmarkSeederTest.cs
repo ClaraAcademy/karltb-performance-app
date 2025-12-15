@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Constants;
-using PerformanceApp.Data.Seeding.Dtos;
+using PerformanceApp.Seeder.Constants;
+using PerformanceApp.Seeder.Dtos;
 
 namespace PerformanceApp.Seeder.Test.Entities;
 

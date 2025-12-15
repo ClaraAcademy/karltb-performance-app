@@ -1,5 +1,5 @@
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Helpers;

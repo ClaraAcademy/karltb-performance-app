@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Seeder.Constants;
 
 namespace PerformanceApp.Seeder.Test.Entities;
 
