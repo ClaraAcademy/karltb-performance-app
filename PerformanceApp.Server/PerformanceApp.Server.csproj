@@ -33,7 +33,7 @@
     <ProjectReference Include="..\performanceapp.client\performanceapp.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\PerformanceApp.Infrastructure\PerformanceApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\PerformanceApp.Seeder\PerformanceApp.Seeder.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
