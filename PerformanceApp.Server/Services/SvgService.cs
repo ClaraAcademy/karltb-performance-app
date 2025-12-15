@@ -1,5 +1,5 @@
 using PerformanceApp.Data.Mappers;
-using PerformanceApp.Server.Dtos;
+using PerformanceApp.Data.Dtos;
 
 namespace PerformanceApp.Server.Services;
 
