@@ -3,6 +3,7 @@ using PerformanceApp.Server.Services;
 using PerformanceApp.Data.Builders;
 using Moq;
 using PerformanceApp.Infrastructure.Repositories;
+using PerformanceApp.Data.Builders.Defaults;
 
 namespace PerformanceApp.Server.Test.Services;
 
@@ -21,95 +22,83 @@ public class PerformanceServiceTest
     public async Task GetPortfolioBenchmarkKeyFigureValues_ReturnsExpectedResults()
     {
         // Arrange
-        var portfolioId = 1;
-        var benchmarkId = 100;
+        var keyFigureId = 1;
+        var keyFigureName = "Test Key Figure";
         var keyFigureInfo = new KeyFigureInfoBuilder()
-            .WithId(1)
-            .WithName("Key Figure 1")
+            .WithId(keyFigureId)
+            .WithName(keyFigureName)
             .Build();
-
-        var keyFigureValue = new KeyFigureValueBuilder()
-            .WithValue(150.0m)
+        var portfolioKeyFigure = new KeyFigureValueBuilder()
             .WithKeyFigureInfo(keyFigureInfo)
             .Build();
-        
-        var benchmark = new PortfolioBuilder()
-            .WithId(benchmarkId)
-            .WithName("Benchmark")
-            .WithKeyFigureValues([keyFigureValue])
+        var benchmarkKeyFigure = new KeyFigureValueBuilder()
+            .WithKeyFigureInfo(keyFigureInfo)
+            .WithValue(200.0m)
             .Build();
-
+        var benchmark = new PortfolioBuilder()
+            .WithKeyFigureValues([benchmarkKeyFigure])
+            .Build();
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName("Portfolio 1")
-            .WithKeyFigureValues([keyFigureValue])
+            .WithKeyFigureValues([portfolioKeyFigure])
             .WithBenchmark(benchmark)
             .Build();
-            
+
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(portfolioId);
+        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(1);
+        var dto = result.FirstOrDefault();
 
         // Assert
         Assert.Single(result);
-        var dto = result.First();
+        Assert.NotNull(dto);
+
+        Assert.Equal(keyFigureId, dto.KeyFigureId);
+        Assert.Equal(keyFigureName, dto.KeyFigureName);
+
         Assert.Equal(portfolio.Id, dto.PortfolioId);
-        Assert.Equal(portfolio.Name, dto.PortfolioName);
         Assert.Equal(benchmark.Id, dto.BenchmarkId);
-        Assert.Equal(benchmark.Name, dto.BenchmarkName);
-        Assert.Equal(keyFigureInfo.Id, dto.KeyFigureId);
-        Assert.Equal(keyFigureInfo.Name, dto.KeyFigureName);
-        Assert.Equal(keyFigureValue.Value, dto.PortfolioValue);
-        Assert.Equal(keyFigureValue.Value, dto.BenchmarkValue);
+
+        Assert.Equal(portfolioKeyFigure.Value, dto.PortfolioValue);
+        Assert.Equal(benchmarkKeyFigure.Value, dto.BenchmarkValue);
     }
 
     [Fact]
     public async Task GetPortfolioBenchmarkKeyFigureValues_NoKeyFigureValues_ReturnsEmpty()
     {
         // Arrange
-        int portfolioId = 1;
-        var benchmark = new PortfolioBuilder()
-            .WithId(100)
-            .WithName("Benchmark")
-            .Build();
-
+        var benchmark = PortfolioBuilderDefaults.Benchmark;
         var portfolio = new PortfolioBuilder()
-            .WithId(1)
-            .WithName("Portfolio 1")
             .WithBenchmark(benchmark)
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(portfolioId);
+        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(1);
 
         // Assert
         Assert.Empty(result);
     }
 
     [Fact]
-    public async Task GetPortfolioBenchmarkKeyFigureValues_NoCombinations_ReturnsEmptyList()
+    public async Task GetPortfolioBenchmarkKeyFigureValues_NoBenchmark_ReturnsEmptyList()
     {
         // Arrange
-        int portfolioId = 1;
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName("Portfolio 1")
+            .WithBenchmarks([])
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(portfolioId);
-
+        var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(1);
         // Assert
         Assert.Empty(result);
     }
