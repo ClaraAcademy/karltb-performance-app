@@ -21,15 +21,26 @@ public abstract class BaseControllerIntegrationTests(WebApplicationFactory<Progr
 
     protected static IJwtService GetJwtService(WebApplicationFactory<Program> factory)
     {
-        using var scope = factory.Services.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<IJwtService>();
+        using var scope = factory
+            .Services
+            .CreateScope();
+        return scope
+            .ServiceProvider
+            .GetRequiredService<IJwtService>();
     }
 
     private static ApplicationUser GetTestUser(WebApplicationFactory<Program> factory)
     {
-        using var scope = factory.Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        var user = userManager.FindByNameAsync(UserData.UsernameB).GetAwaiter().GetResult();
+        using var scope = factory
+            .Services
+            .CreateScope();
+        var userManager = scope
+            .ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
+        var user = userManager
+            .FindByNameAsync(UserData.UsernameB)
+            .GetAwaiter()
+            .GetResult();
         return user!;
     }
 

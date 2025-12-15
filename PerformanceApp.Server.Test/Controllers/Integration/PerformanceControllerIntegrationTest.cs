@@ -6,7 +6,7 @@ namespace PerformanceApp.Server.Test.Controllers.Integration;
 public class PerformanceControllerIntegrationTest(WebApplicationFactory<Program> factory, DatabaseFixture fixture) 
     : BaseControllerIntegrationTests(factory, fixture)
 {
-    private readonly string Endpoint = "api/performance?portfolioId=1";
+    private readonly string Endpoint = "api/performance?portfolioId=3";
 
     [Fact]
     public async Task GetKeyFigures_Unauthenticated_Returns_Unauthorized()
