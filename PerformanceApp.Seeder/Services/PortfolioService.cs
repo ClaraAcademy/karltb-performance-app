@@ -1,5 +1,5 @@
-using PerformanceApp.Data.Context;
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Context;
+using PerformanceApp.Infrastructure.Repositories;
 
 namespace PerformanceApp.Seeder.Services;
 
