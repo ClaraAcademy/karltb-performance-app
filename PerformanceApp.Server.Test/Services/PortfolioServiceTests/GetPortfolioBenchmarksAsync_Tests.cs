@@ -2,6 +2,7 @@ using Moq;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Test.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
+using Xunit.Sdk;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests;
 
@@ -66,7 +67,7 @@ public class GetPortfolioBenchmarksAsync_Tests() : PortfolioServiceTestFixture()
         var portfolioName = "Portfolio 1";
         var benchmarkName = "Benchmark 1";
 
-        var benchmarks = new PortfolioBuilder()
+        var benchmark = new PortfolioBuilder()
             .WithId(benchmarkId)
             .WithName(benchmarkName)
             .Build();
@@ -74,12 +75,12 @@ public class GetPortfolioBenchmarksAsync_Tests() : PortfolioServiceTestFixture()
         var portfolio = new PortfolioBuilder()
             .WithId(portfolioId)
             .WithName(portfolioName)
-            .WithBenchmarks([benchmarks])
+            .WithBenchmark(benchmark)
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetProperPortfoliosAsync())
-            .ReturnsAsync([portfolio]);
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
+            .ReturnsAsync(portfolio);
 
         // Act
         var result = await _portfolioService.GetPortfolioBenchmarksAsync(portfolioId);
@@ -111,11 +112,11 @@ public class GetPortfolioBenchmarksAsync_Tests() : PortfolioServiceTestFixture()
         var portfolio = new PortfolioBuilder()
             .WithId(portfolioId)
             .WithName(portfolioName)
-            .WithBenchmarks([benchmark])
+            .WithBenchmark(benchmark)
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfoliosAsync(userId))
+            .Setup(r => r.GetPortfoliosAsync(It.IsAny<string>()))
             .ReturnsAsync([portfolio]);
 
         // Act

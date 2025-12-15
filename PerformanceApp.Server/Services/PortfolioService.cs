@@ -44,18 +44,24 @@ namespace PerformanceApp.Server.Services
         {
             var portfolios = await _portfolioRepository.GetPortfoliosAsync(userId);
 
-            return portfolios
-                .SelectMany(PortfolioMapper.MapToPortfolioBenchmarkDTOs)
-                .ToList();
+            if (portfolios == null || !portfolios.Any())
+            {
+                return [];
+            }
+
+            return PortfolioMapper.MapToPortfolioBenchmarkDTOs(portfolios);
         }
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync()
         {
             var portfolios = await _portfolioRepository.GetProperPortfoliosAsync();
 
-            return portfolios
-                .SelectMany(PortfolioMapper.MapToPortfolioBenchmarkDTOs)
-                .ToList();
+            if (portfolios == null || !portfolios.Any())
+            {
+                return [];
+            }
+
+            return PortfolioMapper.MapToPortfolioBenchmarkDTOs(portfolios);
         }
 
         public async Task<List<PortfolioBenchmarkDTO>> GetPortfolioBenchmarksAsync(int portfolioId)

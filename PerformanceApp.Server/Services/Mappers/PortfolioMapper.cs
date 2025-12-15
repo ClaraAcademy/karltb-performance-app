@@ -38,6 +38,12 @@ public static class PortfolioMapper
             .Select(benchmark => MapToPortfolioBenchmarkDTO(portfolio, benchmark))
             .ToList();
     }
+    public static List<PortfolioBenchmarkDTO> MapToPortfolioBenchmarkDTOs(IEnumerable<Portfolio> portfolios)
+    {
+        return portfolios
+            .SelectMany(MapToPortfolioBenchmarkDTOs)
+            .ToList();
+    }
 
     private static PortfolioDTO MapToPortfolioDTO(int id, string name)
     {
