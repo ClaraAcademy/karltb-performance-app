@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PerformanceApp.Data.Context.Configuration.Constants.Columns;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Context.Configuration.Columns;
 using PerformanceApp.Infrastructure.Context.Configuration.Constants.Context;
