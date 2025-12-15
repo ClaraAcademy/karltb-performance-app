@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PerformanceApp.Data\PerformanceApp.Data.csproj" />
-    <ProjectReference Include="..\PerformanceApp.Seeder\PerformanceApp.Seeder.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
