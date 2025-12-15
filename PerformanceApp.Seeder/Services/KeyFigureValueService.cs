@@ -3,6 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Seeder.Utilities;
+using PerformanceApp.Data.Constants.PerformanceType;
 
 namespace PerformanceApp.Seeder.Services;
 
@@ -235,7 +236,7 @@ public class KeyFigureValueService(PadbContext context) : IKeyFigureValueService
 
         var performances = await _portfolioPerformanceRepository.GetPortfolioPerformancesAsync();
         var halfYearPerformances = performances
-            .Where(pp => pp.PerformanceTypeNavigation.Name == PerformanceTypeData.HalfYearPerformance)
+            .Where(pp => pp.PerformanceTypeNavigation.Name == PerformanceTypeConstants.HalfYear)
             .Select(MapToKeyFigureValue)
             .ToList();
 

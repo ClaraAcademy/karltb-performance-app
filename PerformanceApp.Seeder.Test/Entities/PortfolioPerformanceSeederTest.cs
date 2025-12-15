@@ -35,7 +35,6 @@ public class PortfolioPerformanceSeederTest(DatabaseFixture fixture) : BaseSeede
             .ToList();
 
         // Act
-
         var portfolioPerformances = await _context
             .PortfolioPerformances
             .Include(pp => pp.PortfolioNavigation)

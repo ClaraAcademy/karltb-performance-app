@@ -3,6 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Data.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
+using PerformanceApp.Data.Constants.PerformanceType;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests;
 
@@ -20,7 +21,7 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
         var benchmarkName = "Benchmark 1";
         var performanceType = new PerformanceTypeBuilder()
             .WithId(performanceTypeId)
-            .WithName(PerformanceTypeData.CumulativeDayPerformance)
+            .WithName(PerformanceTypeConstants.CumulativeDay)
             .Build();
         var portfolioPerformances = new List<PortfolioPerformance>
         {

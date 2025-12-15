@@ -30,7 +30,7 @@ public class PerformanceTypeSeeder(PadbContext context)
             return;
         }
 
-        var raw = PerformanceTypeData.GetPerformanceTypes();
+        var raw = PerformanceTypeData.PerformanceTypes;
 
         var performanceTypeInfos = raw.Select(MapToPerformanceTypeInfo).ToList();
 

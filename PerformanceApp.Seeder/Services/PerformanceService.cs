@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Constants.PerformanceType;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;
@@ -29,19 +30,19 @@ public class PerformanceService(PadbContext context) : IPerformanceService
     }
     public async Task<int> GetCumulativeDayPerformanceIdAsync()
     {
-        return await GetPerformanceIdAsync(PerformanceTypeData.CumulativeDayPerformance);
+        return await GetPerformanceIdAsync(PerformanceTypeConstants.CumulativeDay);
     }
     public async Task<int> GetDayPerformanceIdAsync()
     {
-        return await GetPerformanceIdAsync(PerformanceTypeData.DayPerformance);
+        return await GetPerformanceIdAsync(PerformanceTypeConstants.Day);
     }
     public async Task<int> GetHalfYearPerformanceIdAsync()
     {
-        return await GetPerformanceIdAsync(PerformanceTypeData.HalfYearPerformance);
+        return await GetPerformanceIdAsync(PerformanceTypeConstants.HalfYear);
     }
     public async Task<int> GetMonthPerformanceIdAsync()
     {
-        return await GetPerformanceIdAsync(PerformanceTypeData.MonthPerformance);
+        return await GetPerformanceIdAsync(PerformanceTypeConstants.Month);
     }
     public decimal GetPerformanceValue(decimal current, decimal previous)
     {
