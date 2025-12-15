@@ -2,6 +2,7 @@ using Moq;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
+using PerformanceApp.Data.Builders.Defaults;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests;
 
@@ -11,7 +12,7 @@ public class PortfolioDtosAsync_Tests() : PortfolioServiceTestFixture
     public async Task GetPortfolioDTOsAsync_ReturnsExpectedResults()
     {
         // Arrange
-        var expected = new PortfolioBuilder().Build();
+        var expected = PortfolioBuilderDefaults.Portfolio;
 
         _portfolioRepositoryMock
             .Setup(r => r.GetProperPortfoliosAsync())
@@ -46,17 +47,16 @@ public class PortfolioDtosAsync_Tests() : PortfolioServiceTestFixture
     public async Task GetPortfolioDTOSAsync_ByUserId_ReturnsExpectedResults()
     {
         // Arrange
-        var userId = "user-123";
         var expected = new PortfolioBuilder()
-            .WithUser(new ApplicationUser { Id = userId })
+            .WithUser(ApplicationUserBuilderDefaults.User)
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfoliosAsync(userId))
+            .Setup(r => r.GetPortfoliosAsync(It.IsAny<string>()))
             .ReturnsAsync([expected]);
 
         // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync(userId);
+        var result = await _portfolioService.GetPortfolioDTOsAsync("some-user-id");
         var actual = result.Single();
 
         // Assert
@@ -69,14 +69,12 @@ public class PortfolioDtosAsync_Tests() : PortfolioServiceTestFixture
     public async Task GetPortfolioDTOSAsync_ByUserId_ReturnsEmptyList_WhenNoMatchingPortfolios()
     {
         // Arrange
-        var userId = "nonexistent-user";
-
         _portfolioRepositoryMock
-            .Setup(r => r.GetProperPortfoliosAsync())
+            .Setup(r => r.GetPortfoliosAsync(It.IsAny<string>()))
             .ReturnsAsync([]);
 
         // Act
-        var result = await _portfolioService.GetPortfolioDTOsAsync(userId);
+        var result = await _portfolioService.GetPortfolioDTOsAsync("some-user-id");
 
         // Assert
         Assert.Empty(result);
