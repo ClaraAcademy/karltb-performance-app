@@ -81,7 +81,7 @@ public class PortfolioBuilder : IBuilder<Portfolio>
                 Id = i,
                 Name = $"Portfolio {i}",
                 User = _user,
-                PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
+                BenchmarksNavigation = _benchmarks,
                 KeyFigureValuesNavigation = _keyFigureValues,
                 PortfolioPerformancesNavigation = _performances
             }
@@ -97,7 +97,7 @@ public class PortfolioBuilder : IBuilder<Portfolio>
             Id = _id,
             Name = _name,
             User = _user,
-            PortfolioPortfolioBenchmarkEntityNavigation = _benchmarkEntities,
+            BenchmarksNavigation = _benchmarks,
             KeyFigureValuesNavigation = _keyFigureValues,
             PortfolioPerformancesNavigation = _performances
         };
