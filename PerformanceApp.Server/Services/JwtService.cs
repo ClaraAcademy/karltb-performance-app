@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Jwt;
-using PerformanceApp.Server.Jwt.Keys;
-using PerformanceApp.Server.Jwt.Keys.Constants;
-using PerformanceApp.Server.Jwt.Validation;
+using PerformanceApp.Server.Auth.Jwt;
+using PerformanceApp.Server.Auth.Jwt.Keys;
+using PerformanceApp.Server.Auth.Jwt.Keys.Constants;
+using PerformanceApp.Server.Auth.Jwt.Validation;
 
 namespace PerformanceApp.Server.Services;
 

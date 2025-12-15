@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Jwt.Claims;
+namespace PerformanceApp.Server.Auth.Jwt.Claims;
 
 public static class ClaimFactory
 {

@@ -1,11 +1,11 @@
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Jwt.Claims;
-using PerformanceApp.Server.Jwt.Credentials;
-using PerformanceApp.Server.Jwt.Duration;
+using PerformanceApp.Server.Auth.Jwt.Claims;
+using PerformanceApp.Server.Auth.Jwt.Credentials;
+using PerformanceApp.Server.Auth.Jwt.Duration;
 
-namespace PerformanceApp.Server.Jwt;
+namespace PerformanceApp.Server.Auth.Jwt;
 
 public class JwtTokenFactory
 {

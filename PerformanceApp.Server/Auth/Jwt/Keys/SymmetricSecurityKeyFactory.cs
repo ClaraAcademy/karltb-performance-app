@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace PerformanceApp.Server.Jwt.Keys;
+namespace PerformanceApp.Server.Auth.Jwt.Keys;
 
 public static class SymmetricSecurityKeyFactory
 {

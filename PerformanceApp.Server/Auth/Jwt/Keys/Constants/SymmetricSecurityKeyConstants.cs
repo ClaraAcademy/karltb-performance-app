@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.Jwt.Keys.Constants;
+namespace PerformanceApp.Server.Auth.Jwt.Keys.Constants;
 
 public static class SymmetricSecurityKeyConstants
 {

@@ -1,7 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
-using PerformanceApp.Server.Jwt.Credentials.Constants;
+using PerformanceApp.Server.Auth.Jwt.Credentials.Constants;
 
-namespace PerformanceApp.Server.Jwt.Credentials;
+namespace PerformanceApp.Server.Auth.Jwt.Credentials;
 
 public static class SigningCredentialsFactory
 {

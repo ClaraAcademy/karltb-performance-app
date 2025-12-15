@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace PerformanceApp.Server.Jwt.Credentials.Constants;
+namespace PerformanceApp.Server.Auth.Jwt.Credentials.Constants;
 
 public static class SigningCredentialsConstants
 {

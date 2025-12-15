@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.Jwt.Duration.Constants;
+namespace PerformanceApp.Server.Auth.Jwt.Duration.Constants;
 
 public static class DurationConstants
 {

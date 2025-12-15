@@ -1,6 +1,6 @@
-using PerformanceApp.Server.Jwt.Duration.Constants;
+using PerformanceApp.Server.Auth.Jwt.Duration.Constants;
 
-namespace PerformanceApp.Server.Jwt.Duration;
+namespace PerformanceApp.Server.Auth.Jwt.Duration;
 
 public static class DurationFactory
 {

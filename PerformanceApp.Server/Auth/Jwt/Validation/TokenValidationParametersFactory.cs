@@ -1,7 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
-using PerformanceApp.Server.Jwt.Validation.Constants;
+using PerformanceApp.Server.Auth.Jwt.Validation.Constants;
 
-namespace PerformanceApp.Server.Jwt.Validation;
+namespace PerformanceApp.Server.Auth.Jwt.Validation;
 
 using Defaults = TokenValidationParametersConstants;
 

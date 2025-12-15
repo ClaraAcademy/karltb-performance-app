@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.Jwt.Validation.Constants;
+namespace PerformanceApp.Server.Auth.Jwt.Validation.Constants;
 
 public static class TokenValidationParametersConstants
 {
