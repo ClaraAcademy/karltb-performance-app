@@ -13,34 +13,23 @@ public class GetPortfolioCumulativeDayPerformancesAsync_Tests() : PortfolioServi
     public async Task GetPortfolioCumulativeDayPerformanceDTOsAsync_ReturnsExpectedResults()
     {
         // Arrange
-        var portfolioId = 1;
-        var portfolioName = "Portfolio 1";
-
         var performanceType = new PerformanceTypeBuilder()
-            .WithId(5)
             .WithName(PerformanceTypeConstants.CumulativeDay)
             .Build();
-        var performances = Enumerable.Range(1, 3)
-            .Select(i => new PortfolioPerformanceBuilder()
-                .WithId(i)
-                .WithPeriodStart(new DateOnly(2025, 1, i))
-                .WithPeriodEnd(new DateOnly(2025, 1, i))
-                .WithPerformanceType(performanceType)
-                .WithValue(i * 100m)
-                .Build())
+        var performances = new PortfolioPerformanceBuilder()
+            .WithPerformanceType(performanceType)
+            .Many(7)
             .ToList();
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName(portfolioName)
             .WithPerformances(performances)
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var actual = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var actual = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(1);
 
         // Assert
         Assert.Equal(performances.Count, actual.Count);
@@ -55,21 +44,16 @@ public class GetPortfolioCumulativeDayPerformancesAsync_Tests() : PortfolioServi
     public async Task GetPortfolioCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPerformances()
     {
         // Arrange
-        var portfolioId = 1;
-        var portfolioName = "Portfolio 1";
-
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName(portfolioName)
             .WithPerformances([])
             .Build();
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(1);
 
         // Assert
         Assert.Empty(result);
@@ -79,16 +63,14 @@ public class GetPortfolioCumulativeDayPerformancesAsync_Tests() : PortfolioServi
     public async Task GetPortfolioCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoPortfolio()
     {
         // Arrange
-        var portfolioId = 1;
         var portfolio = null as Portfolio;
 
         _portfolioRepositoryMock
-            .Setup(r => r.GetPortfolioAsync(portfolioId))
+            .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(portfolioId);
-
+        var result = await _portfolioService.GetPortfolioCumulativeDayPerformanceDTOsAsync(1);
         // Assert
         Assert.Empty(result);
     }
