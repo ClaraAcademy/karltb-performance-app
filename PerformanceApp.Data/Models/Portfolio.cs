@@ -10,9 +10,37 @@ public partial class Portfolio
 
     public string? UserID { get; set; }
 
-    public IEnumerable<Portfolio> BenchmarksNavigation => PortfolioPortfolioBenchmarkEntityNavigation.Select(b => b.BenchmarkPortfolioNavigation);
+    public IEnumerable<Portfolio> BenchmarksNavigation
+    {
+        get
+        {
+            return PortfolioPortfolioBenchmarkEntityNavigation
+                .Select(b => b.BenchmarkPortfolioNavigation)
+                .ToList();
+        }
+        set
+        {
+            PortfolioPortfolioBenchmarkEntityNavigation = value
+                .Select(b => new Benchmark { PortfolioId = Id, BenchmarkId = b.Id, BenchmarkPortfolioNavigation = b, PortfolioPortfolioNavigation = this })
+                .ToList();
+        }
+    }
 
-    public IEnumerable<Portfolio> PortfoliosNavigation => BenchmarkPortfolioBenchmarkEntityNavigation.Select(b => b.PortfolioPortfolioNavigation);
+    public IEnumerable<Portfolio> PortfoliosNavigation
+    {
+        get
+        {
+            return BenchmarkPortfolioBenchmarkEntityNavigation
+                .Select(b => b.PortfolioPortfolioNavigation)
+                .ToList();
+        }
+        set
+        {
+            BenchmarkPortfolioBenchmarkEntityNavigation = value
+                .Select(p => new Benchmark { PortfolioId = p.Id, BenchmarkId = Id, PortfolioPortfolioNavigation = p, BenchmarkPortfolioNavigation = this })
+                .ToList();
+        }
+    }
 
     public virtual ApplicationUser? User { get; set; }
 
