@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
 using System.Net;

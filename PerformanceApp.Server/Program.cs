@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Seeding;
+using PerformanceApp.Seeder;
 using PerformanceApp.Server.Startup.App;
 using PerformanceApp.Server.Startup.App.Development;
 using PerformanceApp.Server.Startup.Builder;

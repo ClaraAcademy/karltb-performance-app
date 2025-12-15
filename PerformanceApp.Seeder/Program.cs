@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PerformanceApp.Data.Seeding;
 using PerformanceApp.Data;
 using PerformanceApp.Data.Context;
 

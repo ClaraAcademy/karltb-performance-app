@@ -1,6 +1,6 @@
 using Moq;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Server.Test.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
 

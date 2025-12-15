@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using PerformanceApp.Data.Seeding.Constants;
+using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Server.Controllers;
 using PerformanceApp.Server.Dtos;
 using PerformanceApp.Server.Services;
