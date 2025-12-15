@@ -1,6 +1,6 @@
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Services.Helpers;
+namespace PerformanceApp.Data.Helpers;
 
 public static class PositionHelper
 {

@@ -4,7 +4,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding.Dtos;
 using PerformanceApp.Seeder.Constants;
 
-namespace PerformanceApp.Server.Services.Helpers;
+namespace PerformanceApp.Data.Helpers;
 
 public static class PortfolioPerformanceHelper
 {

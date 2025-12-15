@@ -2,7 +2,7 @@ using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Services.Helpers;
+namespace PerformanceApp.Data.Helpers;
 
 public static class PortfolioHelper
 {
