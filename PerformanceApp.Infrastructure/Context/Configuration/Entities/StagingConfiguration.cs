@@ -1,0 +1,28 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PerformanceApp.Data.Models;
+using PerformanceApp.Infrastructure.Context.Configuration.Constants.Columns;
+
+namespace PerformanceApp.Infrastructure.Context.Configuration.Entities;
+
+public static class StagingConfiguration
+{
+    public static void ConfigureStaging(this ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Staging>(Configure);
+    }
+
+    static void Configure(EntityTypeBuilder<Staging> entity)
+    {
+        entity.HasKey(e => new { e.Bankday, e.InstrumentName, e.InstrumentType });
+
+        entity.Property(e => e.InstrumentName)
+            .HasMaxLength(100);
+
+        entity.Property(e => e.InstrumentType)
+            .HasMaxLength(100);
+
+        entity.Property(e => e.Price)
+            .HasColumnType(Price.SqlType);
+    }
+}

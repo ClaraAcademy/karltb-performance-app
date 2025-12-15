@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Seeding;
+using PerformanceApp.Infrastructure.Context;
 
 namespace PerformanceApp.Server.Test.Controllers.Integration;
 

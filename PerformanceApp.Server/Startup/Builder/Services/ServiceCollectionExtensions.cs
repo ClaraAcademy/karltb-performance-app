@@ -1,5 +1,5 @@
 using PerformanceApp.Server.Services;
-using PerformanceApp.Data;
+using PerformanceApp.Infrastructure;
 
 namespace PerformanceApp.Server.Startup.Builder.Services;
 

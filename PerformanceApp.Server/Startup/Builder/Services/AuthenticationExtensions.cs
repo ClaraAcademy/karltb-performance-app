@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Infrastructure.Context;
 
 namespace PerformanceApp.Server.Startup.Builder.Services;
 
