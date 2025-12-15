@@ -2,7 +2,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace PerformanceApp.Data.Test.Repositories;
+namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class KeyFigureRepositoryTest : BaseRepositoryTest
 {

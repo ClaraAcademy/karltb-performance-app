@@ -1,7 +1,7 @@
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Data.Test.Repositories;
+namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class InstrumentPriceRepositoryTest : BaseRepositoryTest
 {

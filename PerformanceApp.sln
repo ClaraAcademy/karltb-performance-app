@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceApp.Seeder", "Pe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceApp.Server.Test", "PerformanceApp.Server.Test\PerformanceApp.Server.Test.csproj", "{E8A5BADA-2FD8-4316-AC0E-C9640900C881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceApp.Data.Test", "PerformanceApp.Data.Test\PerformanceApp.Data.Test.csproj", "{540C6160-944E-4EF1-ABCF-BFF8CC6F105F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceApp.Infrastructure.Test", "PerformanceApp.Infrastructure.Test\PerformanceApp.Infrastructure.Test.csproj", "{540C6160-944E-4EF1-ABCF-BFF8CC6F105F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceApp.Infrastructure", "PerformanceApp.Infrastructure\PerformanceApp.Infrastructure.csproj", "{8661FB12-B0E0-40E9-A78F-305611FA324C}"
 EndProject

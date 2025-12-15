@@ -1,7 +1,7 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 
-namespace PerformanceApp.Data.Test.Repositories;
+namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class PositionRepositoryTest : BaseRepositoryTest
 {

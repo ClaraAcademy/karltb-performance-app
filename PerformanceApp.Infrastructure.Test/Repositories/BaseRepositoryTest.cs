@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Infrastructure.Context;
 
-namespace PerformanceApp.Data.Test.Repositories;
+namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class BaseRepositoryTest
 {

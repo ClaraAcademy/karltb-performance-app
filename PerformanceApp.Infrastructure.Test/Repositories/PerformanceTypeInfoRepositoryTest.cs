@@ -2,7 +2,7 @@ using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace PerformanceApp.Data.Test.Repositories;
+namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class PerformanceTypeInfoRepositoryTest : BaseRepositoryTest
 {
