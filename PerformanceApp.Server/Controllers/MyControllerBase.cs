@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using PerformanceApp.Server.Dtos;
+using PerformanceApp.Data.Dtos;
 
 namespace PerformanceApp.Server.Controllers;
 
