@@ -71,8 +71,8 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
         {
             yield return new PortfolioPerformanceBuilder()
                 .WithId(_id + i)
-                .WithPeriodStart(_periodStart)
-                .WithPeriodEnd(_periodEnd)
+                .WithPeriodStart(_periodStart.AddDays(i))
+                .WithPeriodEnd(_periodEnd.AddDays(i))
                 .WithPerformanceType(_performanceType)
                 .WithValue(_value)
                 .Build();
