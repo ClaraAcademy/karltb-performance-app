@@ -1,7 +1,7 @@
-using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Server.Services;
 using Moq;
+using PerformanceApp.Infrastructure.Repositories;
 
 namespace PerformanceApp.Server.Test.Services;
 

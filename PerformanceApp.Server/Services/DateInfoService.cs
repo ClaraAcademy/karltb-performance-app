@@ -1,6 +1,6 @@
-using PerformanceApp.Data.Repositories;
 using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Mappers;
+using PerformanceApp.Infrastructure.Repositories;
 
 namespace PerformanceApp.Server.Services
 {

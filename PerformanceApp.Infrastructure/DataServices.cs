@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Repositories;
 using PerformanceApp.Infrastructure.Context;
+using PerformanceApp.Infrastructure.Repositories;
 
 namespace PerformanceApp.Infrastructure;
 

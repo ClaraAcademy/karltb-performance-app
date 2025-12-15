@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Context;
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Data.Repositories;
+namespace PerformanceApp.Infrastructure.Repositories;
 
 public interface IPerformanceTypeRepository
 {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Data.Context;
 
-namespace PerformanceApp.Data.Repositories;
+namespace PerformanceApp.Infrastructure.Repositories;
 
 public interface IPortfolioPerformanceRepository
 {

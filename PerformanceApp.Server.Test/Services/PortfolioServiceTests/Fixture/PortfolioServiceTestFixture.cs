@@ -1,5 +1,5 @@
 using Moq;
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Server.Services;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
