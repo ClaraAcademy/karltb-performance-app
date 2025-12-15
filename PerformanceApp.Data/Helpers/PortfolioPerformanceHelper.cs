@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Constants.PerformanceType;
+using PerformanceApp.Data.Constants;
 using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Models;

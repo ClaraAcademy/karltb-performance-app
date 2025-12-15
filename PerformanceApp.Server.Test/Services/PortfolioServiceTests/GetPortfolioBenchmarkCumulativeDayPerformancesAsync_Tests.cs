@@ -3,7 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Data.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
-using PerformanceApp.Data.Constants.PerformanceType;
+using PerformanceApp.Data.Constants;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests;
 

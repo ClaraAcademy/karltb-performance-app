@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Constants.PerformanceType;
+using PerformanceApp.Data.Constants;
 
 namespace PerformanceApp.Seeder.Constants;
 

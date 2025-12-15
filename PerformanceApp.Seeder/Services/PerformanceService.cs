@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Constants.PerformanceType;
+using PerformanceApp.Data.Constants;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;

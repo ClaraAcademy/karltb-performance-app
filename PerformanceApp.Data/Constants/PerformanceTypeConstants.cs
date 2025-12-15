@@ -1,4 +1,4 @@
-namespace PerformanceApp.Data.Constants.PerformanceType;
+namespace PerformanceApp.Data.Constants;
 
 public static class PerformanceTypeConstants
 {

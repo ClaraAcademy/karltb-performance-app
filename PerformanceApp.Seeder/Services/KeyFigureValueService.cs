@@ -3,7 +3,7 @@ using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Seeder.Utilities;
-using PerformanceApp.Data.Constants.PerformanceType;
+using PerformanceApp.Data.Constants;
 
 namespace PerformanceApp.Seeder.Services;
 
