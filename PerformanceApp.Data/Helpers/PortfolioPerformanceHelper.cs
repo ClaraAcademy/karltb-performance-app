@@ -1,8 +1,7 @@
+using PerformanceApp.Data.Constants.PerformanceType;
 using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Seeding.Dtos;
-using PerformanceApp.Seeder.Constants;
 
 namespace PerformanceApp.Data.Helpers;
 
@@ -10,9 +9,9 @@ public static class PortfolioPerformanceHelper
 {
     public static bool IsCumulativeDayPerformance(PortfolioPerformance portfolioPerformance)
     {
-        var performanceTypeName = portfolioPerformance.PerformanceTypeNavigation.Name;
+        var name = portfolioPerformance.PerformanceTypeNavigation.Name;
 
-        return performanceTypeName == PerformanceTypeData.CumulativeDayPerformance;
+        return name == PerformanceTypeConstants.CumulativeDay;
     }
 
     public static DateOnly GetBankday(PortfolioPerformanceDTO portfolioPerformanceDTO)
@@ -25,7 +24,7 @@ public static class PortfolioPerformanceHelper
         IEnumerable<PortfolioPerformanceDTO> rhs
     )
     {
-        var joined = 
+        var joined =
             from lp in lhs
             join rp in rhs
             on GetBankday(lp) equals GetBankday(rp)
