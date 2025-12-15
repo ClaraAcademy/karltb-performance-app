@@ -4,6 +4,7 @@ using PerformanceApp.Seeder.Constants;
 using PerformanceApp.Data.Builders;
 using PerformanceApp.Server.Test.Services.PortfolioServiceTests.Fixture;
 using PerformanceApp.Data.Constants;
+using PerformanceApp.Data.Builders.Defaults;
 
 namespace PerformanceApp.Server.Test.Services.PortfolioServiceTests;
 
@@ -14,45 +15,25 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
     public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsExpectedResults()
     {
         // Arrange
-        var performanceTypeId = 7;
-        var portfolioId = 1;
-        var portfolioName = "Portfolio 1";
-        var benchmarkId = 2;
-        var benchmarkName = "Benchmark 1";
+        var n = 9;
         var performanceType = new PerformanceTypeBuilder()
-            .WithId(performanceTypeId)
             .WithName(PerformanceTypeConstants.CumulativeDay)
             .Build();
-        var portfolioPerformances = new List<PortfolioPerformance>
-        {
-            new PortfolioPerformanceBuilder()
-                .WithId(performanceTypeId)
-                .WithPeriodStart(new DateOnly(2025, 1, 1))
-                .WithPeriodEnd(new DateOnly(2025, 1, 1))
-                .WithPerformanceType(performanceType)
-                .WithValue(100m)
-                .Build()
-        };
-        var benchmarkPerformances = new List<PortfolioPerformance>
-        {
-            new PortfolioPerformanceBuilder()
-                .WithId(performanceTypeId)
-                .WithPeriodStart(new DateOnly(2025, 1, 1))
-                .WithPeriodEnd(new DateOnly(2025, 1, 1))
-                .WithPerformanceType(performanceType)
-                .WithValue(150m)
-                .Build()
-        };
-        
+        var portfolioPerformances = new PortfolioPerformanceBuilder()
+            .WithPerformanceType(performanceType)
+            .Many(n)
+            .ToList();
+        var benchmarkPerformances = new PortfolioPerformanceBuilder()
+            .WithPerformanceType(performanceType)
+            .WithValue(-100m)
+            .Many(n)
+            .ToList();
         var benchmark = new PortfolioBuilder()
-            .WithId(benchmarkId)
-            .WithName(benchmarkName)
+            .WithName(PortfolioBuilderDefaults.BenchmarkName)
+            .WithId(PortfolioBuilderDefaults.BenchmarkId)
             .WithPerformances(benchmarkPerformances)
             .Build();
-
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName(portfolioName)
             .WithPerformances(portfolioPerformances)
             .WithBenchmarks([benchmark])
             .Build();
@@ -62,11 +43,10 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
             .ReturnsAsync(portfolio);
 
         // Act
-        var actual = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var actual = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(1);
 
         // Assert
         Assert.Equal(portfolioPerformances.Count, actual.Count);
-        Assert.Single(actual);
         for (int i = 0; i < portfolioPerformances.Count; i++)
         {
             var expectedPortfolioPerformance = portfolioPerformances[i];
@@ -86,11 +66,15 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
     public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenNoBenchmarks()
     {
         // Arrange
-        var portfolioId = 1;
-        var portfolioName = "Portfolio 1";
+        var performanceType = new PerformanceTypeBuilder()
+            .WithName(PerformanceTypeConstants.CumulativeDay)
+            .Build();
+        var performances = new PortfolioPerformanceBuilder()
+            .WithPerformanceType(performanceType)
+            .Many(7)
+            .ToList();
         var portfolio = new PortfolioBuilder()
-            .WithId(portfolioId)
-            .WithName(portfolioName)
+            .WithPerformances(performances)
             .WithBenchmarks([])
             .Build();
 
@@ -99,7 +83,7 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(1);
 
         // Assert
         Assert.Empty(result);
@@ -109,15 +93,14 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
     public async Task GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync_ReturnsEmptyList_WhenInvalidPortfolioId()
     {
         // Arrange
-        var portfolioId = 1;
-
         var portfolio = null as Portfolio;
+
         _portfolioRepositoryMock
             .Setup(r => r.GetPortfolioAsync(It.IsAny<int>()))
             .ReturnsAsync(portfolio);
 
         // Act
-        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(portfolioId);
+        var result = await _portfolioService.GetPortfolioBenchmarkCumulativeDayPerformanceDTOsAsync(-1);
 
         // Assert
         Assert.Empty(result);
