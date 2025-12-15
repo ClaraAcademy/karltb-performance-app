@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders.Defaults;
 using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
@@ -5,17 +6,12 @@ namespace PerformanceApp.Data.Builders;
 
 public class PortfolioBuilder : IBuilder<Portfolio>
 {
-    private int _id = 1;
-    private string _name = "Default Portfolio";
-    private ApplicationUser _user = new ApplicationUser { Id = "userId1", UserName = "userName1" };
+    private int _id = PortfolioBuilderDefaults.PortfolioId;
+    private string _name = PortfolioBuilderDefaults.PortfolioName;
+    private ApplicationUser _user = new ApplicationUser();
     private List<Portfolio> _benchmarks = new List<Portfolio>();
     private List<KeyFigureValue> _keyFigureValues = new List<KeyFigureValue>();
     private List<PortfolioPerformance> _performances = new List<PortfolioPerformance>();
-
-    private List<Benchmark> _benchmarkEntities =>
-        new List<Benchmark>(
-            _benchmarks.Select(b => new Benchmark { PortfolioId = _id, BenchmarkId = b.Id })
-        );
 
     public PortfolioBuilder WithId(int id)
     {
