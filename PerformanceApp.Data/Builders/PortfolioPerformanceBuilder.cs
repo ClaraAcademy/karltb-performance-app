@@ -1,7 +1,8 @@
+using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Test.Builders.Interface;
+using PerformanceApp.Server.Test.Builders;
 
-namespace PerformanceApp.Server.Test.Builders;
+namespace PerformanceApp.Data.Builders;
 
 public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
 {

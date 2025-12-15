@@ -1,7 +1,7 @@
+using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Server.Test.Builders.Interface;
 
-namespace PerformanceApp.Server.Test.Builders;
+namespace PerformanceApp.Data.Builders;
 
 public class KeyFigureInfoBuilder : IBuilder<KeyFigureInfo>
 { 

@@ -1,4 +1,4 @@
-namespace PerformanceApp.Server.Test.Builders.Interface;
+namespace PerformanceApp.Data.Builders.Interface;
 
 public interface IBuilder<T>
 {

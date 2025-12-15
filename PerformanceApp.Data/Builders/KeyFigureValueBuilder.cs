@@ -1,6 +1,6 @@
 using PerformanceApp.Data.Models;
 
-namespace PerformanceApp.Server.Test.Builders;
+namespace PerformanceApp.Data.Builders;
 
 public class KeyFigureValueBuilder
 {
