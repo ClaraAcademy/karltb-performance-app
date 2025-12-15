@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders.Defaults;
 using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
@@ -5,8 +6,8 @@ namespace PerformanceApp.Data.Builders;
 
 public class PerformanceTypeBuilder : IBuilder<PerformanceType>
 {
-    private int _id = 1;
-    private string _name = "Default Performance Type";
+    private int _id = PerformanceTypeBuilderDefaults.Id;
+    private string _name = PerformanceTypeBuilderDefaults.Name;
 
     public PerformanceTypeBuilder WithId(int id)
     {

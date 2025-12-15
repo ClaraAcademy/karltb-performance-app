@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders.Defaults;
 using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
@@ -5,11 +6,11 @@ namespace PerformanceApp.Data.Builders;
 
 public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
 {
-    private int _id = 1;
-    private DateOnly _periodStart = DateOnly.FromDateTime(DateTime.UtcNow);
-    private DateOnly _periodEnd = DateOnly.FromDateTime(DateTime.UtcNow);
+    private int _id = PortfolioPerformanceBuilderDefaults.Id;
+    private DateOnly _periodStart = PortfolioPerformanceBuilderDefaults.PeriodStart;
+    private DateOnly _periodEnd = PortfolioPerformanceBuilderDefaults.PeriodEnd;
     private PerformanceType _performanceType = new PerformanceTypeBuilder().Build();
-    private decimal _value = 0m;
+    private decimal _value = PortfolioPerformanceBuilderDefaults.Value;
 
     public PortfolioPerformanceBuilder WithId(int id)
     {
