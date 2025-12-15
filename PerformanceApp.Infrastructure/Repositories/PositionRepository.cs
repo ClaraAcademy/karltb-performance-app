@@ -22,7 +22,8 @@ public class PositionRepository(PadbContext context) : IPositionRepository
         DateOnly bankday,
         int portfolioId
     )
-        => await _context.Positions
+    {
+        return await _context.Positions
             .Include(p => p.InstrumentNavigation!)
                 .ThenInclude(i => i.InstrumentTypeNavigation)
             .Include(p => p.InstrumentNavigation!)
@@ -32,13 +33,22 @@ public class PositionRepository(PadbContext context) : IPositionRepository
             .Where(p => p.PortfolioId == portfolioId)
             .Where(p => p.InstrumentNavigation!.InstrumentTypeNavigation!.Name == instrumentType)
             .ToListAsync();
+    }
 
     public async Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId)
-        => await GetPositionsAsync("Stock", bankday, portfolioId);
+    {
+        return await GetPositionsAsync("Stock", bankday, portfolioId);
+    }
+
     public async Task<IEnumerable<Position>> GetBondPositionsAsync(DateOnly bankday, int portfolioId)
-        => await GetPositionsAsync("Bond", bankday, portfolioId);
+    {
+        return await GetPositionsAsync("Bond", bankday, portfolioId);
+    }
+
     public async Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId)
-        => await GetPositionsAsync("Index", bankday, portfolioId);
+    {
+        return await GetPositionsAsync("Index", bankday, portfolioId);
+    }
 
     public async Task<IEnumerable<Position>> GetPositionsAsync()
     {
