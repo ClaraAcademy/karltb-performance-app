@@ -28,7 +28,7 @@ public class TransactionTypeSeeder(PadbContext context)
             return;
         }
 
-        var raw = TransactionTypeData.GetTransactionTypes();
+        var raw = TransactionTypeData.TransactionTypes;
 
         var transactionTypes = raw.Select(MapToTransactionType).ToList();
 
