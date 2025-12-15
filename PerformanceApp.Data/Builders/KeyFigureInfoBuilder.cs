@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders.Defaults;
 using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
@@ -5,8 +6,8 @@ namespace PerformanceApp.Data.Builders;
 
 public class KeyFigureInfoBuilder : IBuilder<KeyFigureInfo>
 { 
-    private int _id = 1;
-    private string _name = "Default Key Figure";
+    private int _id = KeyFigureInfoBuilderDefaults.Id;
+    private string _name = KeyFigureInfoBuilderDefaults.Name;
 
     public KeyFigureInfoBuilder WithId(int id)
     {

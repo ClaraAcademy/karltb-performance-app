@@ -1,11 +1,13 @@
+using PerformanceApp.Data.Builders.Defaults;
+using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Builders;
 
-public class KeyFigureValueBuilder
+public class KeyFigureValueBuilder : IBuilder<KeyFigureValue>
 {
     private KeyFigureInfo _keyFigureInfo = new KeyFigureInfoBuilder().Build();
-    private decimal _value = 100.0m;
+    private decimal _value = KeyFigureValueBuilderDefaults.Value;
     private Portfolio _portfolio = new PortfolioBuilder().Build();
 
     public KeyFigureValueBuilder WithKeyFigureInfo(KeyFigureInfo keyFigureInfo)
@@ -30,5 +32,24 @@ public class KeyFigureValueBuilder
             PortfolioId = _portfolio.Id,
             PortfolioNavigation = _portfolio
         };
+    }
+
+    public KeyFigureValue Clone()
+    {
+        return new KeyFigureValueBuilder()
+            .WithKeyFigureInfo(_keyFigureInfo)
+            .WithValue(_value)
+            .Build();
+    }
+
+    public IEnumerable<KeyFigureValue> Many(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            yield return new KeyFigureValueBuilder()
+                .WithKeyFigureInfo(_keyFigureInfo)
+                .WithValue(_value + i)
+                .Build();
+        }
     }
 }
