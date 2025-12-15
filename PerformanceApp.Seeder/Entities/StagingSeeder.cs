@@ -1,8 +1,8 @@
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
-using PerformanceApp.Seeder;
 using PerformanceApp.Seeder.Constants;
+using PerformanceApp.Seeder.Excel.Reader;
 
 namespace PerformanceApp.Seeder.Entities;
 
