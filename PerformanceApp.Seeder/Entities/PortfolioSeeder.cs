@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;
 
 namespace PerformanceApp.Seeder.Entities;

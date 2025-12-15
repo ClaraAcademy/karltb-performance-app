@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;

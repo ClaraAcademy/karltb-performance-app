@@ -1,5 +1,5 @@
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Repositories;
 namespace PerformanceApp.Data.Test.Repositories;
 
 public class KeyFigureValueRepositoryTest : BaseRepositoryTest

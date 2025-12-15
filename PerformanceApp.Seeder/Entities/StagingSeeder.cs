@@ -1,6 +1,6 @@
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
-using PerformanceApp.Data.Repositories;
+using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder;
 using PerformanceApp.Seeder.Constants;
 
