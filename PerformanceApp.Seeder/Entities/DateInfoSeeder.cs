@@ -1,6 +1,8 @@
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
+using PerformanceApp.Data.Helpers;
+using PerformanceApp.Data.Mappers;
 
 
 namespace PerformanceApp.Seeder.Entities;
@@ -17,9 +19,6 @@ public class DateInfoSeeder(PadbContext context)
         return dateInfos.Any();
     }
 
-    private DateInfo MapToDateInfo(DateOnly bankday) => new DateInfo { Bankday = bankday };
-    private DateOnly? GetBankday(Staging staging) => staging.Bankday;
-
     public async Task Seed()
     {
         var exists = await IsPopulated();
@@ -29,10 +28,14 @@ public class DateInfoSeeder(PadbContext context)
         }
 
         var stagings = await _stagingRepository.GetStagingsAsync();
-        var bankdays = stagings.Select(GetBankday)
+
+        var bankdays = stagings
+            .Select(StagingHelper.GetBankday)
             .OfType<DateOnly>()
             .Distinct();
-        var dateInfos = bankdays.Select(MapToDateInfo).ToList();
+        var dateInfos = bankdays
+            .Select(DateInfoMapper.Map)
+            .ToList();
 
         await _dateInfoRepository.AddDateInfosAsync(dateInfos);
     }

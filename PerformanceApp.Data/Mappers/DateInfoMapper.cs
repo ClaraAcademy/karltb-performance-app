@@ -11,4 +11,9 @@ public static class DateInfoMapper
     }
 
     static BankdayDTO MapToBankdayDto(DateOnly bankday) => new() { Bankday = bankday };
+
+    public static DateInfo Map(DateOnly bankday)
+    {
+        return new DateInfo { Bankday = bankday };
+    }
 }
