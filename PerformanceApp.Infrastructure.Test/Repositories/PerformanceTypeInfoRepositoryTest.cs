@@ -1,6 +1,7 @@
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Builders;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -13,31 +14,25 @@ public class PerformanceTypeInfoRepositoryTest : BaseRepositoryTest
         _repository = new PerformanceTypeRepository(_context);
     }
 
-    private static string CreateName(int i) => $"PerformanceType{i}";
-    private static PerformanceType CreatePerformanceType(int i) => new() { Id = i, Name = CreateName(i) };
-    private static List<PerformanceType> CreatePerformanceTypes(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(CreatePerformanceType)
-            .ToList();
-    }
-
     [Fact]
     public async Task AddPerformanceTypesAsync_AddsPerformanceTypes_ToDatabase()
     {
         // Arrange
-        var n = 2;
-        var performanceTypes = CreatePerformanceTypes(n);
+        var expected = new PerformanceTypeBuilder()
+            .Many(3)
+            .ToList();
 
         // Act
-        await _repository.AddPerformanceTypesAsync(performanceTypes);
+        await _repository.AddPerformanceTypesAsync(expected);
 
         // Assert
-        var addedTypes = await _context.PerformanceTypeInfos.ToListAsync();
-        Assert.Equal(n, addedTypes.Count);
-        for (int i = 1; i <= n; i++)
+        var actual = await _context.PerformanceTypeInfos.ToListAsync();
+
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(addedTypes, pt => pt.Name == CreateName(i));
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
         }
     }
 
@@ -45,13 +40,15 @@ public class PerformanceTypeInfoRepositoryTest : BaseRepositoryTest
     public async Task AddPerformanceTypeAsync_DoesNotAddEmptyList()
     {
         // Arrange
-        var expected = new List<PerformanceType>();
+        var empty = new List<PerformanceType>();
 
         // Act
-        await _repository.AddPerformanceTypesAsync(expected);
+        await _repository.AddPerformanceTypesAsync(empty);
+        var actual = await _context
+            .PerformanceTypeInfos
+            .ToListAsync();
 
         // Assert
-        var actual = await _context.PerformanceTypeInfos.ToListAsync();
         Assert.Empty(actual);
     }
 
@@ -59,20 +56,24 @@ public class PerformanceTypeInfoRepositoryTest : BaseRepositoryTest
     public async Task GetPerformanceTypeInfosAsync_ReturnsAllPerformanceTypes()
     {
         // Arrange
-        var n = 100;
-        var performanceTypes = CreatePerformanceTypes(n);
+        var expected = new PerformanceTypeBuilder()
+            .Many(7)
+            .ToList();
 
-        _context.PerformanceTypeInfos.AddRange(performanceTypes);
+        await _context
+            .PerformanceTypeInfos
+            .AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetPerformanceTypeInfosAsync();
 
         // Assert
-        Assert.Equal(n, result.Count());
-        for (int i = 1; i <= n; i++)
+        Assert.Equal(expected.Count, result.Count);
+        foreach (var (e, a) in expected.Zip(result))
         {
-            Assert.Contains(result, pt => pt.Name == CreateName(i));
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
         }
     }
 
