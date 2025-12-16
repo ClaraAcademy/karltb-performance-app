@@ -9,8 +9,8 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
     private int _instrumentId = InstrumentPriceBuilderDefaults.InstrumentId;
     private DateOnly _bankday = InstrumentPriceBuilderDefaults.Bankday;
     private decimal _price = InstrumentPriceBuilderDefaults.Price;
-    private DateInfo _bankdayNavigation = InstrumentPriceBuilderDefaults.BankdayNavigation;
-    private Instrument _instrumentNavigation = InstrumentPriceBuilderDefaults.InstrumentNavigation;
+    private DateInfo? _bankdayNavigation = null;
+    private Instrument? _instrumentNavigation = null;
     public InstrumentPriceBuilder WithInstrumentId(int instrumentId)
     {
         _instrumentId = instrumentId;
