@@ -10,6 +10,6 @@ public class PositionBuilderDefaults
     public static readonly int Id = 1;
     public static readonly int PortfolioId = PortfolioNavigation.Id;
     public static readonly int InstrumentId = InstrumentNavigation.Id;
-    public static readonly DateOnly Bankday = BankdayNavigation.Bankday;
+    public static readonly DateOnly Bankday = DateInfoBuilderDefaults.Bankday;
     public static readonly List<PositionValue> PositionValuesNavigation = new PositionValueBuilder().Many(1).ToList();
 }

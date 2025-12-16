@@ -55,7 +55,7 @@ public class InstrumentBuilder : IBuilder<Instrument>
         {
             Id = _id,
             Name = _name,
-            TypeId = _typeId,
+            TypeId = _instrumentTypeNavigation?.Id ?? _typeId,
             InstrumentTypeNavigation = _instrumentTypeNavigation,
             InstrumentPricesNavigation = _instrumentPriceNavigation
         };
