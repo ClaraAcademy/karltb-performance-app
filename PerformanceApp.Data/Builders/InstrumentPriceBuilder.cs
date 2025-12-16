@@ -67,15 +67,18 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
     {
         for (int i = 0; i < count; i++)
         {
+            var bankday = _bankday.AddDays(i);
+            var instrumentId = _instrumentId + i;
+            var price = _price + i;
             yield return new InstrumentPriceBuilder()
-                .WithInstrumentId(_instrumentId)
-                .WithBankday(_bankday.AddDays(i))
-                .WithPrice(_price + i)
+                .WithInstrumentId(instrumentId)
+                .WithBankday(bankday)
+                .WithPrice(price)
                 .WithBankdayNavigation(
-                    new DateInfoBuilder().WithBankday(_bankday.AddDays(i)).Build()
+                    new DateInfoBuilder().WithBankday(bankday).Build()
                 )
                 .WithInstrumentNavigation(
-                    _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
+                    _instrumentNavigation ?? new InstrumentBuilder().WithId(instrumentId).Build()
                 )
                 .Build();
         }
