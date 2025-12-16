@@ -2,6 +2,7 @@ using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Seeder.Constants;
+using PerformanceApp.Data.Mappers;
 
 namespace PerformanceApp.Seeder.Entities;
 
@@ -15,16 +16,6 @@ public class BenchmarkSeeder(PadbContext context)
         var benchmarks = await _benchmarkRepository.GetBenchmarkMappingsAsync();
 
         return benchmarks.Any();
-    }
-
-    private Benchmark MapToBenchmark((Portfolio, Portfolio) pair)
-    {
-        var (portfolio, benchmark) = pair;
-        return new Benchmark
-        {
-            PortfolioId = portfolio.Id,
-            BenchmarkId = benchmark.Id
-        };
     }
 
     public async Task Seed()
@@ -42,7 +33,7 @@ public class BenchmarkSeeder(PadbContext context)
         var benchmarks = await _portfolioRepository.GetPortfoliosAsync(benchmarkNames);
 
         var benchmarkMappings = portfolios.Zip(benchmarks)
-            .Select(MapToBenchmark)
+            .Select(BenchmarkMapper.Map)
             .ToList();
 
         await _benchmarkRepository.AddBenchmarkMappingsAsync(benchmarkMappings);

@@ -32,4 +32,10 @@ public static class BenchmarkMapper
         };
     }
 
+    public static Benchmark Map((Portfolio, Portfolio) pair)
+    {
+        var (portfolio, benchmark) = pair;
+        return Map(portfolio, benchmark);
+    }
+
 }
