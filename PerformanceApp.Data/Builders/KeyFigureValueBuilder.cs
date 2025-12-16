@@ -22,6 +22,12 @@ public class KeyFigureValueBuilder : IBuilder<KeyFigureValue>
         return this;
     }
 
+    public KeyFigureValueBuilder WithPortfolio(Portfolio portfolio)
+    {
+        _portfolio = portfolio;
+        return this;
+    }
+
     public KeyFigureValue Build()
     {
         return new KeyFigureValue
@@ -47,8 +53,14 @@ public class KeyFigureValueBuilder : IBuilder<KeyFigureValue>
         for (int i = 0; i < count; i++)
         {
             yield return new KeyFigureValueBuilder()
-                .WithKeyFigureInfo(_keyFigureInfo)
+                .WithKeyFigureInfo(
+                    new KeyFigureInfoBuilder()
+                        .WithId(_keyFigureInfo.Id + i)
+                        .WithName($"{_keyFigureInfo.Name} {i + 1}")
+                        .Build()
+                )
                 .WithValue(_value + i)
+                .WithPortfolio(_portfolio)
                 .Build();
         }
     }
