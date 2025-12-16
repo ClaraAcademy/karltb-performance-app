@@ -42,7 +42,10 @@ public class InstrumentTypeBuilder : IBuilder<InstrumentType>
     {
         for (int i = 0; i < count; i++)
         {
-            yield return Build();
+            yield return new InstrumentTypeBuilder()
+                .WithId(_id + i)
+                .WithName($"{_name} {i + 1}")
+                .Build();
         }
     }
 }
