@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Infrastructure.Repositories;
@@ -11,50 +12,39 @@ public class PortfolioValueRepositoryTest : BaseRepositoryTest
     {
         _repository = new PortfolioValueRepository(_context);
     }
-    private static int GetId(int i) => i;
-    private static decimal GetValue(int i) => i * 1000m;
-    private static PortfolioValue CreatePortfolioValue(int i) => new() { PortfolioId = GetId(i), Value = GetValue(i) };
-    private static List<PortfolioValue> CreatePortfolioValues(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(CreatePortfolioValue)
-            .ToList();
-    }
 
     [Fact]
     public async Task GetPortfolioValuesAsync_ReturnsAllPortfolioValues()
     {
         // Arrange
-        var nExpected = 54;
-        var portfolioValues = CreatePortfolioValues(nExpected);
+        var expected = new PortfolioValueBuilder()
+            .Many(20)
+            .ToList();
 
-        await _context.PortfolioValues.AddRangeAsync(portfolioValues);
+        await _context.PortfolioValues.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
         var fetched = await _repository.GetPortfolioValuesAsync();
+        var actual = fetched.ToList();
 
         // Assert
-        var nActual = fetched.Count();
-        Assert.Equal(nExpected, nActual);
-        for (int i = 1; i <= nExpected; i++)
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(fetched, pv => pv.PortfolioId == GetId(i) && pv.Value == GetValue(i));
+            Assert.Equal(e.PortfolioId, a.PortfolioId);
+            Assert.Equal(e.Value, a.Value);
+            Assert.Equal(e.Bankday, a.Bankday);
         }
     }
 
     [Fact]
     public async Task GetPortfolioValuesAsync_ReturnsEmptyListWhenNoData()
     {
-        // Arrange
-        var context = null as PadbContext;
-        var repository = new PortfolioValueRepository(context);
-
         // Act
-        var result = await repository.GetPortfolioValuesAsync();
+        var result = await _repository.GetPortfolioValuesAsync();
 
         // Assert
-        Assert.NotNull(result);
         Assert.Empty(result);
     }
 }
