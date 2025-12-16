@@ -8,5 +8,6 @@ public static class InstrumentBuilderDefaults
     public static readonly int Id = 1;
     public static readonly string Name = "Default Instrument";
     public static readonly int TypeId = InstrumentTypeNavigation.Id;
+    public static readonly InstrumentPrice InstrumentPriceNavigation = new InstrumentPriceBuilder().Build();
 
 }

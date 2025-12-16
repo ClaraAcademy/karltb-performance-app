@@ -10,6 +10,7 @@ public class InstrumentBuilder : IBuilder<Instrument>
     private string _name = InstrumentBuilderDefaults.Name;
     private int _typeId = InstrumentBuilderDefaults.TypeId;
     private InstrumentType _instrumentTypeNavigation = InstrumentBuilderDefaults.InstrumentTypeNavigation;
+    private InstrumentPrice _instrumentPriceNavigation = InstrumentBuilderDefaults.InstrumentPriceNavigation;
 
     public InstrumentBuilder WithId(int id)
     {
@@ -35,6 +36,12 @@ public class InstrumentBuilder : IBuilder<Instrument>
         return this;
     }
 
+    public InstrumentBuilder WithInstrumentPriceNavigation(InstrumentPrice instrumentPrice)
+    {
+        _instrumentPriceNavigation = instrumentPrice;
+        return this;
+    }
+
     public Instrument Build()
     {
         return new Instrument
@@ -42,7 +49,8 @@ public class InstrumentBuilder : IBuilder<Instrument>
             Id = _id,
             Name = _name,
             TypeId = _typeId,
-            InstrumentTypeNavigation = _instrumentTypeNavigation
+            InstrumentTypeNavigation = _instrumentTypeNavigation,
+            InstrumentPricesNavigation = [_instrumentPriceNavigation]
         };
     }
 
@@ -53,6 +61,7 @@ public class InstrumentBuilder : IBuilder<Instrument>
             .WithName(_name)
             .WithTypeId(_typeId)
             .WithInstrumentTypeNavigation(_instrumentTypeNavigation)
+            .WithInstrumentPriceNavigation(_instrumentPriceNavigation)
             .Build();
     }
 

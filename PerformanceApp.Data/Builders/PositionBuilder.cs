@@ -13,6 +13,7 @@ public class PositionBuilder : IBuilder<Position>
     private Instrument _instrumentNavigation = PositionBuilderDefaults.InstrumentNavigation;
     private Portfolio _portfolioNavigation = PositionBuilderDefaults.PortfolioNavigation;
     private DateInfo _bankdayNavigation = PositionBuilderDefaults.BankdayNavigation;
+    private List<PositionValue> _positionValuesNavigation = PositionBuilderDefaults.PositionValuesNavigation;
     protected decimal? _amount = null;
     protected int? _count = null;
     protected decimal? _proportion = null;
@@ -60,17 +61,10 @@ public class PositionBuilder : IBuilder<Position>
         _bankday = dateInfo.Bankday;
         return this;
     }
-
-    protected PositionBuilder IntermediateBuild()
+    public PositionBuilder WithPositionValuesNavigation(List<PositionValue> positionValues)
     {
-        return new PositionBuilder()
-            .WithId(_id)
-            .WithInstrumentId(_instrumentId)
-            .WithPortfolioId(_portfolioId)
-            .WithBankday(_bankday)
-            .WithInstrumentNavigation(_instrumentNavigation)
-            .WithPortfolioNavigation(_portfolioNavigation)
-            .WithBankdayNavigation(_bankdayNavigation);
+        _positionValuesNavigation = positionValues;
+        return this;
     }
 
     public virtual Position Build()
@@ -87,7 +81,8 @@ public class PositionBuilder : IBuilder<Position>
             Amount = _amount,
             Count = _count,
             Proportion = _proportion,
-            Nominal = _nominal
+            Nominal = _nominal,
+            PositionValuesNavigation = _positionValuesNavigation
         };
     }
 
@@ -101,6 +96,7 @@ public class PositionBuilder : IBuilder<Position>
             .WithInstrumentNavigation(_instrumentNavigation)
             .WithPortfolioNavigation(_portfolioNavigation)
             .WithBankdayNavigation(_bankdayNavigation)
+            .WithPositionValuesNavigation(_positionValuesNavigation)
             .Build();
     }
 
@@ -116,6 +112,14 @@ public class PositionBuilder : IBuilder<Position>
                 .WithInstrumentNavigation(_instrumentNavigation)
                 .WithPortfolioNavigation(_portfolioNavigation)
                 .WithBankdayNavigation(_bankdayNavigation)
+                .WithPositionValuesNavigation(
+                    [
+                        new PositionValueBuilder()
+                            .WithBankday(_bankday.AddDays(i))
+                            .WithId(_id + i)
+                            .Build()
+                    ]
+                )
                 .Build();
         }
     }
