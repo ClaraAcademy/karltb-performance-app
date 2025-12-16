@@ -1,4 +1,6 @@
-using PerformanceApp.Data.Models;
+using System.Collections.Immutable;
+using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Builders;
 using PerformanceApp.Infrastructure.Repositories;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
@@ -12,24 +14,59 @@ public class InstrumentPerformanceRepositoryTest : BaseRepositoryTest
         _repository = new InstrumentPerformanceRepository(_context);
     }
 
-    private static List<InstrumentPerformance> CreateInstrumentPerformances()
-    {
-        return [
-            new InstrumentPerformance { InstrumentId = 1, TypeId = 1, PeriodStart = DateOnly.FromDateTime(DateTime.Now), PeriodEnd = DateOnly.FromDateTime(DateTime.Now), Value = 0.05m },
-            new InstrumentPerformance { InstrumentId = 2, TypeId = 8, PeriodStart = DateOnly.FromDateTime(DateTime.Now), PeriodEnd = DateOnly.FromDateTime(DateTime.Now), Value = 0.10m }
-        ];
-    }
-
     [Fact]
     public async Task GetInstrumentPerformancesAsync_ReturnsPerformances()
     {
-        var expected = CreateInstrumentPerformances();
-        _context.InstrumentPerformances.AddRange(expected);
+        // Arrange
+        var expected = new InstrumentPerformanceBuilder()
+            .Many(5)
+            .ToList();
 
+        await _context.InstrumentPerformances.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
+        // Act
         var actual = await _repository.GetInstrumentPerformancesAsync();
 
-        Assert.Equal(expected.Count, actual.Count());
+        // Assert
+        Assert.Equal(expected.Count(), actual.Count());
+        for (int i = 0; i < expected.Count; i++)
+        {
+            var e = expected[i];
+            var a = actual.ElementAt(i);
+
+            Assert.Equal(e.InstrumentId, a.InstrumentId);
+            Assert.Equal(e.TypeId, a.TypeId);
+            Assert.Equal(e.PeriodStart, a.PeriodStart);
+            Assert.Equal(e.PeriodEnd, a.PeriodEnd);
+            Assert.Equal(e.Value, a.Value);
+        }
+    }
+
+    [Fact]
+    public async Task AddInstrumentPerformancesAsync_AddsPerformances()
+    {
+        // Arrange
+        var expected = new InstrumentPerformanceBuilder()
+            .Many(4)
+            .ToList();
+
+        // Act
+        await _repository.AddInstrumentPerformancesAsync(expected);
+        var actual = await _context.InstrumentPerformances.ToListAsync();
+
+        // Assert
+        Assert.Equal(expected.Count(), actual.Count());
+        for (int i = 0; i < expected.Count(); i++)
+        {
+            var e = expected[i];
+            var a = actual[i];
+
+            Assert.Equal(e.InstrumentId, a.InstrumentId);
+            Assert.Equal(e.TypeId, a.TypeId);
+            Assert.Equal(e.PeriodStart, a.PeriodStart);
+            Assert.Equal(e.PeriodEnd, a.PeriodEnd);
+            Assert.Equal(e.Value, a.Value);
+        }
     }
 }
