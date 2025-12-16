@@ -1,4 +1,5 @@
 using PerformanceApp.Data.Models;
+using PerformanceApp.Infrastructure.Context;
 using PerformanceApp.Infrastructure.Repositories;
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -46,7 +47,7 @@ public class PortfolioValueRepositoryTest : BaseRepositoryTest
     public async Task GetPortfolioValuesAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
-        var context = GetContext();
+        var context = null as PadbContext;
         var repository = new PortfolioValueRepository(context);
 
         // Act

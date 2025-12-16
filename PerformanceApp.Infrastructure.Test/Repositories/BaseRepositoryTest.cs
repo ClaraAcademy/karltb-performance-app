@@ -9,14 +9,9 @@ public class BaseRepositoryTest
 
     public BaseRepositoryTest()
     {
-        _context = GetContext();
-    }
-
-    public static PadbContext GetContext()
-    {
         var options = new DbContextOptionsBuilder<PadbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
-        return new PadbContext(options);
+        _context = new PadbContext(options);
     }
 }
