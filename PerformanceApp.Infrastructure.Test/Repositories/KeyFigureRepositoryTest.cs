@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Builders;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -13,53 +14,32 @@ public class KeyFigureRepositoryTest : BaseRepositoryTest
         _repository = new KeyFigureInfoRepository(_context);
     }
 
-    private static string GetName(int i) => $"KeyFigure{i}";
-
-    private static List<KeyFigureInfo> CreateKeyFigureInfos(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(i => new KeyFigureInfo { Id = i, Name = GetName(i) })
-            .ToList();
-    }
-
     [Fact]
     public async Task AddKeyFigureInfosAsync_AddsKeyFigures()
     {
-        int n = 3;
-        var keyFigureInfos = CreateKeyFigureInfos(n);
-
-        // Act
-        await _repository.AddKeyFigureInfosAsync(keyFigureInfos);
-
-        // Assert
-        var addedKeyFigures = await _context.KeyFigureInfos.ToListAsync();
-
-        Assert.Equal(n, addedKeyFigures.Count);
-        for (int i = 1; i <= n; i++)
-        {
-            Assert.Contains(addedKeyFigures, kf => kf.Name == GetName(i));
-        }
-    }
-
-    [Fact]
-    public async Task AddKeyFiguresInfosAsync_AddsSingleKeyFigure()
-    {
         // Arrange
-        int n = 1;
-        var expected = CreateKeyFigureInfos(n);
+        var expected = new KeyFigureInfoBuilder()
+            .Many(5)
+            .ToList();
 
         // Act
         await _repository.AddKeyFigureInfosAsync(expected);
 
         // Assert
         var actual = await _context.KeyFigureInfos.ToListAsync();
-        Assert.Single(actual);
-        Assert.Equal("KeyFigure1", actual[0].Name);
+
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
+        }
     }
 
     [Fact]
     public async Task AddKeyFigureInfosAsync_NoKeyFigures_DoesNothing()
     {
+        // Arrange
         var empty = new List<KeyFigureInfo>();
 
         // Act
@@ -73,20 +53,24 @@ public class KeyFigureRepositoryTest : BaseRepositoryTest
     [Fact]
     public async Task GetKeyFigureInfosAsync_ReturnsAllKeyFigures()
     {
-        var n = 2;
-        var expected = CreateKeyFigureInfos(n);
+        // Arrange
+        var expected = new KeyFigureInfoBuilder()
+            .Many(8)
+            .ToList();
 
         await _context.KeyFigureInfos.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
-        var actual = await _repository.GetKeyFigureInfosAsync();
+        var retrieved = await _repository.GetKeyFigureInfosAsync();
+        var actual = retrieved.ToList();
 
         // Assert
-        Assert.Equal(n, actual.Count());
-        for (int i = 1; i <= n; i++)
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(actual, kf => kf.Name == GetName(i));
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
         }
     }
 
