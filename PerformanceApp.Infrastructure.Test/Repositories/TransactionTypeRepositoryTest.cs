@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Builders;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -13,87 +14,75 @@ public class TransactionTypeRepositoryTest : BaseRepositoryTest
         _repository = new TransactionTypeRepository(_context);
     }
 
-    private static TransactionType CreateTransactionType(int i)
-    {
-        return new TransactionType { Id = i, Name = $"Type{i}" };
-    }
-
-    private static List<TransactionType> CreateTransactionTypes(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(i => CreateTransactionType(i))
-            .ToList();
-    }
-
-    private static void AreEqual(TransactionType expected, TransactionType actual)
-    {
-        Assert.Equal(expected.Id, actual.Id);
-        Assert.Equal(expected.Name, actual.Name);
-    }
-    private static void AssertEqual(IEnumerable<TransactionType> expected, IEnumerable<TransactionType> actual)
-    {
-        Assert.Equal(expected.Count(), actual.Count());
-        foreach (var (e, a) in expected.Zip(actual))
-        {
-            AreEqual(e, a);
-        }
-    }
-
     [Fact]
     public async Task AddTransactionTypesAsync_AddsTransactionTypesToDatabase()
     {
         // Arrange
-        var nExpected = 9;
-        var transactionTypes = CreateTransactionTypes(nExpected);
-        await _repository.AddTransactionTypesAsync(transactionTypes);
+        var expected = new TransactionTypeBuilder()
+            .Many(5)
+            .ToList();
+
+        await _repository.AddTransactionTypesAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
-        var addedTransactionTypes = await _context.TransactionTypes.ToListAsync();
+        var actual = await _context.TransactionTypes.ToListAsync();
 
         // Assert
-        AssertEqual(transactionTypes, addedTransactionTypes);
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
+        }
     }
 
     [Fact]
     public async Task AddTransactionTypesAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var transactionTypes = new List<TransactionType>();
+        var empty = new List<TransactionType>();
 
         // Act
-        await _repository.AddTransactionTypesAsync(transactionTypes);
+        await _repository.AddTransactionTypesAsync(empty);
         await _context.SaveChangesAsync();
 
         // Assert
-        var addedTransactionTypes = await _context.TransactionTypes.ToListAsync();
-        Assert.Empty(addedTransactionTypes);
+        var actual = await _context.TransactionTypes.ToListAsync();
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetTransactionTypesAsync_ReturnsAllTransactionTypes()
     {
         // Arrange
-        var nExpected = 100;
-        var transactionTypes = CreateTransactionTypes(nExpected);
+        var expected = new TransactionTypeBuilder()
+            .Many(10)
+            .ToList();
 
-        await _context.TransactionTypes.AddRangeAsync(transactionTypes);
+        await _context.TransactionTypes.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetTransactionTypesAsync();
+        var actual = result.ToList();
 
         // Assert
-        AssertEqual(transactionTypes, result);
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
+        }
     }
 
     [Fact]
     public async Task GetTransactionTypesAsync_NoTransactionTypes_ReturnsEmptyList()
     {
         // Act
-        var result = await _repository.GetTransactionTypesAsync();
+        var actual = await _repository.GetTransactionTypesAsync();
 
         // Assert
-        Assert.Empty(result);
+        Assert.Empty(actual);
     }
 }
