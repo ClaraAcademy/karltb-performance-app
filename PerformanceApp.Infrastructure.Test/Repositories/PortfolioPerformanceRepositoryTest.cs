@@ -1,5 +1,6 @@
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Builders;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -11,31 +12,33 @@ public class PortfolioPerformanceRepositoryTest : BaseRepositoryTest
         _repository = new PortfolioPerformanceRepository(_context);
     }
 
-    private static PortfolioPerformance CreatePortfolioPerformance(int i) => new() { TypeId = i, PortfolioId = i, Value = 100m + i };
-    private static List<PortfolioPerformance> CreatePortfolioPerformances(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(CreatePortfolioPerformance)
-            .ToList();
-    }
-
     [Fact]
     public async Task GetPortfolioPerformancesAsync_ReturnsAllPortfolioPerformances()
     {
         // Arrange
-        var n = 40;
-        var portfolioPerformances = CreatePortfolioPerformances(n);
-        _context.PortfolioPerformances.AddRange(portfolioPerformances);
+        var portfolio = new PortfolioBuilder()
+            .WithId(1)
+            .Build();
+        var expected = new PortfolioPerformanceBuilder()
+            .WithPortfolio(portfolio)
+            .Many(5)
+            .ToList();
+        await _context
+            .PortfolioPerformances
+            .AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
         var result = await _repository.GetPortfolioPerformancesAsync();
+        var actual = result.ToList();
 
         // Assert
-        Assert.Equal(n, result.Count());
-        for (int i = 1; i <= n; i++)
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(result, pp => pp.TypeId == i && pp.Value == 100m + i);
+            Assert.Equal(e.TypeId, a.TypeId);
+            Assert.Equal(e.PortfolioId, a.PortfolioId);
+            Assert.Equal(e.Value, a.Value);
         }
     }
 
