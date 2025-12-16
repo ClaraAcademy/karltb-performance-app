@@ -21,4 +21,15 @@ public static class BenchmarkMapper
         };
     }
 
+    public static Benchmark Map(Portfolio portfolio, Portfolio benchmark)
+    {
+        return new Benchmark
+        {
+            PortfolioId = portfolio.Id,
+            BenchmarkId = benchmark.Id,
+            PortfolioPortfolioNavigation = portfolio,
+            BenchmarkPortfolioNavigation = benchmark
+        };
+    }
+
 }

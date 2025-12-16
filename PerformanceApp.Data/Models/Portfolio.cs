@@ -1,4 +1,6 @@
-﻿namespace PerformanceApp.Data.Models;
+﻿using PerformanceApp.Data.Mappers;
+
+namespace PerformanceApp.Data.Models;
 
 public partial class Portfolio
 {
@@ -21,7 +23,7 @@ public partial class Portfolio
         set
         {
             PortfolioPortfolioBenchmarkEntityNavigation = value
-                .Select(b => new Benchmark { PortfolioId = Id, BenchmarkId = b.Id, BenchmarkPortfolioNavigation = b, PortfolioPortfolioNavigation = this })
+                .Select(b => BenchmarkMapper.Map(this, b))
                 .ToList();
         }
     }
@@ -37,7 +39,7 @@ public partial class Portfolio
         set
         {
             BenchmarkPortfolioBenchmarkEntityNavigation = value
-                .Select(p => new Benchmark { PortfolioId = p.Id, BenchmarkId = Id, PortfolioPortfolioNavigation = p, BenchmarkPortfolioNavigation = this })
+                .Select(p => BenchmarkMapper.Map(p, this))
                 .ToList();
         }
     }
