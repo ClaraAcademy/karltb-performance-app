@@ -1,53 +1,58 @@
 using PerformanceApp.Infrastructure.Repositories;
-using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Builders;
+using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Helpers;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
 public class DateInfoRepositoryTest : BaseRepositoryTest
 {
     private readonly DateInfoRepository _repository;
-    private readonly List<DateInfo> _dateInfos = CreateDateInfos();
 
     public DateInfoRepositoryTest()
     {
         _repository = new DateInfoRepository(_context);
     }
 
-    private static List<DateInfo> CreateDateInfos()
-    {
-        return [
-            new DateInfo { Bankday = new DateOnly(2024, 1, 1) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 2) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 3) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 4) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 5) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 6) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 7) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 8) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 9) },
-            new DateInfo { Bankday = new DateOnly(2024, 1, 10) }
-        ];
-    }
-
     [Fact]
     public async Task AddDateInfosAsync_AddsDateInfos()
     {
-        await _repository.AddDateInfosAsync(_dateInfos);
+        // Arrange
+        var expected = new DateInfoBuilder()
+            .Many(5)
+            .ToList();
 
-        Assert.Equal(_dateInfos.Count, _context.DateInfos.Count());
+        // Act
+        await _repository.AddDateInfosAsync(expected);
+        var actual = await _context
+            .DateInfos
+            .ToListAsync();
+
+        // Assert
+        Assert.Equal(expected.Count, actual.Count);
+        var orderedExpected = expected.OrderedBankdays();
+        var orderedActual = actual.OrderedBankdays();
+        Assert.Equal(orderedExpected, orderedActual);
     }
 
     [Fact]
     public async Task GetDateInfosAsync_ReturnsDateInfos()
     {
-        _context.DateInfos.AddRange(_dateInfos);
+        // Arrange
+        var expected = new DateInfoBuilder()
+            .Many(7)
+            .ToList();
+
+        _context.DateInfos.AddRange(expected);
         _context.SaveChanges();
 
+        // Act
         var dateInfos = await _repository.GetDateInfosAsync();
+        var actual = dateInfos.ToList();
 
-        Assert.Equal(_dateInfos.Count, dateInfos.Count());
+        Assert.Equal(expected.Count, actual.Count);
+        var orderedExpected = expected.OrderedBankdays();
+        var orderedActual = actual.OrderedBankdays();
+        Assert.Equal(orderedExpected, orderedActual);
     }
-
-
-
 }
