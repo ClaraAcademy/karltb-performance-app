@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 
@@ -12,65 +13,59 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
         _repository = new PortfolioRepository(_context);
     }
 
-    private static string CreateName(int i) => $"Portfolio {i}";
-    private static Portfolio CreatePortfolio(int i) => new Portfolio { Id = i, Name = CreateName(i) };
-    private static List<Portfolio> CreatePortfolios(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(CreatePortfolio)
-            .ToList();
-    }
-
     [Fact]
     public async Task AddPortfoliosAsync_AddsMultiplePortfoliosToDatabase()
     {
         // Arrange
-        var n = 24;
-        var portfolios = CreatePortfolios(n);
+        var expected = new PortfolioBuilder()
+            .Many(10)
+            .ToList();
 
         // Act
-        await _repository.AddPortfoliosAsync(portfolios);
+        await _repository.AddPortfoliosAsync(expected);
 
         // Assert
-        var fetched = _context.Portfolios.ToList();
-        var actual = fetched.Count;
+        var actual = _context.Portfolios.ToList();
 
-        Assert.Equal(n, actual);
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
+        }
     }
 
     [Fact]
     public async Task AddPortfoliosAsync_DoesNotAddEmptyList()
     {
         // Arrange
-        var portfolios = new List<Portfolio>();
-        var expected = 0;
+        var empty = new List<Portfolio>();
 
         // Act
-        await _repository.AddPortfoliosAsync(portfolios);
-        var actual = _context.Portfolios.Count();
+        await _repository.AddPortfoliosAsync(empty);
+        var actual = _context.Portfolios.ToList();
 
         // Assert
-        Assert.Equal(expected, actual);
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetPortfolioAsync_ById_ReturnsCorrectPortfolio()
     {
         // Arrange
-        var n = 51;
-        var portfolios = CreatePortfolios(n);
+        var portfolios = new PortfolioBuilder()
+            .Many(5)
+            .ToList();
+        var expected = portfolios.First();
 
         // Act
         await _context.Portfolios.AddRangeAsync(portfolios);
         await _context.SaveChangesAsync();
 
-        var id = 23;
-        var fetched = await _repository.GetPortfolioAsync(id);
+        var actual = await _repository.GetPortfolioAsync(expected.Id);
 
         // Assert
-        Assert.NotNull(fetched);
-        var expected = CreateName(id);
-        var actual = fetched.Name;
+        Assert.NotNull(actual);
         Assert.Equal(expected, actual);
     }
 
@@ -88,23 +83,32 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
     public async Task GetPortfoliosAsync_ByNames_ReturnsCorrectPortfolios()
     {
         // Arrange
-        var nTotal = 4;
-        var portfolios = CreatePortfolios(nTotal);
-        await _context.Portfolios.AddRangeAsync(portfolios);
+        var n = 9;
+        var m = 4;
+
+        var portfolios = new PortfolioBuilder()
+            .Many(n)
+            .ToList();
+
+        await _context
+            .Portfolios
+            .AddRangeAsync(portfolios);
         await _context.SaveChangesAsync();
 
         // Act
-        var nToRetrieve = 2;
-        var namesToFetch = Enumerable.Range(1, nToRetrieve).Select(CreateName).ToList();
-        var fetched = await _repository.GetPortfoliosAsync(namesToFetch);
+        var expected = portfolios.Take(m).ToList();
+        var names = expected
+            .Select(p => p.Name)
+            .ToList();
+        var fetched = await _repository.GetPortfoliosAsync(names);
+        var actual = fetched.ToList();
 
         // Assert
-        var nExpected = nToRetrieve;
-        var nActual = fetched.Count();
-        Assert.Equal(nExpected, nActual);
-        foreach (var name in namesToFetch)
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(fetched, p => p.Name == name);
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
         }
     }
 
@@ -112,62 +116,72 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
     public async Task GetPortfoliosAsync_ByNames_ReturnsEmpty_WhenNoMatches()
     {
         // Arrange
-        var nPortfolios = 10;
-        var portfolios = CreatePortfolios(nPortfolios);
+        var portfolios = new PortfolioBuilder()
+            .Many(5)
+            .ToList();
 
         await _context.Portfolios.AddRangeAsync(portfolios);
         await _context.SaveChangesAsync();
 
         // Act
-        var namesToFetch = new List<string> { CreateName(-100), CreateName(-200) };
-        var fetched = await _repository.GetPortfoliosAsync(namesToFetch);
+        var actual = await _repository.GetPortfoliosAsync(["Nonsense"]);
 
         // Assert
-        Assert.Empty(fetched);
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetProperPortfoliosAsync_ReturnsPortfoliosWithBenchmarks()
     {
         // Arrange
-        var benchmarkPortfolio = new Portfolio { Name = "Benchmark Portfolio" };
-        var portfolioWithBenchmark = new Portfolio { Name = "With Benchmark" };
-        var portfolioWithoutBenchmark = new Portfolio { Name = "Without Benchmark" };
-        var portfolios = new List<Portfolio> { benchmarkPortfolio, portfolioWithBenchmark, portfolioWithoutBenchmark };
+        var benchmark = new PortfolioBuilder()
+            .WithId(100)
+            .WithName("Benchmark Portfolio")
+            .Build();
+        var portfolioWithBenchmark = new PortfolioBuilder()
+            .WithId(1)
+            .WithName("With Benchmark")
+            .WithBenchmark(benchmark)
+            .Build();
+        var portfolioWithoutBenchmark = new PortfolioBuilder()
+            .WithId(2)
+            .WithName("Without Benchmark")
+            .Build();
+        var portfolios = new List<Portfolio> { benchmark, portfolioWithBenchmark, portfolioWithoutBenchmark };
 
         await _context.Portfolios.AddRangeAsync(portfolios);
         await _context.SaveChangesAsync();
 
-        var benchmark = new Benchmark { PortfolioId = portfolioWithBenchmark.Id, BenchmarkId = benchmarkPortfolio.Id };
-        await _context.Benchmarks.AddAsync(benchmark);
-        await _context.SaveChangesAsync();
-
         // Act
         var fetched = await _repository.GetProperPortfoliosAsync();
+        var actual = fetched.ToList();
 
-        Assert.Single(fetched);
-        Assert.Equal("With Benchmark", fetched.First().Name);
+        Assert.Single(actual);
+        Assert.Equal(portfolioWithBenchmark.Name, actual[0].Name);
+        Assert.Equal(portfolioWithBenchmark.Id, actual[0].Id);
     }
 
     [Fact]
     public async Task GetPortfoliosAsync_ReturnsAllPortfolios()
     {
         // Arrange
-        var nExpected = 20;
-        var expected = CreatePortfolios(nExpected);
+        var expected = new PortfolioBuilder()
+            .Many(15)
+            .ToList();
 
         await _context.Portfolios.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
-        var actual = await _repository.GetPortfoliosAsync();
+        var fetched = await _repository.GetPortfoliosAsync();
+        var actual = fetched.ToList();
 
         // Assert
-        var nActual = actual.Count();
-        Assert.Equal(nExpected, nActual);
-        foreach (var portfolio in expected)
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(actual, p => p.Name == portfolio.Name);
+            Assert.Equal(e.Id, a.Id);
+            Assert.Equal(e.Name, a.Name);
         }
     }
 
@@ -185,43 +199,48 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
     public async Task GetPortfoliosAsync_ByUserId_ReturnsCorrectPortfolios()
     {
         // Arrange
-        var userId1 = "user1";
-        var userId2 = "user2";
-
-        var portfolio1 = new Portfolio { Name = "Portfolio 1", UserID = userId1 };
-        var portfolio2 = new Portfolio { Name = "Portfolio 2", UserID = userId1 };
-        var portfolio3 = new Portfolio { Name = "Portfolio 3", UserID = userId2 };
-
-        var portfolios = new List<Portfolio> { portfolio1, portfolio2, portfolio3 };
+        var user = new ApplicationUserBuilder()
+            .WithId("SomeUserId")
+            .Build();
+        var benchmark = new PortfolioBuilder()
+            .WithId(100)
+            .WithName("Benchmark Portfolio")
+            .Build();
+        var portfolio1 = new PortfolioBuilder()
+            .WithId(1)
+            .WithName("Portfolio 1")
+            .WithUser(user)
+            .WithBenchmark(benchmark)
+            .Build();
+        var portfolio2 = new PortfolioBuilder()
+            .WithId(2)
+            .WithName("Portfolio 2")
+            .Build();
+        var portfolios = new List<Portfolio> { portfolio1, portfolio2 };
+        var expected = new List<Portfolio> { portfolio1 };
 
         await _context.Portfolios.AddRangeAsync(portfolios);
         await _context.SaveChangesAsync();
 
-        var benchmark = new Benchmark { PortfolioId = portfolio1.Id, BenchmarkId = portfolio3.Id };
-        await _context.Benchmarks.AddAsync(benchmark);
-        await _context.SaveChangesAsync();
-
         // Act
-        var fetched = await _repository.GetPortfoliosAsync(userId1);
+        var actual = await _repository.GetPortfoliosAsync(user.Id);
 
         // Assert
-        var nExpected = 1; // Only portfolio1 has a benchmark
-        var nActual = fetched.Count();
-        Assert.Equal(nExpected, nActual);
-        Assert.Contains(fetched, p => p.Name == "Portfolio 1");
+        Assert.Single(actual);
+        Assert.Equal(actual, expected);
     }
 
     [Fact]
     public async Task GetPortfoliosAsync_ByUserId_ReturnsEmpty_WhenNoMatchingPortfolios()
     {
         // Arrange
-        var userId = "nonexistent_user";
+        var userId = "nonsense";
 
         // Act
-        var fetched = await _repository.GetPortfoliosAsync(userId);
+        var actual = await _repository.GetPortfoliosAsync(userId);
 
         // Assert
-        Assert.Empty(fetched);
+        Assert.Empty(actual);
     }
 
 }
