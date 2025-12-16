@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Builders;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -35,20 +36,17 @@ public class StagingRepositoryTest : BaseRepositoryTest
     [Fact]
     public async Task AddStagingsAsync_AddsStagingsToDatabase()
     {
-        // Arrange
-        var nExpected = 5;
-        var stagings = CreateStagings(nExpected);
+        var expected = new StagingBuilder()
+            .Many(5)
+            .ToList();
 
         // Act
-        await _repository.AddStagingsAsync(stagings);
+        await _repository.AddStagingsAsync(expected);
 
+        var actual = await _context.Stagings.ToListAsync();
         // Assert
-        var addedStagings = await _context.Stagings.ToListAsync();
-
-        var nActual = addedStagings.Count;
-        Assert.Equal(nExpected, nActual);
-
-        foreach ((var e, var a) in stagings.Zip(addedStagings))
+        Assert.Equal(expected.Count, actual.Count);
+        foreach ((var e, var a) in expected.Zip(actual))
         {
             Assert.Equal(e.Bankday, a.Bankday);
             Assert.Equal(e.InstrumentType, a.InstrumentType);
@@ -61,33 +59,33 @@ public class StagingRepositoryTest : BaseRepositoryTest
     public async Task AddStagingsAsync_EmptyList_DoesNotAddAnything()
     {
         // Arrange
-        var stagings = new List<Staging>();
+        var empty = new List<Staging>();
 
         // Act
-        await _repository.AddStagingsAsync(stagings);
+        await _repository.AddStagingsAsync(empty);
 
         // Assert
-        var addedStagings = await _context.Stagings.ToListAsync();
-        Assert.Empty(addedStagings);
+        var actual = await _context.Stagings.ToListAsync();
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetStagingsAsync_ReturnsAllStagings()
     {
         // Arrange
-        var nExpected = 8;
-        var stagings = CreateStagings(nExpected);
+        var expected = new StagingBuilder()
+            .Many(7)
+            .ToList();
 
-        await _context.Stagings.AddRangeAsync(stagings);
+        await _context.Stagings.AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
-        var retrievedStagings = await _repository.GetStagingsAsync();
+        var actual = await _repository.GetStagingsAsync();
 
         // Assert
-        var nActual = retrievedStagings.Count;
-        Assert.Equal(nExpected, nActual);
-        foreach ((var e, var a) in stagings.Zip(retrievedStagings))
+        Assert.Equal(expected.Count, actual.Count);
+        foreach ((var e, var a) in expected.Zip(actual))
         {
             Assert.Equal(e.Bankday, a.Bankday);
             Assert.Equal(e.InstrumentType, a.InstrumentType);
@@ -100,9 +98,9 @@ public class StagingRepositoryTest : BaseRepositoryTest
     public async Task GetStagingsAsync_NoStagings_ReturnsEmptyList()
     {
         // Act
-        var retrievedStagings = await _repository.GetStagingsAsync();
+        var actual = await _repository.GetStagingsAsync();
 
         // Assert
-        Assert.Empty(retrievedStagings);
+        Assert.Empty(actual);
     }
 }
