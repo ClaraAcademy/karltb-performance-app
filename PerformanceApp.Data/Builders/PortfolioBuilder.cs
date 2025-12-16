@@ -69,21 +69,17 @@ public class PortfolioBuilder : IBuilder<Portfolio>
 
     public IEnumerable<Portfolio> Many(int count)
     {
-        var portfolios = new List<Portfolio>();
-        for (int i = 1; i <= count; i++)
+        for (int i = 0; i < count; i++)
         {
-            portfolios.Add(new Portfolio
-            {
-                Id = i,
-                Name = $"Portfolio {i}",
-                User = _user,
-                BenchmarksNavigation = _benchmarks,
-                KeyFigureValuesNavigation = _keyFigureValues,
-                PortfolioPerformancesNavigation = _performances
-            }
-            );
+            yield return new PortfolioBuilder()
+                .WithId(i + 1)
+                .WithName($"Portfolio {i + 1}")
+                .WithUser(_user)
+                .WithBenchmarks(_benchmarks)
+                .WithKeyFigureValues(_keyFigureValues)
+                .WithPerformances(_performances)
+                .Build();
         }
-        return portfolios;
     }
 
     public Portfolio Build()
