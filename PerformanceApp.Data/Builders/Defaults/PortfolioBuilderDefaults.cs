@@ -11,7 +11,6 @@ public static class PortfolioBuilderDefaults
     public static int BenchmarkId => 100;
     public static string BenchmarkName => "Default Benchmark";
     public static Portfolio Benchmark => new PortfolioBuilder()
-        .WithId(BenchmarkId)
         .WithName(BenchmarkName)
         .Build();
 }

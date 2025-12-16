@@ -6,14 +6,7 @@ namespace PerformanceApp.Data.Builders;
 
 public class TransactionTypeBuilder : IBuilder<TransactionType>
 {
-    private int _id = TransactionTypeBuilderDefaults.Id;
     private string _name = TransactionTypeBuilderDefaults.Name;
-
-    public TransactionTypeBuilder WithId(int id)
-    {
-        _id = id;
-        return this;
-    }
 
     public TransactionTypeBuilder WithName(string name)
     {
@@ -25,7 +18,6 @@ public class TransactionTypeBuilder : IBuilder<TransactionType>
     {
         return new TransactionType
         {
-            Id = _id,
             Name = _name
         };
     }
@@ -33,7 +25,6 @@ public class TransactionTypeBuilder : IBuilder<TransactionType>
     public TransactionType Clone()
     {
         return new TransactionTypeBuilder()
-            .WithId(_id)
             .WithName(_name)
             .Build();
     }
@@ -43,7 +34,6 @@ public class TransactionTypeBuilder : IBuilder<TransactionType>
         for (int i = 0; i < count; i++)
         {
             yield return new TransactionTypeBuilder()
-                .WithId(i + 1)
                 .WithName($"Transaction Type {i + 1}")
                 .Build();
         }

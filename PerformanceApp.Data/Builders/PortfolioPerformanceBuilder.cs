@@ -6,19 +6,12 @@ namespace PerformanceApp.Data.Builders;
 
 public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
 {
-    private int _id = PortfolioPerformanceBuilderDefaults.Id;
     private DateOnly _periodStart = PortfolioPerformanceBuilderDefaults.PeriodStart;
     private DateOnly _periodEnd = PortfolioPerformanceBuilderDefaults.PeriodEnd;
     private PerformanceType _performanceType = new PerformanceTypeBuilder().Build();
     private decimal _value = PortfolioPerformanceBuilderDefaults.Value;
     private int _portfolioId = new PortfolioBuilder().Build().Id;
     private Portfolio _portfolio = new PortfolioBuilder().Build();
-
-    public PortfolioPerformanceBuilder WithId(int id)
-    {
-        _id = id;
-        return this;
-    }
 
     public PortfolioPerformanceBuilder WithPeriodStart(DateOnly periodStart)
     {
@@ -61,7 +54,6 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
     {
         return new PortfolioPerformance
         {
-            TypeId = _id,
             PeriodStart = _periodStart,
             PeriodEnd = _periodEnd,
             PerformanceTypeNavigation = _performanceType,
@@ -74,7 +66,6 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
     public PortfolioPerformance Clone()
     {
         return new PortfolioPerformanceBuilder()
-            .WithId(_id)
             .WithPeriodStart(_periodStart)
             .WithPeriodEnd(_periodEnd)
             .WithPerformanceType(_performanceType)
@@ -88,7 +79,6 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
         for (int i = 0; i < count; i++)
         {
             yield return new PortfolioPerformanceBuilder()
-                .WithId(_id + i)
                 .WithPeriodStart(_periodStart.AddDays(i))
                 .WithPeriodEnd(_periodEnd.AddDays(i))
                 .WithPerformanceType(_performanceType)

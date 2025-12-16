@@ -6,18 +6,11 @@ namespace PerformanceApp.Data.Builders;
 
 public class PortfolioBuilder : IBuilder<Portfolio>
 {
-    private int _id = PortfolioBuilderDefaults.PortfolioId;
     private string _name = PortfolioBuilderDefaults.PortfolioName;
     private ApplicationUser _user = new ApplicationUser();
     private List<Portfolio> _benchmarks = new List<Portfolio>();
     private List<KeyFigureValue> _keyFigureValues = new List<KeyFigureValue>();
     private List<PortfolioPerformance> _performances = new List<PortfolioPerformance>();
-
-    public PortfolioBuilder WithId(int id)
-    {
-        _id = id;
-        return this;
-    }
 
     public PortfolioBuilder WithName(string name)
     {
@@ -58,7 +51,6 @@ public class PortfolioBuilder : IBuilder<Portfolio>
     public Portfolio Clone()
     {
         return new PortfolioBuilder()
-            .WithId(_id)
             .WithName(_name)
             .WithUser(_user)
             .WithBenchmarks(new List<Portfolio>(_benchmarks))
@@ -72,7 +64,6 @@ public class PortfolioBuilder : IBuilder<Portfolio>
         for (int i = 0; i < count; i++)
         {
             yield return new PortfolioBuilder()
-                .WithId(i + 1)
                 .WithName($"Portfolio {i + 1}")
                 .WithUser(_user)
                 .WithBenchmarks(_benchmarks)
@@ -86,7 +77,6 @@ public class PortfolioBuilder : IBuilder<Portfolio>
     {
         return new Portfolio
         {
-            Id = _id,
             Name = _name,
             User = _user,
             BenchmarksNavigation = _benchmarks,

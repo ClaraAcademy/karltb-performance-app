@@ -6,7 +6,6 @@ namespace PerformanceApp.Data.Builders;
 
 public class PositionBuilder : IBuilder<Position>
 {
-    private int _id = PositionBuilderDefaults.Id;
     private int _instrumentId = PositionBuilderDefaults.InstrumentId;
     private int _portfolioId = PositionBuilderDefaults.PortfolioId;
     private DateOnly _bankday = PositionBuilderDefaults.Bankday;
@@ -20,11 +19,6 @@ public class PositionBuilder : IBuilder<Position>
     protected decimal? _nominal = null;
 
 
-    public PositionBuilder WithId(int id)
-    {
-        _id = id;
-        return this;
-    }
     public PositionBuilder WithInstrumentId(int instrumentId)
     {
         _instrumentId = instrumentId;
@@ -85,7 +79,6 @@ public class PositionBuilder : IBuilder<Position>
     {
         return new Position
         {
-            Id = _id,
             InstrumentId = _instrumentId,
             PortfolioId = _portfolioId,
             Bankday = _bankday,
@@ -103,7 +96,6 @@ public class PositionBuilder : IBuilder<Position>
     public Position Clone()
     {
         return new PositionBuilder()
-            .WithId(_id)
             .WithInstrumentId(_instrumentId)
             .WithPortfolioId(_portfolioId)
             .WithBankday(_bankday)
@@ -122,13 +114,14 @@ public class PositionBuilder : IBuilder<Position>
     {
         for (int i = 0; i < count; i++)
         {
-            var instrument = new InstrumentBuilder().WithId(_instrumentId + i).Build();
-            var portfolio = new PortfolioBuilder().WithId(_portfolioId + i).Build();
+            var instrument = new InstrumentBuilder()
+                .Build();
+            var portfolio = new PortfolioBuilder()
+                .Build();
             var bankday = _bankday.AddDays(i);
             var dateInfo = new DateInfoBuilder().WithBankday(bankday).Build();
 
             yield return new PositionBuilder()
-                .WithId(_id + i)
                 .WithInstrumentId(instrument.Id)
                 .WithPortfolioId(portfolio.Id)
                 .WithBankday(bankday)
@@ -138,9 +131,8 @@ public class PositionBuilder : IBuilder<Position>
                 .WithPositionValuesNavigation(
                     [
                         new PositionValueBuilder()
-                        .WithBankday(bankday)
-                        .WithId(_id + i)
-                        .Build()
+                            .WithBankday(bankday)
+                            .Build()
                     ]
                 )
                 .WithAmount(_amount)

@@ -44,7 +44,8 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
             Bankday = _bankday,
             Price = _price,
             BankdayNavigation = _bankdayNavigation ?? new DateInfoBuilder().WithBankday(_bankday).Build(),
-            InstrumentNavigation = _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
+            InstrumentNavigation = _instrumentNavigation ?? new InstrumentBuilder()
+                .Build()
         };
     }
 
@@ -58,7 +59,8 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
                 _bankdayNavigation ?? new DateInfoBuilder().WithBankday(_bankday).Build()
             )
             .WithInstrumentNavigation(
-                _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
+                _instrumentNavigation ?? new InstrumentBuilder()
+                    .Build()
             )
                 .Build();
     }
@@ -78,7 +80,8 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
                     new DateInfoBuilder().WithBankday(bankday).Build()
                 )
                 .WithInstrumentNavigation(
-                    _instrumentNavigation ?? new InstrumentBuilder().WithId(instrumentId).Build()
+                    _instrumentNavigation ?? new InstrumentBuilder()
+                        .Build()
                 )
                 .Build();
         }

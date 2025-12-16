@@ -7,10 +7,8 @@ public class StockPositionBuilderDefaults : PositionBuilderDefaults
 {
     public static readonly int Count = 100;
     public new static readonly Instrument InstrumentNavigation = new InstrumentBuilder()
-        .WithId(20000)
         .WithInstrumentTypeNavigation(
             new InstrumentTypeBuilder()
-                .WithId(20000)
                 .WithName(InstrumentTypeConstants.Stock)
                 .Build()
         )

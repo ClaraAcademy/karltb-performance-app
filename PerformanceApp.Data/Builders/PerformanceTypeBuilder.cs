@@ -6,14 +6,8 @@ namespace PerformanceApp.Data.Builders;
 
 public class PerformanceTypeBuilder : IBuilder<PerformanceType>
 {
-    private int _id = PerformanceTypeBuilderDefaults.Id;
     private string _name = PerformanceTypeBuilderDefaults.Name;
 
-    public PerformanceTypeBuilder WithId(int id)
-    {
-        _id = id;
-        return this;
-    }
 
     public PerformanceTypeBuilder WithName(string name)
     {
@@ -25,7 +19,6 @@ public class PerformanceTypeBuilder : IBuilder<PerformanceType>
     {
         return new PerformanceType
         {
-            Id = _id,
             Name = _name
         };
     }
@@ -33,7 +26,6 @@ public class PerformanceTypeBuilder : IBuilder<PerformanceType>
     public PerformanceType Clone()
     {
         return new PerformanceTypeBuilder()
-            .WithId(_id)
             .WithName(_name)
             .Build();
     }
@@ -43,7 +35,6 @@ public class PerformanceTypeBuilder : IBuilder<PerformanceType>
         for (int i = 1; i <= count; i++)
         {
             yield return new PerformanceTypeBuilder()
-                .WithId(i)
                 .WithName($"Performance Type {i}")
                 .Build();
         }

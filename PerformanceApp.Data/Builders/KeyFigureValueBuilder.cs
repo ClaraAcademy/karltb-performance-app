@@ -55,7 +55,6 @@ public class KeyFigureValueBuilder : IBuilder<KeyFigureValue>
             yield return new KeyFigureValueBuilder()
                 .WithKeyFigureInfo(
                     new KeyFigureInfoBuilder()
-                        .WithId(_keyFigureInfo.Id + i)
                         .WithName($"{_keyFigureInfo.Name} {i + 1}")
                         .Build()
                 )

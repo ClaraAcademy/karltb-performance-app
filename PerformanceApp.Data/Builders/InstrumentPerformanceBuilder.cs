@@ -6,33 +6,21 @@ namespace PerformanceApp.Data.Builders;
 
 public class InstrumentPerformanceBuilder : IBuilder<InstrumentPerformance>
 {
-    private int _instrumentId = InstrumentPerformanceBuilderDefaults.InstrumentId;
-    private int _typeId = InstrumentPerformanceBuilderDefaults.TypeId;
-    private DateOnly _periodStart = InstrumentPerformanceBuilderDefaults.PeriodStart;
-    private DateOnly _periodEnd = InstrumentPerformanceBuilderDefaults.PeriodEnd;
+    private DateInfo _periodStartNavigation = InstrumentPerformanceBuilderDefaults.PeriodStartNavigation;
+    private DateInfo _periodEndNavigation = InstrumentPerformanceBuilderDefaults.PeriodEndNavigation;
     private decimal _value = InstrumentPerformanceBuilderDefaults.Value;
+    private Instrument _instrumentNavigation = InstrumentPerformanceBuilderDefaults.InstrumentNavigation;
+    private PerformanceType _performanceTypeNavigation = InstrumentPerformanceBuilderDefaults.PerformanceTypeNavigation;
 
-    public InstrumentPerformanceBuilder WithInstrumentId(int instrumentId)
+    public InstrumentPerformanceBuilder WithPeriodStart(DateInfo periodStart)
     {
-        _instrumentId = instrumentId;
+        _periodStartNavigation = periodStart;
         return this;
     }
 
-    public InstrumentPerformanceBuilder WithTypeId(int typeId)
+    public InstrumentPerformanceBuilder WithPeriodEnd(DateInfo periodEnd)
     {
-        _typeId = typeId;
-        return this;
-    }
-
-    public InstrumentPerformanceBuilder WithPeriodStart(DateOnly periodStart)
-    {
-        _periodStart = periodStart;
-        return this;
-    }
-
-    public InstrumentPerformanceBuilder WithPeriodEnd(DateOnly periodEnd)
-    {
-        _periodEnd = periodEnd;
+        _periodEndNavigation = periodEnd;
         return this;
     }
 
@@ -42,39 +30,57 @@ public class InstrumentPerformanceBuilder : IBuilder<InstrumentPerformance>
         return this;
     }
 
+    public InstrumentPerformanceBuilder WithInstrumentNavigation(Instrument instrument)
+    {
+        _instrumentNavigation = instrument;
+        return this;
+    }
+
+    public InstrumentPerformanceBuilder WithPerformanceTypeNavigation(PerformanceType performanceType)
+    {
+        _performanceTypeNavigation = performanceType;
+        return this;
+    }
+
     public InstrumentPerformance Build()
     {
         return new InstrumentPerformance
         {
-            InstrumentId = _instrumentId,
-            TypeId = _typeId,
-            PeriodStart = _periodStart,
-            PeriodEnd = _periodEnd,
-            Value = _value
+            PeriodStartNavigation = _periodStartNavigation,
+            PeriodEndNavigation = _periodEndNavigation,
+            Value = _value,
+            InstrumentNavigation = _instrumentNavigation,
+            PerformanceTypeNavigation = _performanceTypeNavigation
         };
     }
 
     public InstrumentPerformance Clone()
     {
         return new InstrumentPerformanceBuilder()
-            .WithInstrumentId(_instrumentId)
-            .WithTypeId(_typeId)
-            .WithPeriodStart(_periodStart)
-            .WithPeriodEnd(_periodEnd)
+            .WithPeriodStart(_periodStartNavigation)
+            .WithPeriodEnd(_periodEndNavigation)
             .WithValue(_value)
+            .WithInstrumentNavigation(_instrumentNavigation)
+            .WithPerformanceTypeNavigation(_performanceTypeNavigation)
             .Build();
     }
 
     public IEnumerable<InstrumentPerformance> Many(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (int i = 1; i <= count; i++)
         {
+            var periodStart = new DateInfoBuilder().WithBankday(
+                _periodStartNavigation.Bankday.AddDays(i)
+            ).Build();
+            var periodEnd = new DateInfoBuilder().WithBankday(
+                _periodEndNavigation.Bankday.AddDays(i)
+            ).Build();
             yield return new InstrumentPerformanceBuilder()
-                .WithInstrumentId(_instrumentId + i)
-                .WithTypeId(_typeId)
-                .WithPeriodStart(_periodStart.AddDays(i))
-                .WithPeriodEnd(_periodEnd.AddDays(i))
+                .WithPeriodStart(periodStart)
+                .WithPeriodEnd(periodEnd)
                 .WithValue(_value + i)
+                .WithInstrumentNavigation(_instrumentNavigation)
+                .WithPerformanceTypeNavigation(_performanceTypeNavigation)
                 .Build();
         }
     }

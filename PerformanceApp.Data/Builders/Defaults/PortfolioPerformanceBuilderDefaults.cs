@@ -4,7 +4,7 @@ namespace PerformanceApp.Data.Builders.Defaults;
 
 public static class PortfolioPerformanceBuilderDefaults
 {
-    public static int Id => 1;
+    public static int Id => 0;
     public static int PortfolioId => 1;
     public static int PerformanceTypeId => 1;
     public static decimal Value => 1000.00m;
