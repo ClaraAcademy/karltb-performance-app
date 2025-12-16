@@ -1,3 +1,4 @@
+using PerformanceApp.Data.Builders;
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Repositories;
 namespace PerformanceApp.Infrastructure.Test.Repositories;
@@ -11,54 +12,34 @@ public class KeyFigureValueRepositoryTest : BaseRepositoryTest
         _repository = new KeyFigureValueRepository(_context);
     }
 
-    private static Portfolio CreatePortfolio(int i) => new Portfolio { Id = i, Name = $"Portfolio {i}" };
-    private static List<Portfolio> CreatePortfolios(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(CreatePortfolio)
-            .ToList();
-    }
-    private static KeyFigureValue CreateKeyFigureValue(int keyFigureId, int portfolioId)
-    {
-        return new KeyFigureValue
-        {
-            KeyFigureId = keyFigureId,
-            PortfolioId = portfolioId,
-            Value = keyFigureId * portfolioId * 100m
-        };
-    }
-    private static List<KeyFigureValue> CreateKeyFigureValues(int nKeyFigures, int nPortfolios)
-    {
-        var result = new List<KeyFigureValue>();
-        for (int pfId = 1; pfId <= nPortfolios; pfId++)
-        {
-            for (int kfId = 1; kfId <= nKeyFigures; kfId++)
-            {
-                result.Add(CreateKeyFigureValue(kfId, pfId));
-            }
-        }
-        return result;
-    }
-
     [Fact]
     public async Task GetKeyFigureValuesAsync_ReturnsValues_ForGivenPortfolioId()
     {
         // Arrange
-        var nPortfolios = 2;
-        var portfolios = CreatePortfolios(nPortfolios);
-        _context.Portfolios.AddRange(portfolios);
-        await _context.SaveChangesAsync();
-
-        var nKeyFigures = 4;
-        var keyFigureValues = CreateKeyFigureValues(nKeyFigures, nPortfolios);
-        _context.KeyFigureValues.AddRange(keyFigureValues);
+        var portfolio = new PortfolioBuilder()
+            .WithId(1)
+            .Build();
+        var expected = new KeyFigureValueBuilder()
+            .WithPortfolio(portfolio)
+            .Many(10)
+            .ToList();
+        await _context
+            .KeyFigureValues
+            .AddRangeAsync(expected);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _repository.GetKeyFigureValuesAsync(1);
+        var retrieved = await _repository.GetKeyFigureValuesAsync(1);
+        var actual = retrieved.ToList();
 
         // Assert
-        Assert.Equal(nKeyFigures, result.Count());
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.KeyFigureId, a.KeyFigureId);
+            Assert.Equal(e.PortfolioId, a.PortfolioId);
+            Assert.Equal(e.Value, a.Value);
+        }
     }
 
     [Fact]
