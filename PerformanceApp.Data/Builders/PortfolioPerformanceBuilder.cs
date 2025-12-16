@@ -11,6 +11,8 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
     private DateOnly _periodEnd = PortfolioPerformanceBuilderDefaults.PeriodEnd;
     private PerformanceType _performanceType = new PerformanceTypeBuilder().Build();
     private decimal _value = PortfolioPerformanceBuilderDefaults.Value;
+    private int _portfolioId = new PortfolioBuilder().Build().Id;
+    private Portfolio _portfolio = new PortfolioBuilder().Build();
 
     public PortfolioPerformanceBuilder WithId(int id)
     {
@@ -42,6 +44,19 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
         return this;
     }
 
+    public PortfolioPerformanceBuilder WithPortfolioId(int portfolioId)
+    {
+        _portfolioId = portfolioId;
+        return this;
+    }
+
+    public PortfolioPerformanceBuilder WithPortfolio(Portfolio portfolio)
+    {
+        _portfolio = portfolio;
+        _portfolioId = portfolio.Id;
+        return this;
+    }
+
     public PortfolioPerformance Build()
     {
         return new PortfolioPerformance
@@ -50,7 +65,9 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
             PeriodStart = _periodStart,
             PeriodEnd = _periodEnd,
             PerformanceTypeNavigation = _performanceType,
-            Value = _value
+            Value = _value,
+            PortfolioId = _portfolioId,
+            PortfolioNavigation = _portfolio
         };
     }
 
@@ -62,6 +79,7 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
             .WithPeriodEnd(_periodEnd)
             .WithPerformanceType(_performanceType)
             .WithValue(_value)
+            .WithPortfolio(_portfolio)
             .Build();
     }
 
@@ -74,7 +92,8 @@ public class PortfolioPerformanceBuilder : IBuilder<PortfolioPerformance>
                 .WithPeriodStart(_periodStart.AddDays(i))
                 .WithPeriodEnd(_periodEnd.AddDays(i))
                 .WithPerformanceType(_performanceType)
-                .WithValue(_value)
+                .WithValue(_value + i)
+                .WithPortfolio(_portfolio)
                 .Build();
         }
     }
