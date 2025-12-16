@@ -43,8 +43,8 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
             InstrumentId = _instrumentId,
             Bankday = _bankday,
             Price = _price,
-            BankdayNavigation = _bankdayNavigation,
-            InstrumentNavigation = _instrumentNavigation
+            BankdayNavigation = _bankdayNavigation ?? new DateInfoBuilder().WithBankday(_bankday).Build(),
+            InstrumentNavigation = _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
         };
     }
 
@@ -54,9 +54,13 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
             .WithInstrumentId(_instrumentId)
             .WithBankday(_bankday)
             .WithPrice(_price)
-            .WithBankdayNavigation(_bankdayNavigation)
-            .WithInstrumentNavigation(_instrumentNavigation)
-            .Build();
+            .WithBankdayNavigation(
+                _bankdayNavigation ?? new DateInfoBuilder().WithBankday(_bankday).Build()
+            )
+            .WithInstrumentNavigation(
+                _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
+            )
+                .Build();
     }
 
     public IEnumerable<InstrumentPrice> Many(int count)
@@ -68,11 +72,11 @@ public class InstrumentPriceBuilder : IBuilder<InstrumentPrice>
                 .WithBankday(_bankday.AddDays(i))
                 .WithPrice(_price + i)
                 .WithBankdayNavigation(
-                    new DateInfoBuilder()
-                    .WithBankday(_bankday.AddDays(i))
-                    .Build()
+                    new DateInfoBuilder().WithBankday(_bankday.AddDays(i)).Build()
                 )
-                .WithInstrumentNavigation(_instrumentNavigation)
+                .WithInstrumentNavigation(
+                    _instrumentNavigation ?? new InstrumentBuilder().WithId(_instrumentId).Build()
+                )
                 .Build();
         }
     }
