@@ -1,5 +1,7 @@
 using PerformanceApp.Infrastructure.Repositories;
 using PerformanceApp.Data.Models;
+using PerformanceApp.Data.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace PerformanceApp.Infrastructure.Test.Repositories;
 
@@ -12,79 +14,70 @@ public class InstrumentPriceRepositoryTest : BaseRepositoryTest
         _repository = new InstrumentPriceRepository(_context);
     }
 
-    private static List<InstrumentPrice> CreateInstrumentPrices()
-    {
-        return [
-            new InstrumentPrice { InstrumentId = 1, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 100m },
-            new InstrumentPrice { InstrumentId = 2, Bankday = DateOnly.FromDateTime(DateTime.Now), Price = 200m }
-        ];
-    }
-
-    [Fact]
-    public void AddInstrumentPrices_AddsInstrumentPricesToDatabase()
-    {
-        var expected = CreateInstrumentPrices();
-
-        _repository.AddInstrumentPrices(expected);
-
-        foreach (var instrumentPrice in expected)
-        {
-            var actual = _context.InstrumentPrices.Find(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-            Assert.NotNull(actual);
-            Assert.Equal(instrumentPrice.Price, actual.Price);
-        }
-    }
-
-    [Fact]
-    public void AddInstrumentPrices_DoesNotAddEmptyList()
-    {
-        var empty = new List<InstrumentPrice>();
-
-        _repository.AddInstrumentPrices(empty);
-
-        Assert.Empty(_context.InstrumentPrices.ToList());
-    }
-
     [Fact]
     public async Task AddInstrumentPricesAsync_AddsInstrumentPricesToDatabase()
     {
-        var expected = CreateInstrumentPrices();
+        // Arrange
+        var expected = new InstrumentPriceBuilder()
+            .Many(9)
+            .ToList();
 
+        // Act
         await _repository.AddInstrumentPricesAsync(expected);
+        var actual = await _context
+            .InstrumentPrices
+            .ToListAsync();
 
-        foreach (var instrumentPrice in expected)
+        // Assert
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            var actual = await _context.InstrumentPrices.FindAsync(instrumentPrice.InstrumentId, instrumentPrice.Bankday);
-            Assert.NotNull(actual);
-            Assert.Equal(instrumentPrice.Price, actual.Price);
+            Assert.Equal(e.InstrumentId, a.InstrumentId);
+            Assert.Equal(e.Bankday, a.Bankday);
+            Assert.Equal(e.Price, a.Price);
         }
     }
 
     [Fact]
     public async Task AddInstrumentPricesAsync_DoesNotAddEmptyList()
     {
+        // Arrange
         var empty = new List<InstrumentPrice>();
-        await _repository.AddInstrumentPricesAsync(empty);
 
-        Assert.Empty(_context.InstrumentPrices.ToList());
+        // Act
+        await _repository.AddInstrumentPricesAsync(empty);
+        var actual = await _context
+            .InstrumentPrices
+            .ToListAsync();
+
+        // Assert
+        Assert.Empty(actual);
     }
 
     [Fact]
     public async Task GetInstrumentPricesAsync_ReturnsAllInstrumentPrices()
     {
-        var expected = CreateInstrumentPrices();
+        // Arrange
+        var expected = new InstrumentPriceBuilder()
+            .Many(6)
+            .ToList();
 
-        _context.InstrumentPrices.AddRange(expected);
-        _context.SaveChanges();
+        await _context
+            .InstrumentPrices
+            .AddRangeAsync(expected);
+        await _context.SaveChangesAsync();
 
+        // Act
         var retrieved = await _repository.GetInstrumentPricesAsync();
+        var actual = retrieved.ToList();
 
-        Assert.Equal(expected.Count, retrieved.Count());
-
-        foreach (var instrumentPrice in expected)
+        // Assert
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
         {
-            Assert.Contains(retrieved, ip => ip.InstrumentId == instrumentPrice.InstrumentId && ip.Bankday == instrumentPrice.Bankday && ip.Price == instrumentPrice.Price);
+            Assert.Equal(e.InstrumentId, a.InstrumentId);
+            Assert.Equal(e.Bankday, a.Bankday);
+            Assert.Equal(e.Price, a.Price);
         }
-
     }
 }
