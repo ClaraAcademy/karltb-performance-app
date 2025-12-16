@@ -9,8 +9,8 @@ public class InstrumentBuilder : IBuilder<Instrument>
     private int _id = InstrumentBuilderDefaults.Id;
     private string _name = InstrumentBuilderDefaults.Name;
     private int _typeId = InstrumentBuilderDefaults.TypeId;
-    private InstrumentType _instrumentTypeNavigation = InstrumentBuilderDefaults.InstrumentTypeNavigation;
-    private InstrumentPrice _instrumentPriceNavigation = InstrumentBuilderDefaults.InstrumentPriceNavigation;
+    private InstrumentType? _instrumentTypeNavigation = null;
+    private List<InstrumentPrice> _instrumentPriceNavigation = [];
 
     public InstrumentBuilder WithId(int id)
     {
@@ -30,15 +30,22 @@ public class InstrumentBuilder : IBuilder<Instrument>
         return this;
     }
 
-    public InstrumentBuilder WithInstrumentTypeNavigation(InstrumentType instrumentType)
+    public InstrumentBuilder WithInstrumentTypeNavigation(InstrumentType? instrumentType)
     {
         _instrumentTypeNavigation = instrumentType;
+        _typeId = instrumentType?.Id ?? _typeId;
+        return this;
+    }
+    
+    public InstrumentBuilder WithInstrumentPriceNavigation(IEnumerable<InstrumentPrice> instrumentPrices)
+    {
+        _instrumentPriceNavigation.AddRange(instrumentPrices);
         return this;
     }
 
     public InstrumentBuilder WithInstrumentPriceNavigation(InstrumentPrice instrumentPrice)
     {
-        _instrumentPriceNavigation = instrumentPrice;
+        _instrumentPriceNavigation.Add(instrumentPrice);
         return this;
     }
 
@@ -50,7 +57,7 @@ public class InstrumentBuilder : IBuilder<Instrument>
             Name = _name,
             TypeId = _typeId,
             InstrumentTypeNavigation = _instrumentTypeNavigation,
-            InstrumentPricesNavigation = [_instrumentPriceNavigation]
+            InstrumentPricesNavigation = _instrumentPriceNavigation
         };
     }
 
@@ -69,7 +76,13 @@ public class InstrumentBuilder : IBuilder<Instrument>
     {
         for (int i = 0; i < count; i++)
         {
-            yield return Build();
+            yield return new InstrumentBuilder()
+                .WithId(_id + i)
+                .WithName($"{_name} {i + 1}")
+                .WithTypeId(_typeId)
+                .WithInstrumentTypeNavigation(_instrumentTypeNavigation)
+                .WithInstrumentPriceNavigation(_instrumentPriceNavigation)
+                .Build();
         }
     }
 }
