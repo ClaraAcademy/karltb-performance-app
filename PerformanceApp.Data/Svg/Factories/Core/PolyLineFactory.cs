@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Utilities;
 
@@ -14,20 +15,19 @@ public class PolyLineFactory(string color, int width, bool dotted)
     {
         var joined = SvgUtilities.MapToString(points);
 
-        var attributes = new List<(string, string)>
-        {
-            (XAttributeConstants.Points, joined),
-            (XAttributeConstants.Fill, XAttributeConstants.None),
-            (XAttributeConstants.Stroke, _color),
-            (XAttributeConstants.StrokeWidth, _width.ToString())
-        };
+        var element = new XElementBuilder(XElementConstants.Polyline)
+            .WithAttribute(XAttributeConstants.Points, joined)
+            .WithAttribute(XAttributeConstants.Fill, XAttributeConstants.None)
+            .WithAttribute(XAttributeConstants.Stroke, _color)
+            .WithAttribute(XAttributeConstants.StrokeWidth, _width);
 
         if (_dotted)
         {
             var spacing = SvgUtilities.MapToPoint(2, 2);
-            attributes.Add((XAttributeConstants.StrokeDashArray, spacing));
+            element = element
+                .WithAttribute(XAttributeConstants.StrokeDashArray, spacing);
         }
 
-        return XElementFactory.Create(XElementConstants.Polyline, attributes);
+        return element.Build();
     }
 }
