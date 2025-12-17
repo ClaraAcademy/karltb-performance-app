@@ -15,7 +15,7 @@ public class BondPositionBuilder : PositionBuilder
     public override Position Build()
     {
         base._nominal = _nominal;
-        _instrumentNavigation = Defaults.BondPositionBuilderDefaults.InstrumentNavigation;
+        // _instrument = Defaults.BondPositionBuilderDefaults.InstrumentNavigation;
         return base.Build();
     }
 }

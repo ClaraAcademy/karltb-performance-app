@@ -7,8 +7,7 @@ namespace PerformanceApp.Data.Builders;
 public class InstrumentBuilder : IBuilder<Instrument>
 {
     private string _name = InstrumentBuilderDefaults.Name;
-    private int _typeId = InstrumentBuilderDefaults.TypeId;
-    private InstrumentType? _instrumentTypeNavigation = null;
+    private InstrumentType _instrumentTypeNavigation = new InstrumentTypeBuilder().Build();
     private List<InstrumentPrice> _instrumentPriceNavigation = [];
 
     public InstrumentBuilder WithName(string name)
@@ -17,19 +16,12 @@ public class InstrumentBuilder : IBuilder<Instrument>
         return this;
     }
 
-    public InstrumentBuilder WithTypeId(int typeId)
+    public InstrumentBuilder WithInstrumentTypeNavigation(InstrumentType instrumentType)
     {
-        _typeId = typeId;
+        _instrumentTypeNavigation = instrumentType;
         return this;
     }
 
-    public InstrumentBuilder WithInstrumentTypeNavigation(InstrumentType? instrumentType)
-    {
-        _instrumentTypeNavigation = instrumentType;
-        _typeId = instrumentType?.Id ?? _typeId;
-        return this;
-    }
-    
     public InstrumentBuilder WithInstrumentPriceNavigation(IEnumerable<InstrumentPrice> instrumentPrices)
     {
         _instrumentPriceNavigation.AddRange(instrumentPrices);
@@ -47,7 +39,6 @@ public class InstrumentBuilder : IBuilder<Instrument>
         return new Instrument
         {
             Name = _name,
-            TypeId = _instrumentTypeNavigation?.Id ?? _typeId,
             InstrumentTypeNavigation = _instrumentTypeNavigation,
             InstrumentPricesNavigation = _instrumentPriceNavigation
         };
@@ -57,7 +48,6 @@ public class InstrumentBuilder : IBuilder<Instrument>
     {
         return new InstrumentBuilder()
             .WithName(_name)
-            .WithTypeId(_typeId)
             .WithInstrumentTypeNavigation(_instrumentTypeNavigation)
             .WithInstrumentPriceNavigation(_instrumentPriceNavigation)
             .Build();
@@ -65,11 +55,10 @@ public class InstrumentBuilder : IBuilder<Instrument>
 
     public IEnumerable<Instrument> Many(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (int i = 1; i <= count; i++)
         {
             yield return new InstrumentBuilder()
-                .WithName($"{_name} {i + 1}")
-                .WithTypeId(_typeId)
+                .WithName($"{_name} {i}")
                 .WithInstrumentTypeNavigation(_instrumentTypeNavigation)
                 .WithInstrumentPriceNavigation(_instrumentPriceNavigation)
                 .Build();

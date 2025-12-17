@@ -1,4 +1,3 @@
-using PerformanceApp.Data.Builders.Defaults;
 using PerformanceApp.Data.Builders.Interface;
 using PerformanceApp.Data.Models;
 
@@ -6,7 +5,7 @@ namespace PerformanceApp.Data.Builders;
 
 public class DateInfoBuilder : IBuilder<DateInfo>
 {
-    private DateOnly _bankday = DateInfoBuilderDefaults.Bankday;
+    private DateOnly _bankday = DateOnly.FromDateTime(DateTime.UtcNow);
 
     public DateInfoBuilder WithBankday(DateOnly bankday)
     {
@@ -16,7 +15,7 @@ public class DateInfoBuilder : IBuilder<DateInfo>
 
     public DateInfo Build()
     {
-        return new DateInfo{    Bankday = _bankday};
+        return new DateInfo { Bankday = _bankday };
     }
 
     public DateInfo Clone()

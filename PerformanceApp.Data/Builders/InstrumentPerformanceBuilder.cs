@@ -6,11 +6,15 @@ namespace PerformanceApp.Data.Builders;
 
 public class InstrumentPerformanceBuilder : IBuilder<InstrumentPerformance>
 {
-    private DateInfo _periodStartNavigation = InstrumentPerformanceBuilderDefaults.PeriodStartNavigation;
-    private DateInfo _periodEndNavigation = InstrumentPerformanceBuilderDefaults.PeriodEndNavigation;
-    private decimal _value = InstrumentPerformanceBuilderDefaults.Value;
-    private Instrument _instrumentNavigation = InstrumentPerformanceBuilderDefaults.InstrumentNavigation;
-    private PerformanceType _performanceTypeNavigation = InstrumentPerformanceBuilderDefaults.PerformanceTypeNavigation;
+    private DateInfo _periodStartNavigation = new DateInfoBuilder()
+        .WithBankday(DateOnly.FromDateTime(DateTime.Now))
+        .Build();
+    private DateInfo _periodEndNavigation = new DateInfoBuilder()
+        .WithBankday(DateOnly.FromDateTime(DateTime.Now.AddMonths(1)))
+        .Build();
+    private decimal _value = 100m;
+    private Instrument _instrumentNavigation = new InstrumentBuilder().Build();
+    private PerformanceType _performanceTypeNavigation = new PerformanceTypeBuilder().Build();
 
     public InstrumentPerformanceBuilder WithPeriodStart(DateInfo periodStart)
     {
@@ -48,9 +52,10 @@ public class InstrumentPerformanceBuilder : IBuilder<InstrumentPerformance>
         {
             PeriodStartNavigation = _periodStartNavigation,
             PeriodEndNavigation = _periodEndNavigation,
-            Value = _value,
             InstrumentNavigation = _instrumentNavigation,
-            PerformanceTypeNavigation = _performanceTypeNavigation
+            PerformanceTypeNavigation = _performanceTypeNavigation,
+
+            Value = _value
         };
     }
 
@@ -71,14 +76,18 @@ public class InstrumentPerformanceBuilder : IBuilder<InstrumentPerformance>
         {
             var periodStart = new DateInfoBuilder().WithBankday(
                 _periodStartNavigation.Bankday.AddDays(i)
-            ).Build();
+            )
+            .Build();
             var periodEnd = new DateInfoBuilder().WithBankday(
                 _periodEndNavigation.Bankday.AddDays(i)
-            ).Build();
+            )
+            .Build();
+            var value = _value + i;
+
             yield return new InstrumentPerformanceBuilder()
                 .WithPeriodStart(periodStart)
                 .WithPeriodEnd(periodEnd)
-                .WithValue(_value + i)
+                .WithValue(value)
                 .WithInstrumentNavigation(_instrumentNavigation)
                 .WithPerformanceTypeNavigation(_performanceTypeNavigation)
                 .Build();

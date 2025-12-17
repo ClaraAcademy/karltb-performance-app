@@ -15,7 +15,7 @@ public class StockPositionBuilder : PositionBuilder
     public override Position Build()
     {
         base._count = _count;
-        _instrumentNavigation = Defaults.StockPositionBuilderDefaults.InstrumentNavigation;
+        // _instrument = Defaults.StockPositionBuilderDefaults.InstrumentNavigation;
         return base.Build();
     }
 }

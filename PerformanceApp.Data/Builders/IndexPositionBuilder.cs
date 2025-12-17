@@ -15,7 +15,7 @@ public class IndexPositionBuilder : PositionBuilder
     public override Position Build()
     {
         base._proportion = _proportion;
-        _instrumentNavigation = Defaults.IndexPositionBuilderDefaults.InstrumentNavigation;
+        // _instrument = Defaults.IndexPositionBuilderDefaults.InstrumentNavigation;
         return base.Build();
     }
 }

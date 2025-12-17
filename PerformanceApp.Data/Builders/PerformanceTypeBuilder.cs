@@ -8,7 +8,6 @@ public class PerformanceTypeBuilder : IBuilder<PerformanceType>
 {
     private string _name = PerformanceTypeBuilderDefaults.Name;
 
-
     public PerformanceTypeBuilder WithName(string name)
     {
         _name = name;
