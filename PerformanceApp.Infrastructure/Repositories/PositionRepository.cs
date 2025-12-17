@@ -1,6 +1,7 @@
 using PerformanceApp.Data.Models;
 using PerformanceApp.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using PerformanceApp.Data.Constants;
 
 namespace PerformanceApp.Infrastructure.Repositories;
 
@@ -37,17 +38,20 @@ public class PositionRepository(PadbContext context) : IPositionRepository
 
     public async Task<IEnumerable<Position>> GetStockPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await GetPositionsAsync("Stock", bankday, portfolioId);
+        var stock = InstrumentTypeConstants.Stock;
+        return await GetPositionsAsync(stock, bankday, portfolioId);
     }
 
     public async Task<IEnumerable<Position>> GetBondPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await GetPositionsAsync("Bond", bankday, portfolioId);
+        var bond = InstrumentTypeConstants.Bond;
+        return await GetPositionsAsync(bond, bankday, portfolioId);
     }
 
     public async Task<IEnumerable<Position>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await GetPositionsAsync("Index", bankday, portfolioId);
+        var index = InstrumentTypeConstants.Index;
+        return await GetPositionsAsync(index, bankday, portfolioId);
     }
 
     public async Task<IEnumerable<Position>> GetPositionsAsync()
