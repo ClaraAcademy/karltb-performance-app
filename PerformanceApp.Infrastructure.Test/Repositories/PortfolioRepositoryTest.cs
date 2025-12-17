@@ -135,16 +135,13 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
     {
         // Arrange
         var benchmark = new PortfolioBuilder()
-            .WithId(100)
             .WithName("Benchmark Portfolio")
             .Build();
         var portfolioWithBenchmark = new PortfolioBuilder()
-            .WithId(1)
             .WithName("With Benchmark")
             .WithBenchmark(benchmark)
             .Build();
         var portfolioWithoutBenchmark = new PortfolioBuilder()
-            .WithId(2)
             .WithName("Without Benchmark")
             .Build();
         var portfolios = new List<Portfolio> { benchmark, portfolioWithBenchmark, portfolioWithoutBenchmark };
@@ -203,17 +200,14 @@ public class PortfolioRepositoryTest : BaseRepositoryTest
             .WithId("SomeUserId")
             .Build();
         var benchmark = new PortfolioBuilder()
-            .WithId(100)
             .WithName("Benchmark Portfolio")
             .Build();
         var portfolio1 = new PortfolioBuilder()
-            .WithId(1)
             .WithName("Portfolio 1")
             .WithUser(user)
             .WithBenchmark(benchmark)
             .Build();
         var portfolio2 = new PortfolioBuilder()
-            .WithId(2)
             .WithName("Portfolio 2")
             .Build();
         var portfolios = new List<Portfolio> { portfolio1, portfolio2 };

@@ -11,13 +11,17 @@ public class BaseRepositoryTest : IDisposable
     {
         var name = Guid.NewGuid().ToString();
         var options = new DbContextOptionsBuilder<PadbContext>()
-            .UseInMemoryDatabase(databaseName: name)
+            .UseInMemoryDatabase(name)
+            .EnableSensitiveDataLogging(true) // TODO: Remove in production
             .Options;
+
         _context = new PadbContext(options);
+        _context.Database.EnsureCreated();
     }
 
     public void Dispose()
     {
+        _context.Database.EnsureDeleted();
         _context.Dispose();
         GC.SuppressFinalize(this);
     }

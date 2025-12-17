@@ -1,36 +1,44 @@
 using PerformanceApp.Data.Builders;
-using PerformanceApp.Infrastructure.Test.Repositories.Position.Fixture;
+using PerformanceApp.Infrastructure.Repositories;
 
-namespace PerformanceApp.Infrastructure.Test.Repositories.Position;
+namespace PerformanceApp.Infrastructure.Test.Repositories.Positions;
 
-public class PositionRepository_Index_Tests : PositionRepositoryFixture
+public class PositionRepository_Bond_Tests : BaseRepositoryTest
 {
-    [Fact]
-    public async Task GetIndexPositionsAsync_ReturnsFilteredPositions()
+    private readonly IPositionRepository _repository;
+    public PositionRepository_Bond_Tests() 
     {
+        _repository = new PositionRepository(_context);
+    }
+
+    [Fact]
+    public async Task GetBondPositionsAsync_ReturnsFilteredPositions()
+    {
+        var portfolio = new PortfolioBuilder()
+            .Build();
+
         var stock = new StockPositionBuilder()
-            .WithId(1)
-            .WithPortfolioId(1)
+            .WithPortfolio(portfolio)
             .Build();
         var bond = new BondPositionBuilder()
-            .WithId(2)
-            .WithPortfolioId(1)
+            .WithPortfolio(portfolio)
             .Build();
         var index = new IndexPositionBuilder()
-            .WithId(3)
-            .WithPortfolioId(1)
+            .WithPortfolio(portfolio)
             .Build();
+
         var positions = new[] { stock, bond, index };
-        var expected = index;
-        var bankday = index.Bankday!.Value;
+        var expected = bond;
+        var bankday = (DateOnly)bond.Bankday!;
         // Arrange
         await _context.Positions.AddRangeAsync(positions);
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _repository.GetIndexPositionsAsync(bankday, 1);
+        var result = await _repository.GetBondPositionsAsync(bankday, portfolio.Id);
 
         // Assert
+        Assert.NotNull(result);
         Assert.Single(result);
         var actual = result.First();
         Assert.Equal(expected.Id, actual.Id);
@@ -44,12 +52,30 @@ public class PositionRepository_Index_Tests : PositionRepositoryFixture
     }
 
     [Fact]
-    public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidBankday()
+    public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidBankday()
     {
         // Arrange
         var bankday = DateOnly.FromDateTime(DateTime.Now);
-        var position = new IndexPositionBuilder()
-            .WithPortfolioId(1)
+        var position = new BondPositionBuilder()
+            .WithBankday(bankday)
+            .Build();
+        await _context.Positions.AddAsync(position);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result = await _repository.GetBondPositionsAsync(bankday.AddDays(1), 1);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetBondPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
+    {
+        // Arrange
+        var bankday = DateOnly.FromDateTime(DateTime.Now);
+        var portfolioId = 5;
+        var position = new BondPositionBuilder()
             .WithBankday(bankday)
             .Build();
 
@@ -57,40 +83,20 @@ public class PositionRepository_Index_Tests : PositionRepositoryFixture
         await _context.SaveChangesAsync();
 
         // Act
-        var result = await _repository.GetIndexPositionsAsync(bankday.AddDays(1), 1);
+        var result = await _repository.GetBondPositionsAsync(bankday, portfolioId - 1);
 
         // Assert
         Assert.Empty(result);
     }
 
     [Fact]
-    public async Task GetIndexPositionsAsync_ReturnsEmptyListOnInvalidPortfolioId()
-    {
-        // Arrange
-        var bankday = DateOnly.FromDateTime(DateTime.Now);
-        var portfolioId = 8;
-        var position = new IndexPositionBuilder()
-            .WithPortfolioId(portfolioId)
-            .WithBankday(bankday)
-            .Build();
-        await _context.Positions.AddAsync(position);
-        await _context.SaveChangesAsync();
-
-        // Act
-        var result = await _repository.GetIndexPositionsAsync(bankday, portfolioId - 1);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task GetIndexPositionsAsync_ReturnsEmptyListWhenNoData()
+    public async Task GetBondPositionsAsync_ReturnsEmptyListWhenNoData()
     {
         // Arrange
         var bankday = DateOnly.FromDateTime(DateTime.Now);
 
         // Act
-        var result = await _repository.GetIndexPositionsAsync(bankday, 1);
+        var result = await _repository.GetBondPositionsAsync(bankday, 1);
 
         // Assert
         Assert.Empty(result);

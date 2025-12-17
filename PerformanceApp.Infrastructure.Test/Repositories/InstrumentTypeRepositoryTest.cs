@@ -55,15 +55,12 @@ public class InstrumentTypeRepositoryTest : BaseRepositoryTest
     {
         // Arrange
         var stock = new InstrumentTypeBuilder()
-            .WithId(1)
             .WithName("Stock")
             .Build();
         var bond = new InstrumentTypeBuilder()
-            .WithId(2)
             .WithName("Bond")
             .Build();
         var index = new InstrumentTypeBuilder()
-            .WithId(3)
             .WithName("Index")
             .Build();
 

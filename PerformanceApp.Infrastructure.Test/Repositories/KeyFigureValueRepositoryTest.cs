@@ -17,7 +17,6 @@ public class KeyFigureValueRepositoryTest : BaseRepositoryTest
     {
         // Arrange
         var portfolio = new PortfolioBuilder()
-            .WithId(1)
             .Build();
         var expected = new KeyFigureValueBuilder()
             .WithPortfolio(portfolio)
@@ -29,7 +28,8 @@ public class KeyFigureValueRepositoryTest : BaseRepositoryTest
         await _context.SaveChangesAsync();
 
         // Act
-        var retrieved = await _repository.GetKeyFigureValuesAsync(1);
+        var portfolioId = portfolio.Id;
+        var retrieved = await _repository.GetKeyFigureValuesAsync(portfolioId);
         var actual = retrieved.ToList();
 
         // Assert

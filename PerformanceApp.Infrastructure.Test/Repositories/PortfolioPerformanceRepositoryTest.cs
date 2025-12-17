@@ -17,7 +17,6 @@ public class PortfolioPerformanceRepositoryTest : BaseRepositoryTest
     {
         // Arrange
         var portfolio = new PortfolioBuilder()
-            .WithId(1)
             .Build();
         var expected = new PortfolioPerformanceBuilder()
             .WithPortfolio(portfolio)

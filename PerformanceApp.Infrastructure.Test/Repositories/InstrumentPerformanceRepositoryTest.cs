@@ -47,7 +47,10 @@ public class InstrumentPerformanceRepositoryTest : BaseRepositoryTest
     public async Task AddInstrumentPerformancesAsync_AddsPerformances()
     {
         // Arrange
+        var instrument = new InstrumentBuilder()
+            .Build();
         var expected = new InstrumentPerformanceBuilder()
+            .WithInstrumentNavigation(instrument)
             .Many(4)
             .ToList();
 
