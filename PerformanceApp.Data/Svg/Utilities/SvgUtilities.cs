@@ -4,7 +4,7 @@ namespace PerformanceApp.Data.Svg.Utilities;
 
 public static class SvgUtilities
 {
-    private static readonly DecimalFormatter<float> _decimalFormatter = new();
+    private static readonly DecimalFormatter _decimalFormatter = new();
 
     public static string MapToPoint(float x, float y)
     {

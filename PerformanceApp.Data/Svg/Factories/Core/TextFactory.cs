@@ -8,7 +8,7 @@ namespace PerformanceApp.Data.Svg.Factories.Core;
 public class TextFactory(int size)
 {
     private readonly int _size = size;
-    private readonly DecimalFormatter<float> _decimalFormatter = new();
+    private readonly DecimalFormatter _decimalFormatter = new();
 
     public TextFactory() : this(TextDefaults.FontSize) { }
 

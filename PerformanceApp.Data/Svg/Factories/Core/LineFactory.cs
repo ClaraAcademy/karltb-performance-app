@@ -5,28 +5,27 @@ using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
-public class LineFactory<T>
-    where T : INumber<T>
+public class LineFactory
 {
     private readonly string _color;
     private readonly int _width;
-    private readonly DecimalFormatter<T> _decimalFormatter;
+    private readonly DecimalFormatter _decimalFormatter;
 
     public LineFactory(string color, int width)
     {
         _color = color;
         _width = width;
-        _decimalFormatter = new DecimalFormatter<T>();
+        _decimalFormatter = new DecimalFormatter();
     }
 
     public LineFactory()
     {
         _color = ColorConstants.Black;
         _width = LineConstants.DefaultWidth;
-        _decimalFormatter = new DecimalFormatter<T>();
+        _decimalFormatter = new DecimalFormatter();
     }
 
-    public XElement Create(T x1, T y1, T x2, T y2)
+    public XElement Create(float x1, float y1, float x2, float y2)
     {
         var attributes = new[]
         {

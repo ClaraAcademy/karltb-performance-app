@@ -7,7 +7,7 @@ namespace PerformanceApp.Data.Svg.Factories;
 
 public class AxisFactory(int width, int height, int xMargin, int yMargin, int numberOfPoints, float yMax, float yMin)
 {
-    private readonly LineFactory<float> _lineFactory = new LineFactory<float>(ColorConstants.Black, 1);
+    private readonly LineFactory _lineFactory = new LineFactory(ColorConstants.Black, 1);
     private readonly XScaler _xScaler = new XScaler(width, xMargin, numberOfPoints);
     private readonly YScaler _yScaler = new YScaler(height, yMargin, yMax, yMin);
     private readonly int _width = width;
