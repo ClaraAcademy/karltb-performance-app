@@ -21,29 +21,23 @@ public class LineFactory<T>
 
     public LineFactory()
     {
-        _color = LineConstants.DefaultColor;
+        _color = ColorConstants.Black;
         _width = LineConstants.DefaultWidth;
         _decimalFormatter = new DecimalFormatter<T>();
     }
 
     public XElement Create(T x1, T y1, T x2, T y2)
     {
-        var formatted = _decimalFormatter
-            .Format([x1, y1, x2, y2]);
-        var values = new[]
+        var attributes = new[]
         {
-            formatted.ElementAt(0),
-            formatted.ElementAt(1),
-            formatted.ElementAt(2),
-            formatted.ElementAt(3),
-            _color,
-            _width.ToString()
+            (XAttributeConstants.X1, _decimalFormatter.Format(x1)),
+            (XAttributeConstants.Y1, _decimalFormatter.Format(y1)),
+            (XAttributeConstants.X2, _decimalFormatter.Format(x2)),
+            (XAttributeConstants.Y2, _decimalFormatter.Format(y2)),
+            (XAttributeConstants.Stroke, _color),
+            (XAttributeConstants.StrokeWidth, _width.ToString())
         };
 
-        var attributes = LineConstants.AttributeNames
-            .Zip(values)
-            .Select(XAttributeFactory.Create);
-
-        return XElementFactory.Create(LineConstants.ElementName, attributes);
+        return XElementFactory.Create(XElementConstants.Line, attributes);
     }
 }
