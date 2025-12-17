@@ -12,7 +12,13 @@ public class TextFactory(int size)
 
     public TextFactory() : this(TextDefaults.FontSize) { }
 
-    public XElement Create(string text, float x, float y, string anchor, float angle)
+    public XElement Create(
+        string text,
+        float x,
+        float y,
+        string anchor = "middle",
+        float angle = 0
+    )
     {
         var fx = _decimalFormatter.Format(x);
         var fy = _decimalFormatter.Format(y);
@@ -30,8 +36,4 @@ public class TextFactory(int size)
     }
 
     static string Rotate(string x, string y, float angle) => $"rotate({angle} {x},{y})";
-
-    public XElement Create(string text, float x, float y, string anchor) => Create(text, x, y, anchor, 0);
-    public XElement Create(string text, float x, float y) => Create(text, x, y, "middle", 0);
-    public XElement Create(string text, float x, float y, float angle) => Create(text, x, y, "middle", angle);
 }
