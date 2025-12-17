@@ -14,4 +14,12 @@ public class XElementFactory
     {
         return Create(name, attributes.ToArray());
     }
+
+    public static XElement Create(string name, IEnumerable<(string, string)> attributes)
+    {
+        var xAttributes = attributes
+            .Select(XAttributeFactory.Create);
+
+        return Create(name, xAttributes);
+    }
 }
