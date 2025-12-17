@@ -28,6 +28,14 @@ public class XElementBuilder(string name)
         return this;
     }
 
+    public XElementBuilder WithValue<T>(T value)
+    {
+        var s = value?.ToString() 
+            ?? throw new ArgumentException("Type must override ToString()");
+        _element.Value = s;
+        return this;
+    }
+
     public XElement Build()
     {
         return _element;
