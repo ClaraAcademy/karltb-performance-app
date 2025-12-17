@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Formatters;
 
@@ -27,16 +28,17 @@ public class LineFactory
 
     public XElement Create(float x1, float y1, float x2, float y2)
     {
-        var attributes = new[]
-        {
-            (XAttributeConstants.X1, _decimalFormatter.Format(x1)),
-            (XAttributeConstants.Y1, _decimalFormatter.Format(y1)),
-            (XAttributeConstants.X2, _decimalFormatter.Format(x2)),
-            (XAttributeConstants.Y2, _decimalFormatter.Format(y2)),
-            (XAttributeConstants.Stroke, _color),
-            (XAttributeConstants.StrokeWidth, _width.ToString())
-        };
+        var c = _decimalFormatter
+            .Format([x1, y1, x2, y2])
+            .ToArray();
 
-        return XElementFactory.Create(XElementConstants.Line, attributes);
+        return new XElementBuilder(XElementConstants.Line)
+            .WithAttribute(XAttributeConstants.X1, c[0])
+            .WithAttribute(XAttributeConstants.Y1, c[1])
+            .WithAttribute(XAttributeConstants.X2, c[2])
+            .WithAttribute(XAttributeConstants.Y2, c[3])
+            .WithAttribute(XAttributeConstants.Stroke, _color)
+            .WithAttribute(XAttributeConstants.StrokeWidth, _width.ToString())
+            .Build();
     }
 }
