@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Formatters;
 
-namespace PerformanceApp.Data.Svg.Factories;
+namespace PerformanceApp.Data.Svg.Factories.Core;
 
 public class LineFactory<T>
     where T : INumber<T>

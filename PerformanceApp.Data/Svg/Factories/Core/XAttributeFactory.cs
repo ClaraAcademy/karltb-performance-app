@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace PerformanceApp.Data.Svg.Factories;
+namespace PerformanceApp.Data.Svg.Factories.Core;
 
 public class XAttributeFactory
 {

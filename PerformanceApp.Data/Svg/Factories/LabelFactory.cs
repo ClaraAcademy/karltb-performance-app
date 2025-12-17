@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Factories.Core;
 
 namespace PerformanceApp.Data.Svg.Factories;
 

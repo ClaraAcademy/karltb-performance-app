@@ -3,7 +3,7 @@ using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Formatters;
 
-namespace PerformanceApp.Data.Svg.Factories;
+namespace PerformanceApp.Data.Svg.Factories.Core;
 
 public class TextFactory(int size)
 {
