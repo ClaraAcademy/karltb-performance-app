@@ -1,10 +1,10 @@
 namespace PerformanceApp.Data.Svg.Scalers;
 
-public class XScaler
+public class XScaler(int width, int margin, int numberOfPoints)
 {
-    private readonly float _width;
-    private readonly float _margin;
-    private readonly int _numberOfPoints;
+    private readonly int _width = width;
+    private readonly int _margin = margin;
+    private readonly int _numberOfPoints = numberOfPoints;
 
     public float Scale(float x)
     {
