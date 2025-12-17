@@ -4,10 +4,6 @@ namespace PerformanceApp.Data.Builders.Defaults;
 
 public static class InstrumentBuilderDefaults
 {
-    public static readonly InstrumentType InstrumentTypeNavigation = new InstrumentTypeBuilder().Build();
     public static readonly int Id = 0;
     public static readonly string Name = "Default Instrument";
-    public static readonly int TypeId = InstrumentTypeNavigation.Id;
-    public static readonly InstrumentPrice InstrumentPriceNavigation = new InstrumentPriceBuilder().Build();
-
 }

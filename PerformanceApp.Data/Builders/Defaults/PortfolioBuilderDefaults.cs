@@ -8,7 +8,6 @@ public static class PortfolioBuilderDefaults
     public static string PortfolioName => "Default Portfolio";
     public static Portfolio Portfolio => new PortfolioBuilder().Build();
 
-    public static int BenchmarkId => 100;
     public static string BenchmarkName => "Default Benchmark";
     public static Portfolio Benchmark => new PortfolioBuilder()
         .WithName(BenchmarkName)
