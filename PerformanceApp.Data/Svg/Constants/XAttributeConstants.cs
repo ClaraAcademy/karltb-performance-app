@@ -6,6 +6,7 @@ public static class XAttributeConstants
     public static string StrokeWidth => "stroke-width";
     public static string Fill => "fill";
     public static string Transform => "transform";
+    public static string Points => "points";
 
     public static string X1 => "x1";
     public static string Y1 => "y1";
@@ -17,4 +18,7 @@ public static class XAttributeConstants
 
     public static string FontSize => "font-size";
     public static string TextAnchor => "text-anchor";
+
+    public static string StrokeDashArray => "stroke-dasharray";
+    public static string None => "none";
 }
