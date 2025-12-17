@@ -8,4 +8,8 @@ public abstract class Formatter<T>
 {
     protected static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
     public abstract string Format(T value);
+    public IEnumerable<string> Format(IEnumerable<T> values)
+    {
+        return values.Select(Format);
+    }
 }
