@@ -1,7 +1,7 @@
-
 using Moq;
 using PerformanceApp.Data.Builders;
 using PerformanceApp.Data.Builders.Defaults;
+using PerformanceApp.Data.Helpers;
 using PerformanceApp.Server.Test.Services.PositionServiceTests.Fixture;
 
 namespace PerformanceApp.Server.Test.Services.PositionServiceTests;
@@ -12,26 +12,30 @@ public class BondPositionTests : PerformanceServiceTestFixture
     public async Task GetBondPositionsAsync_ReturnsMappedBondPositionDTOs()
     {
         // Arrange
-        var positions = new BondPositionBuilder().Build();
-
+        var expected = new BondPositionBuilder()
+            .Many(9)
+            .ToList();
 
         _positionRepositoryMock
             .Setup(r => r.GetBondPositionsAsync(It.IsAny<DateOnly>(), It.IsAny<int>()))
-            .ReturnsAsync([positions]);
+            .ReturnsAsync(expected);
 
         // Act
-        var result = await _positionService.GetBondPositionsAsync(new DateOnly(), 1);
+        var actual = await _positionService.GetBondPositionsAsync(new DateOnly(), 1);
 
         // Assert
-        Assert.Single(result);
-        var dto = result.First();
-        Assert.Equal(PositionBuilderDefaults.PortfolioId, dto.PortfolioId);
-        Assert.Equal(PositionBuilderDefaults.InstrumentId, dto.InstrumentId);
-        Assert.Equal(PositionBuilderDefaults.InstrumentNavigation.Name, dto.InstrumentName);
-        Assert.Equal(PositionBuilderDefaults.Bankday, dto.Bankday);
-        Assert.Equal(PositionValueBuilderDefaults.Value, dto.Value);
-        Assert.Equal(InstrumentPriceBuilderDefaults.Price, dto.UnitPrice);
-        Assert.Equal(BondPositionBuilderDefaults.Nominal, dto.Nominal);
+        Assert.NotEmpty(actual);
+        Assert.Equal(expected.Count, actual.Count);
+        foreach (var (e, a) in expected.Zip(actual))
+        {
+            Assert.Equal(e.PortfolioId, a.PortfolioId);
+            Assert.Equal(e.InstrumentId, a.InstrumentId);
+            Assert.Equal(e.InstrumentNavigation!.Name, a.InstrumentName);
+            Assert.Equal(e.Bankday, a.Bankday);
+            Assert.Equal(PositionHelper.GetPositionValue(e), a.Value);
+            Assert.Equal(PositionHelper.GetInstrumentUnitPrice(e), a.UnitPrice);
+            Assert.Equal(e.Nominal, a.Nominal);
+        }
     }
 
     [Fact]
