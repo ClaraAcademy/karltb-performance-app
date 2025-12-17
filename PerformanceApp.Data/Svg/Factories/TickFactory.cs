@@ -12,15 +12,21 @@ public class TickFactory
 {
     private readonly string _color;
     private readonly LineFactory _lineFactory;
-    private readonly int _length = TickDefaults.Length;
+    private readonly int _length;
+    private readonly int _offset;
     private readonly XScaler _xScaler;
     private readonly YScaler _yScaler;
 
     public TickFactory(XScaler xScaler, YScaler yScaler)
+        : this(xScaler, yScaler, TickDefaults.Length) { }
+
+    public TickFactory(XScaler xScaler, YScaler yScaler, int length)
     {
         _xScaler = xScaler;
         _yScaler = yScaler;
         _color = ColorConstants.Black;
+        _length = length;
+        _offset = length / 2;
         _lineFactory = new LineFactory(_color, 1);
     }
 
@@ -37,35 +43,13 @@ public class TickFactory
         return _lineFactory.Create(x1, y1, x2, y2);
     }
 
-    public XElement CreateX(float x, float y)
+    public IEnumerable<XElement> CreateXs(IEnumerable<float> xs, float y)
     {
-        return Create(x, y - _length / 2, x, y + _length / 2);
+        return xs.Select(x => Create(x, y - _offset, x, y + _offset));
     }
 
-    public IEnumerable<XElement> CreateXs(int total, int nTicks)
+    public IEnumerable<XElement> CreateYs(IEnumerable<float> ys, float x)
     {
-        var samples = Sampler.Sample(total, nTicks);
-        var xs = _xScaler.Scale(samples);
-        var y = _yScaler.Scale(0);
-
-        return xs
-            .Skip(1) // Skip first to avoid overlapping with axis line
-            .Select(x => CreateX(x, y));
-    }
-
-    public XElement CreateY(float x, float y)
-    {
-        return Create(x - _length / 2, y, x + _length / 2, y);
-    }
-
-    public IEnumerable<XElement> CreateYs(int total, int nTicks)
-    {
-        var samples = Sampler.Sample(total, nTicks);
-        var ys = _yScaler.Scale(samples);
-        var x = _xScaler.Scale(0);
-
-        return ys
-            .Skip(1) // Skip first to avoid overlapping with axis line
-            .Select(y => CreateY(x, y));
+        return ys.Select(y => Create(x - _offset, y, x + _offset, y));
     }
 }
