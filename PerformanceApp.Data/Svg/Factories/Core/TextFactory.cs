@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Formatters;
@@ -23,16 +24,14 @@ public class TextFactory(int size)
         var fx = _decimalFormatter.Format(x);
         var fy = _decimalFormatter.Format(y);
 
-        var attributes = new List<(string, string)>
-        {
-            (XAttributeConstants.X, fx),
-            (XAttributeConstants.Y, fy),
-            (XAttributeConstants.FontSize, _size.ToString()),
-            (XAttributeConstants.TextAnchor, anchor),
-            (XAttributeConstants.Transform, Rotate(fx, fy, angle))
-        };
-
-        return XElementFactory.Create(XElementConstants.Text, text, attributes);
+        return new XElementBuilder(XElementConstants.Text)
+            .WithAttribute(XAttributeConstants.X, fx)
+            .WithAttribute(XAttributeConstants.Y, fy)
+            .WithAttribute(XAttributeConstants.FontSize, _size)
+            .WithAttribute(XAttributeConstants.TextAnchor, anchor)
+            .WithAttribute(XAttributeConstants.Transform, Rotate(fx, fy, angle))
+            .WithValue(text)
+            .Build();
     }
 
     static string Rotate(string x, string y, float angle) => $"rotate({angle} {x},{y})";
