@@ -30,7 +30,6 @@ public class GetPortfolioBenchmarkCumulativeDayPerformancesAsync_Tests()
             .ToList();
         var benchmark = new PortfolioBuilder()
             .WithName(PortfolioBuilderDefaults.BenchmarkName)
-            .WithId(PortfolioBuilderDefaults.BenchmarkId)
             .WithPerformances(benchmarkPerformances)
             .Build();
         var portfolio = new PortfolioBuilder()

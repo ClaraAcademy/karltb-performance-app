@@ -22,10 +22,8 @@ public class PerformanceServiceTest
     public async Task GetPortfolioBenchmarkKeyFigureValues_ReturnsExpectedResults()
     {
         // Arrange
-        var keyFigureId = 1;
         var keyFigureName = "Test Key Figure";
         var keyFigureInfo = new KeyFigureInfoBuilder()
-            .WithId(keyFigureId)
             .WithName(keyFigureName)
             .Build();
         var portfolioKeyFigure = new KeyFigureValueBuilder()
@@ -50,6 +48,7 @@ public class PerformanceServiceTest
         // Act
         var result = await _performanceService.GetPortfolioBenchmarkKeyFigureValues(1);
         var dto = result.FirstOrDefault();
+        var keyFigureId = keyFigureInfo.Id;
 
         // Assert
         Assert.Single(result);
