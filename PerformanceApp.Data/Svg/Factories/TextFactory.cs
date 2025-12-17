@@ -5,20 +5,14 @@ using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class TextFactory(string anchor, float angle, int size)
+public class TextFactory(int size)
 {
-    private readonly string _anchor = anchor;
-    private readonly float _angle = angle;
     private readonly int _size = size;
     private readonly DecimalFormatter<float> _decimalFormatter = new();
 
-    public TextFactory() : this("middle", 0, TextDefaults.FontSize) { }
-    public TextFactory(float angle) : this("middle", angle, TextDefaults.FontSize) { }
-    public TextFactory(string anchor, float angle) : this(anchor, angle, TextDefaults.FontSize) { }
+    public TextFactory() : this(TextDefaults.FontSize) { }
 
-    string Rotate(string x, string y) => $"rotate({_angle} {x},{y})";
-
-    public XElement Create(string text, float x, float y)
+    public XElement Create(string text, float x, float y, string anchor, float angle)
     {
         var fx = _decimalFormatter.Format(x);
         var fy = _decimalFormatter.Format(y);
@@ -28,11 +22,16 @@ public class TextFactory(string anchor, float angle, int size)
             (XAttributeConstants.X, fx),
             (XAttributeConstants.Y, fy),
             (XAttributeConstants.FontSize, _size.ToString()),
-            (XAttributeConstants.TextAnchor, _anchor),
-            (XAttributeConstants.Transform, Rotate(fx, fy))
+            (XAttributeConstants.TextAnchor, anchor),
+            (XAttributeConstants.Transform, Rotate(fx, fy, angle))
         };
 
         return XElementFactory.Create(XElementConstants.Text, text, attributes);
     }
 
+    static string Rotate(string x, string y, float angle) => $"rotate({angle} {x},{y})";
+
+    public XElement Create(string text, float x, float y, string anchor) => Create(text, x, y, anchor, 0);
+    public XElement Create(string text, float x, float y) => Create(text, x, y, "middle", 0);
+    public XElement Create(string text, float x, float y, float angle) => Create(text, x, y, "middle", angle);
 }
