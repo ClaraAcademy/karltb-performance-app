@@ -18,31 +18,28 @@ public class PositionService(IPositionRepository repo) : IPositionService
 
     public async Task<List<StockPositionDTO>> GetStockPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await PositionHelper.GetPositionsAsync(
-            _repo.GetStockPositionsAsync,
-            PositionMapper.MapToStockPositionDTO,
-            bankday,
-            portfolioId
-        );
+        var positions = await _repo.GetStockPositionsAsync(bankday, portfolioId);
+
+        return positions
+            .Select(PositionMapper.MapToStockPositionDTO)
+            .ToList();
     }
 
     public async Task<List<BondPositionDTO>> GetBondPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await PositionHelper.GetPositionsAsync(
-            _repo.GetBondPositionsAsync,
-            PositionMapper.MapToBondPositionDTO,
-            bankday,
-            portfolioId
-        );
+        var positions = await _repo.GetBondPositionsAsync(bankday, portfolioId);
+
+        return positions
+            .Select(PositionMapper.MapToBondPositionDTO)
+            .ToList();
     }
 
     public async Task<List<IndexPositionDTO>> GetIndexPositionsAsync(DateOnly bankday, int portfolioId)
     {
-        return await PositionHelper.GetPositionsAsync(
-            _repo.GetIndexPositionsAsync,
-            PositionMapper.MapToIndexPositionDTO,
-            bankday,
-            portfolioId
-        );
+        var positions = await _repo.GetIndexPositionsAsync(bankday, portfolioId);
+
+        return positions
+            .Select(PositionMapper.MapToIndexPositionDTO)
+            .ToList();
     }
 }

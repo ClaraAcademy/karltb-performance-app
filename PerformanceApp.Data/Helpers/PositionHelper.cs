@@ -27,20 +27,4 @@ public static class PositionHelper
             .InstrumentNavigation?
             .Name;
     }
-
-    public static async Task<List<T>> GetPositionsAsync<T>(
-        Func<DateOnly, int, Task<IEnumerable<Position>>> getPositions,
-        Func<Position, T> mapToDto,
-        DateOnly bankday,
-        int portfolioId
-    )
-    {
-        var positions = await getPositions(bankday, portfolioId);
-
-        return positions
-            .Select(mapToDto)
-            .ToList();
-    }
-
-
 }
