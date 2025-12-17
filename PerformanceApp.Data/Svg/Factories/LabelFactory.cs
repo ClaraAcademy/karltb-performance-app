@@ -4,12 +4,9 @@ using PerformanceApp.Data.Svg.Factories.Core;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class LabelFactory(int length)
+public class LabelFactory()
 {
     private readonly TextFactory _textFactory = new();
-    private readonly int _length = length;
-
-    public LabelFactory() : this(LabelDefaults.Length) { }
 
     public XElement Create(
         float x,
