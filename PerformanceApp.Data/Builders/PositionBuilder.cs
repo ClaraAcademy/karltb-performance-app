@@ -72,7 +72,7 @@ public class PositionBuilder : IBuilder<Position>
         {
             InstrumentNavigation = _instrument,
             PortfolioNavigation = _portfolio,
-            BankdayNavigation = _dateInfo,
+            Bankday = _dateInfo.Bankday,
             Amount = _amount,
             Count = _count,
             Proportion = _proportion,

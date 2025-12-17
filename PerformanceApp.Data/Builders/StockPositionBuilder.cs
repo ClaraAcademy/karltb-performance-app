@@ -1,10 +1,18 @@
+using PerformanceApp.Data.Constants;
 using PerformanceApp.Data.Models;
 
 namespace PerformanceApp.Data.Builders;
 
 public class StockPositionBuilder : PositionBuilder
 {
-    private new int _count = Defaults.StockPositionBuilderDefaults.Count;
+    private new int _count = 10;
+    private new Instrument _instrument = new InstrumentBuilder()
+        .WithInstrumentTypeNavigation(
+            new InstrumentTypeBuilder()
+                .WithName(InstrumentTypeConstants.Stock)
+                .Build()
+        )
+        .Build();
 
     public StockPositionBuilder WithCount(int count)
     {
@@ -15,7 +23,7 @@ public class StockPositionBuilder : PositionBuilder
     public override Position Build()
     {
         base._count = _count;
-        // _instrument = Defaults.StockPositionBuilderDefaults.InstrumentNavigation;
+        base._instrument = _instrument;
         return base.Build();
     }
 }
