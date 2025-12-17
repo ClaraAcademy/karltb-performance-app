@@ -7,7 +7,7 @@ public class LabelFactory()
 {
     private readonly TextFactory _textFactory = new();
 
-    public XElement GetLabel(
+    public XElement Create(
         float x,
         float y,
         string labelText,
