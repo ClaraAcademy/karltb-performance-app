@@ -4,6 +4,10 @@ namespace PerformanceApp.Data.Svg.Factories;
 
 public class XAttributeFactory
 {
+    public static IEnumerable<XAttribute> Create(IEnumerable<(string name, string value)> attributes)
+    {
+        return attributes.Select(Create);
+    }
     public static XAttribute Create((string name, string value) attribute)
     {
         return Create(attribute.name, attribute.value);
