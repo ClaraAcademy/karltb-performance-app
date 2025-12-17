@@ -9,4 +9,9 @@ public class XElementFactory
     {
         return new XElement($"{SvgNamespace}{name}", attributes);
     }
+
+    public static XElement Create(string name, IEnumerable<XAttribute> attributes)
+    {
+        return Create(name, attributes.ToArray());
+    }
 }
