@@ -5,13 +5,13 @@ using PerformanceApp.Data.Svg.Scalers;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class AxisFactory(int width, int height, int xMargin, int yMargin, int numberOfPoints, float yMax, float yMin)
+public class AxisFactory(XScaler xScaler, YScaler yScaler)
 {
-    private readonly LineFactory _lineFactory = new LineFactory(ColorConstants.Black, 1);
-    private readonly XScaler _xScaler = new XScaler(width, xMargin, numberOfPoints);
-    private readonly YScaler _yScaler = new YScaler(height, yMargin, yMax, yMin);
-    private readonly int _width = width;
-    private readonly int _height = height;
+    private readonly LineFactory _lineFactory = new(ColorConstants.Black, 1);
+    private readonly XScaler _xScaler = xScaler;
+    private readonly YScaler _yScaler = yScaler;
+    private readonly int _width = xScaler.Width;
+    private readonly int _height = yScaler.Height;
 
     public XElement CreateX()
     {
