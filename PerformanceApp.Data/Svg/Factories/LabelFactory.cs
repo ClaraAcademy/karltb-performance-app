@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Factories.Core;
 
@@ -19,27 +20,24 @@ public class LabelFactory()
         return _textFactory.Create(text, x, y, anchor, angle);
     }
 
-    public IEnumerable<XElement> CreateXs(
-        IEnumerable<float> xs,
-        float y,
-        IEnumerable<string> texts,
-        string anchor = "middle",
-        float angle = 0
-    )
+    public List<XElement> CreateXs(IEnumerable<(float,string)> samples, float y, string anchor = "middle", float angle = 0)
     {
-        return xs.Zip(texts, (x, text) => Create(x, y, text, anchor, angle));
+        var result = new List<XElement>();
+        foreach (var (x, text) in samples)
+        {
+            result.Add(Create(x, y, text, anchor, angle));
+        }
+        return result;
     }
 
-    public IEnumerable<XElement> CreateYs(
-        IEnumerable<float> ys,
-        float x,
-        IEnumerable<string> texts,
-        string anchor = "middle",
-        float angle = 0
-    )
+    public List<XElement> CreateYs(IEnumerable<(float, string)> samples, float x, string anchor = "middle", float angle = 0)
     {
-        return ys.Zip(texts, (y, text) => Create(x, y, text, anchor, angle));
+        var result = new List<XElement>();
+        foreach (var (y, text) in samples)
+        {
+            result.Add(Create(x, y, text, anchor, angle));
+        }
+        return result;
     }
-
 
 }
