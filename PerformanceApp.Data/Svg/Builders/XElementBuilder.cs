@@ -31,13 +31,6 @@ public class XElementBuilder(string name)
         return this;
     }
 
-    public XElementBuilder WithElement(XElementBuilder elementBuilder)
-    {
-        var element = elementBuilder.Build();
-        _element.Add(element);
-        return this;
-    }
-
     public XElementBuilder WithValue<T>(T value)
     {
         var s = value?.ToString()
