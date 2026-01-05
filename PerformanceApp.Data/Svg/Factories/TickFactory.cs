@@ -55,6 +55,14 @@ public class TickFactory
         return xs.Select(x => Create(x, y1, x, y2));
     }
 
+    public IEnumerable<XElement> CreateXs(IEnumerable<float> xs, float y)
+    {
+        var y1 = y - _offset;
+        var y2 = y + _offset;
+
+        return xs.Select(x => Create(x, y1, x, y2));
+    }
+
     public IEnumerable<XElement> CreateYs(int count, float x)
     {
         var x1 = x - _offset;
@@ -63,6 +71,14 @@ public class TickFactory
             .Range(1, count)
             .Select(_yScaler.Scale)
             .Select(y => (float)y);
+
+        return ys.Select(y => Create(x1, y, x2, y));
+    }
+
+    public IEnumerable<XElement> CreateYs(IEnumerable<float> ys, float x)
+    {
+        var x1 = x - _offset;
+        var x2 = x + _offset;
 
         return ys.Select(y => Create(x1, y, x2, y));
     }
