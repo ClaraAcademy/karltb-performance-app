@@ -1,6 +1,9 @@
+using PerformanceApp.Data.Svg.Scalers.Interface;
+
 namespace PerformanceApp.Data.Svg.Scalers;
 
 public class YScaler(int height, int margin, float max, float min)
+    : IScaler
 {
     private readonly int _height = height;
     private readonly int _margin = margin;

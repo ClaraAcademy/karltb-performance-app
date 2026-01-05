@@ -1,6 +1,9 @@
+using PerformanceApp.Data.Svg.Scalers.Interface;
+
 namespace PerformanceApp.Data.Svg.Scalers;
 
 public class XScaler(int width, int margin, int numberOfPoints)
+    : IScaler
 {
     private readonly int _width = width;
     private readonly int _margin = margin;
