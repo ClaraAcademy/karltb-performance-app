@@ -7,7 +7,7 @@ public static class PortfolioPerformanceMapper
 {
     public static PortfolioPerformanceDTO MapToPortfolioPerformanceDTO(PortfolioPerformance portfolioPerformance)
     {
-        var bankday = portfolioPerformance.PeriodStart;
+        var bankday = portfolioPerformance.PeriodEnd;
         var value = portfolioPerformance.Value;
 
         return MapToPortfolioPerformanceDTO(bankday, value);
