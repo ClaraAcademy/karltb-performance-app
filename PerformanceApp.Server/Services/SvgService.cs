@@ -1,5 +1,6 @@
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Dtos;
+using PerformanceApp.Data.Svg.Models;
 
 namespace PerformanceApp.Server.Services;
 
@@ -25,7 +26,7 @@ public class SvgService(IPortfolioService portfolioService) : ISvgService
 
         var dataPoints = PortfolioPerformanceMapper.MapToDataPoint2s(dtos);
 
-        return new SVG(
+        return new SvgLineChart(
             dataPoints,
             width ?? DefaultWidth,
             height ?? DefaultHeight
