@@ -1,13 +1,14 @@
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
+using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Utilities;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
 public class PolyLineFactory
 {
-    public static XElement GetSvgPolyline(
+    public static XElement Create(
         List<string> points, 
         string color = ColorConstants.Black, 
         int width = 1, 
@@ -30,5 +31,25 @@ public class PolyLineFactory
         }
 
         return element.Build();
+    }
+
+    public static XElement CreatePrimary(
+        List<string> points,
+        string color = SvgDefaults.PrimaryColor,
+        int width = 2,
+        bool dotted = false
+    )
+    {
+        return Create(points, color, width, dotted);
+    }
+
+    public static XElement CreateSecondary(
+        List<string> points,
+        string color = SvgDefaults.SecondaryColor,
+        int width = 2,
+        bool dotted = true
+    )
+    {
+        return Create(points, color, width, dotted);
     }
 }
