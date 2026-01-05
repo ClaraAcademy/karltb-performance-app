@@ -4,11 +4,12 @@ namespace PerformanceApp.Data.Svg.Builders;
 
 public class XElementBuilder(string name)
 {
-    private readonly XElement _element = new(name);
+    private static readonly XNamespace SvgNamespace = "http://www.w3.org/2000/svg";
+    private readonly XElement _element = new(SvgNamespace + name);
 
     public XElementBuilder WithAttribute<T>(string name, T value)
     {
-        var s = value?.ToString() 
+        var s = value?.ToString()
             ?? throw new ArgumentException("Type must override ToString()");
 
         _element.Add(new XAttribute(name, s));
@@ -29,7 +30,7 @@ public class XElementBuilder(string name)
         }
         return this;
     }
-    
+
     public XElementBuilder WithElement(XElementBuilder elementBuilder)
     {
         var element = elementBuilder.Build();
@@ -39,7 +40,7 @@ public class XElementBuilder(string name)
 
     public XElementBuilder WithValue<T>(T value)
     {
-        var s = value?.ToString() 
+        var s = value?.ToString()
             ?? throw new ArgumentException("Type must override ToString()");
         _element.Value = s;
         return this;

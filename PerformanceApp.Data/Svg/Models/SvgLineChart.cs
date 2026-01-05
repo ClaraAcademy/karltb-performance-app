@@ -7,6 +7,7 @@ using PerformanceApp.Data.Svg.Factories;
 using PerformanceApp.Data.Svg.Factories.Core;
 using PerformanceApp.Data.Svg.Formatters;
 using PerformanceApp.Data.Svg.Models.Abstract;
+using PerformanceApp.Data.Svg.Samplers;
 using PerformanceApp.Data.Svg.Scalers;
 using PerformanceApp.Data.Svg.Utilities;
 
@@ -25,8 +26,8 @@ public class SvgLineChart : SvgBase
     private readonly PointFactory _pointFactory;
     private readonly TickFactory _tickFactory;
     private readonly LabelFactory _labelFactory = new();
-    private readonly Sampler<DataPoint> _xSampler;
-    private readonly Sampler<DataPoint> _ySampler;
+    private readonly XSampler<DataPoint> _xSampler;
+    private readonly YSampler<DataPoint> _ySampler;
 
     public SvgLineChart(List<DataPoint2> dataPoints, int width, int height)
         : base(width, height)
@@ -40,9 +41,9 @@ public class SvgLineChart : SvgBase
         _pointFactory = new PointFactory(_xScaler, _yScaler);
         _tickFactory = new TickFactory(_xScaler, _yScaler);
         var selectX = new Func<DataPoint, string>(d => d.X.ToString());
-        _xSampler = new Sampler<DataPoint>(_xScaler, selectX);
+        _xSampler = new XSampler<DataPoint>(_xScaler, selectX);
         var selectY = new Func<DataPoint, string>(d => new PercentageFormatter().Format(d.Y));
-        _ySampler = new Sampler<DataPoint>(_yScaler, selectY);
+        _ySampler = new YSampler<DataPoint>(_yScaler, selectY);
 
         _schema = CreateSchema();
     }
@@ -78,7 +79,7 @@ public class SvgLineChart : SvgBase
         var yTicks = _tickFactory.CreateYs(ySamples.Select(t => t.Item1), _xScaler.Scale(_xMargin));
 
         var xLabels = _labelFactory.CreateXs(xSamples, _yScaler.Scale(0), LabelDefaults.Start, LabelDefaults.Angle45);
-        var yLabels = _labelFactory.CreateYs(ySamples, _xScaler.Scale(_xMargin));
+        var yLabels = _labelFactory.CreateYs(ySamples, _xScaler.Scale(_xMargin) - LabelDefaults.Offset);
 
         return SchemaBuilder
             .WithElement(xAxis)
