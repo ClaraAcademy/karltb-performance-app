@@ -1,11 +1,11 @@
 using PerformanceApp.Data.Dtos;
-using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Svg.Scalers.Interface;
 
 namespace PerformanceApp.Data.Svg.Extractors;
 
-public class YExtractor(YScaler yScaler)
+public class YExtractor(IScaler scaler)
 {
-    private readonly YScaler _yScaler = yScaler;
+    private readonly IScaler _yScaler = scaler;
 
     public List<float> ExtractY1s(IEnumerable<DataPoint2> dataPoints)
     {

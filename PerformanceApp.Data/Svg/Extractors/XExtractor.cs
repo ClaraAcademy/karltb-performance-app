@@ -1,11 +1,11 @@
 using PerformanceApp.Data.Dtos;
-using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Svg.Scalers.Interface;
 
 namespace PerformanceApp.Data.Svg.Extractors;
 
-public class XExtractor(XScaler xScaler)
+public class XExtractor(IScaler scaler)
 {
-    private readonly XScaler _xScaler = xScaler;
+    private readonly IScaler _xScaler = scaler;
 
     public List<float> Extract(IEnumerable<DataPoint2> dataPoints)
     {
