@@ -20,6 +20,15 @@ public class XElementBuilder(string name)
         _element.Add(element);
         return this;
     }
+
+    public XElementBuilder WithElements(IEnumerable<XElement> elements)
+    {
+        foreach (var element in elements)
+        {
+            _element.Add(element);
+        }
+        return this;
+    }
     
     public XElementBuilder WithElement(XElementBuilder elementBuilder)
     {
