@@ -1,11 +1,11 @@
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Defaults;
 
 namespace PerformanceApp.Data.Svg.Builders;
 
 public class XElementBuilder(string name)
 {
-    private static readonly XNamespace SvgNamespace = "http://www.w3.org/2000/svg";
-    private readonly XElement _element = new(SvgNamespace + name);
+    private readonly XElement _element = new(SvgDefaults.Namespace + name);
 
     public XElementBuilder WithAttribute<T>(string name, T value)
     {
