@@ -1,4 +1,3 @@
-using System.Numerics;
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
@@ -6,25 +5,15 @@ using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
-public class LineFactory
+public class LineFactory(string color, int width)
 {
-    private readonly string _color;
-    private readonly int _width;
-    private readonly DecimalFormatter _decimalFormatter;
+    private readonly string _color = color;
+    private readonly int _width = width;
+    private readonly DecimalFormatter _decimalFormatter = new();
 
-    public LineFactory(string color, int width)
-    {
-        _color = color;
-        _width = width;
-        _decimalFormatter = new DecimalFormatter();
-    }
-
-    public LineFactory()
-    {
-        _color = ColorConstants.Black;
-        _width = LineConstants.DefaultWidth;
-        _decimalFormatter = new DecimalFormatter();
-    }
+    public LineFactory() : this(ColorConstants.Black, LineConstants.DefaultWidth) { }
+    public LineFactory(string color) : this(color, LineConstants.DefaultWidth) { }
+    public LineFactory(int width) : this(ColorConstants.Black, width) { }
 
     public XElement Create(float x1, float y1, float x2, float y2)
     {
@@ -38,7 +27,7 @@ public class LineFactory
             .WithAttribute(XAttributeConstants.X2, c[2])
             .WithAttribute(XAttributeConstants.Y2, c[3])
             .WithAttribute(XAttributeConstants.Stroke, _color)
-            .WithAttribute(XAttributeConstants.StrokeWidth, _width.ToString())
+            .WithAttribute(XAttributeConstants.StrokeWidth, _width)
             .Build();
     }
 }
