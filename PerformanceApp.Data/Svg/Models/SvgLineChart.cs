@@ -78,8 +78,8 @@ public class SvgLineChart : SvgBase
         var xTicks = _tickFactory.CreateXs(xSamples.Select(t => t.Item1), _yScaler.Scale(0));
         var yTicks = _tickFactory.CreateYs(ySamples.Select(t => t.Item1), _xScaler.Scale(0));
 
-        var xLabels = _labelFactory.CreateXs(xSamples, _yScaler.Scale(0), LabelDefaults.Start, LabelDefaults.Angle45);
-        var yLabels = _labelFactory.CreateYs(ySamples, _xScaler.Scale(0) - LabelDefaults.Offset);
+        var xLabels = _labelFactory.CreateXs(xSamples, _yScaler.Scale(0) + LabelDefaults.OffsetY, LabelDefaults.Start, LabelDefaults.Angle45);
+        var yLabels = _labelFactory.CreateYs(ySamples, _xScaler.Scale(0) - LabelDefaults.OffsetX);
 
         return SchemaBuilder
             .WithElement(xAxis)
