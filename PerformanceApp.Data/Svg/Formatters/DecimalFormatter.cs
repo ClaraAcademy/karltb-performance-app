@@ -5,7 +5,7 @@ namespace PerformanceApp.Data.Svg.Formatters;
 
 public class DecimalFormatter: Formatter
 {
-    public override string Format(float value)
+    public static new string Format(float value)
     {
         return value.ToString("F2", Culture);
     }
