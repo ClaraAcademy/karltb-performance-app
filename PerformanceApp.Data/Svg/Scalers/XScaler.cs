@@ -8,6 +8,7 @@ public class XScaler(int width, int margin, int numberOfPoints)
     private readonly int _width = width;
     private readonly int _margin = margin;
     public int Width => _width;
+    public int Margin => _margin;
     private readonly int _numberOfPoints = numberOfPoints;
 
     public float Scale(float x)

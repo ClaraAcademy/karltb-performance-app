@@ -10,6 +10,9 @@ public class YScaler(int height, int margin, float max, float min)
     private readonly float _max = max;
     private readonly float _min = min;
     public int Height => _height;
+    public int Margin => _margin;
+    public float Max => _max;
+    public float Min => _min;
 
     public float Scale(float y)
     {
