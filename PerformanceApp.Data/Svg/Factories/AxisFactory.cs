@@ -16,20 +16,18 @@ public class AxisFactory(XScaler xScaler, YScaler yScaler)
     public XElement CreateX()
     {
         var x1 = 0;
-        var y1 = _yScaler.Scale(0);
         var x2 = _width;
-        var y2 = _yScaler.Scale(0);
+        var y = _yScaler.Scale(0);
 
-        return _lineFactory.Create(x1, y1, x2, y2);
+        return _lineFactory.Create(x1, y, x2, y);
     }
 
     public XElement CreateY()
     {
-        var x1 = _xScaler.Scale(0);
         var y1 = 0;
-        var x2 = _xScaler.Scale(0);
         var y2 = _height;
+        var x = _xScaler.Scale(0);
 
-        return _lineFactory.Create(x1, y1, x2, y2);
+        return _lineFactory.Create(x, y1, x, y2);
     }
 }
