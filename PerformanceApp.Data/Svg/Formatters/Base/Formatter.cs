@@ -2,10 +2,15 @@ using System.Globalization;
 
 namespace PerformanceApp.Data.Svg.Formatters.Base;
 
-public class Formatter(string formatString)
+public class Formatter(string formatString, CultureInfo culture)
 {
-    private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+    private readonly CultureInfo Culture = culture;
     private readonly string _formatString = formatString;
+
+    public Formatter(string formatString) 
+        : this(formatString, CultureInfo.InvariantCulture)
+    {
+    }
 
     public string Format(float value)
     {
