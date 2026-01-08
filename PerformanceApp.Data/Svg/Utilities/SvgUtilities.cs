@@ -17,4 +17,11 @@ public static class SvgUtilities
     {
         return string.Join(" ", points);
     }
+
+    public static List<string> MapToPoints(List<float> xs, List<float> ys)
+    {
+        return xs
+            .Zip(ys, MapToPoint)
+            .ToList();
+    }
 }

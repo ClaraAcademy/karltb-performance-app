@@ -5,32 +5,32 @@ using PerformanceApp.Data.Svg.Utilities;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class PointFactory(XScaler xScaler, YScaler yScaler)
+public class PointFactory(XExtractor xExtractor, YExtractor yExtractor)
 {
-    private readonly XExtractor _xExtractor = new XExtractor(xScaler);
-    private readonly YExtractor _yExtractor = new YExtractor(yScaler);
+    private readonly XExtractor _xExtractor = xExtractor;
+    private readonly YExtractor _yExtractor = yExtractor;
+
+    public PointFactory(XScaler xScaler, YScaler yScaler)
+        : this(new XExtractor(xScaler), new YExtractor(yScaler))
+    {
+    }
+
+    private List<string> Create(List<DataPoint2> dataPoints, Func<IEnumerable<DataPoint2>, List<float>> selectYs)
+    {
+        var xs = _xExtractor.Extract(dataPoints);
+        var ys = selectYs(dataPoints);
+
+        return SvgUtilities.MapToPoints(xs, ys);
+    }
 
     public List<string> CreatePrimary(List<DataPoint2> dataPoints)
     {
-        var xs = _xExtractor.Extract(dataPoints);
-        var ys = _yExtractor.ExtractY1s(dataPoints);
-
-        return MapToPoints(xs, ys);
+        return Create(dataPoints, _yExtractor.ExtractY1s);
     }
 
     public List<string> CreateSecondary(List<DataPoint2> dataPoints)
     {
-        var xs = _xExtractor.Extract(dataPoints);
-        var ys = _yExtractor.ExtractY2s(dataPoints);
-
-        return MapToPoints(xs, ys);
-    }
-
-    private static List<string> MapToPoints(List<float> xs, List<float> ys)
-    {
-        return xs
-            .Zip(ys, SvgUtilities.MapToPoint)
-            .ToList();
+        return Create(dataPoints, _yExtractor.ExtractY2s);
     }
 
 }
