@@ -1,4 +1,4 @@
-using PerformanceApp.Data.Svg.Formatters.Abstract;
+using PerformanceApp.Data.Svg.Formatters.Base;
 
 namespace PerformanceApp.Data.Svg.Formatters;
 

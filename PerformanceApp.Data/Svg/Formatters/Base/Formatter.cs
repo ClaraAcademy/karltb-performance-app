@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace PerformanceApp.Data.Svg.Formatters.Abstract;
+namespace PerformanceApp.Data.Svg.Formatters.Base;
 
 public class Formatter(string formatString)
 {
