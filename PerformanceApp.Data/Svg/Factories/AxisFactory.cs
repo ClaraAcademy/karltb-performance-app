@@ -1,17 +1,34 @@
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Factories.Core;
+using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
 using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Svg.Scalers.Interface;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class AxisFactory(XScaler xScaler, YScaler yScaler)
+public class AxisFactory(IScaler xScaler, IScaler yScaler, ILineFactory lineFactory, int width, int height)
 {
-    private readonly LineFactory _lineFactory = new(ColorConstants.Black, 1);
-    private readonly XScaler _xScaler = xScaler;
-    private readonly YScaler _yScaler = yScaler;
-    private readonly int _width = xScaler.Width;
-    private readonly int _height = yScaler.Height;
+    private readonly ILineFactory _lineFactory = lineFactory;
+    private readonly IScaler _xScaler = xScaler;
+    private readonly IScaler _yScaler = yScaler;
+    private readonly int _width = width;
+    private readonly int _height = height;
+
+    private class Defaults
+    {
+        private class Line
+        {
+            public const string Color = ColorConstants.Black;
+            public const int Width = 1;
+        }
+        public static readonly ILineFactory LineFactory = new LineFactory(Line.Color, Line.Width);
+    }
+
+    public AxisFactory(XScaler xScaler, YScaler yScaler)
+        : this(xScaler, yScaler, Defaults.LineFactory, xScaler.Width, yScaler.Height)
+    { }
+
 
     public XElement CreateX()
     {
