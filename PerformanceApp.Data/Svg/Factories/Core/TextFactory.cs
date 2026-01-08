@@ -2,11 +2,12 @@ using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Defaults;
+using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
 using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
-public class TextFactory(int size)
+public class TextFactory(int size) : ITextFactory
 {
     private readonly int _size = size;
     private readonly DecimalFormatter _decimalFormatter = new();

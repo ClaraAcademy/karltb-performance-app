@@ -1,13 +1,19 @@
 using System.Xml.Linq;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Factories.Core;
+using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class LabelFactory()
+public class LabelFactory(ITextFactory textFactory)
 {
-    private readonly TextFactory _textFactory = new();
+    private readonly ITextFactory _textFactory = textFactory;
+    private class Defaults
+    {
+        public static readonly ITextFactory TextFactory = new TextFactory(TextDefaults.FontSize);
+    }
+
+    public LabelFactory() : this(Defaults.TextFactory) { }
 
     public XElement Create(
         float x,
@@ -20,7 +26,7 @@ public class LabelFactory()
         return _textFactory.Create(text, x, y, anchor, angle);
     }
 
-    public List<XElement> CreateXs(IEnumerable<(float,string)> samples, float y, string anchor = "middle", float angle = 0)
+    public List<XElement> CreateXs(IEnumerable<(float, string)> samples, float y, string anchor = "middle", float angle = 0)
     {
         var result = new List<XElement>();
         foreach (var (x, text) in samples)
