@@ -1,14 +1,16 @@
 using System.Globalization;
-using System.Numerics;
 
 namespace PerformanceApp.Data.Svg.Formatters.Abstract;
 
-public abstract class Formatter
+public class Formatter(string formatString)
 {
-    protected static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+    private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+    private readonly string _formatString = formatString;
 
-    public abstract string Format(float value);
-
+    public string Format(float value)
+    {
+        return value.ToString(_formatString, Culture);
+    }
     public IEnumerable<string> Format(IEnumerable<float> values)
     {
         return values.Select(Format);

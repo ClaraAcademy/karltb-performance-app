@@ -2,11 +2,7 @@ using PerformanceApp.Data.Svg.Formatters.Abstract;
 
 namespace PerformanceApp.Data.Svg.Formatters;
 
-public class PercentageFormatter: Formatter
+public class PercentageFormatter(): Formatter(FormatString)
 {
-    public override string Format(float value)
-    {
-        return value.ToString("P0", Culture);
-    }
-
+    private const string FormatString = "P0";
 }

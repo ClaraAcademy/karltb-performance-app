@@ -2,10 +2,7 @@ using PerformanceApp.Data.Svg.Formatters.Abstract;
 
 namespace PerformanceApp.Data.Svg.Formatters;
 
-public class DecimalFormatter: Formatter
+public class DecimalFormatter() : Formatter(FormatString)
 {
-    public override string Format(float value)
-    {
-        return value.ToString("F2", Culture);
-    }
+    private const string FormatString = "F2";
 }
