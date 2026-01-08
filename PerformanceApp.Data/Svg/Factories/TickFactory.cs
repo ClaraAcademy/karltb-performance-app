@@ -1,34 +1,26 @@
-using System.Numerics;
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Factories.Core;
-using PerformanceApp.Data.Svg.Scalers;
-using PerformanceApp.Data.Svg.Utilities;
+using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class TickFactory
+public class TickFactory(ILineFactory lineFactory, int length)
 {
-    private readonly string _color;
-    private readonly LineFactory _lineFactory;
-    private readonly int _length;
-    private readonly int _offset;
-    private readonly XScaler _xScaler;
-    private readonly YScaler _yScaler;
+    private readonly ILineFactory _lineFactory = lineFactory;
+    private readonly int _offset = length / 2;
 
-    public TickFactory(XScaler xScaler, YScaler yScaler)
-        : this(xScaler, yScaler, TickDefaults.Length) { }
-
-    public TickFactory(XScaler xScaler, YScaler yScaler, int length)
+    private class Defaults
     {
-        _xScaler = xScaler;
-        _yScaler = yScaler;
-        _color = ColorConstants.Black;
-        _length = length;
-        _offset = length / 2;
-        _lineFactory = new LineFactory(_color, 1);
+        public const string Color = ColorConstants.Black;
+        public const int Length = 10;
+        public static readonly ILineFactory LineFactory = new LineFactory(Color, 1);
     }
+
+    public TickFactory() : this(Defaults.LineFactory, TickDefaults.Length) { }
+    public TickFactory(int length) : this(Defaults.LineFactory, length) { }
+    public TickFactory(ILineFactory lineFactory) : this(lineFactory, Defaults.Length) { }
 
     public XElement Create(float x1, float y1, float x2, float y2)
     {

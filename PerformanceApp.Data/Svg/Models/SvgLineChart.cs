@@ -39,7 +39,7 @@ public class SvgLineChart : SvgBase
         _axisFactory = new AxisFactory(_xScaler, _yScaler);
         _dataPoints = dataPoints;
         _pointFactory = new PointFactory(_xScaler, _yScaler);
-        _tickFactory = new TickFactory(_xScaler, _yScaler);
+        _tickFactory = new TickFactory();
         var selectX = new Func<DataPoint, string>(d => d.X.ToString());
         _xSampler = new XSampler<DataPoint>(_xScaler, selectX);
         var selectY = new Func<DataPoint, string>(d => new PercentageFormatter().Format(d.Y));
