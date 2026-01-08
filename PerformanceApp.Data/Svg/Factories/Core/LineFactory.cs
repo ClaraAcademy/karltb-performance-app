@@ -1,19 +1,16 @@
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Constants;
+using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
 using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
-public class LineFactory(string color, int width)
+public class LineFactory(string color, int width) : ILineFactory
 {
     private readonly string _color = color;
     private readonly int _width = width;
     private readonly DecimalFormatter _decimalFormatter = new();
-
-    public LineFactory() : this(ColorConstants.Black, LineConstants.DefaultWidth) { }
-    public LineFactory(string color) : this(color, LineConstants.DefaultWidth) { }
-    public LineFactory(int width) : this(ColorConstants.Black, width) { }
 
     public XElement Create(float x1, float y1, float x2, float y2)
     {
