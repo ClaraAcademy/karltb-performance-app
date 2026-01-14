@@ -7,13 +7,13 @@ public class XScaler(int width, int margin, int numberOfPoints)
 {
     private readonly int _width = width;
     private readonly int _margin = margin;
-    public int Width => _width;
-    public int Margin => _margin;
     private readonly int _numberOfPoints = numberOfPoints;
 
-    public float Scale(float x)
-    {
-        return _margin + (x * (_width - (2 * _margin)) / _numberOfPoints);
-    }
+    public int Width => _width;
+    public int Margin => _margin;
+    public int NumberOfPoints => _numberOfPoints;
+
+    private float StepSize => (Width - 2f * Margin) / NumberOfPoints;
+    public float Scale(float x) => Margin + x * StepSize;
     public float Scale(int x) => Scale((float)x);
 }
