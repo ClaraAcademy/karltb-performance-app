@@ -19,14 +19,4 @@ public class YScaler(int height, int margin, float max, float min)
         return _margin + (_max - y) * (_height - 2 * _margin) / (_max - _min);
     }
     public float Scale(int y) => Scale((float)y);
-
-    public List<float> Scale(IEnumerable<float> ys)
-    {
-        return ys.Select(Scale).ToList();
-    }
-
-    public List<float> Scale(IEnumerable<int> ys)
-    {
-        return ys.Select(Scale).ToList();
-    }
 }
