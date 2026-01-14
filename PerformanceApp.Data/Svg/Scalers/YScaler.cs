@@ -14,9 +14,10 @@ public class YScaler(int height, int margin, float max, float min)
     public float Max => _max;
     public float Min => _min;
 
-    public float Scale(float y)
-    {
-        return _margin + (_max - y) * (_height - 2 * _margin) / (_max - _min);
-    }
+    float Range => _max - _min;
+    float StepSize => (Height - 2f * Margin) / Range;
+    float Invert(float y) => Max - y;
+
+    public float Scale(float y) => Margin + Invert(y) * StepSize;
     public float Scale(int y) => Scale((float)y);
 }
