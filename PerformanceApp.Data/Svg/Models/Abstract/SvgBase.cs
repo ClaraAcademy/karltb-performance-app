@@ -1,23 +1,22 @@
 using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
+using PerformanceApp.Data.Svg.Common;
 
 namespace PerformanceApp.Data.Svg.Models.Abstract;
 
 public abstract class SvgBase
 {
-    private readonly int _width;
-    private readonly int _height;
+    protected readonly Dimensions _dimensions;
     protected XElement _schema;
     protected XElementBuilder SchemaBuilder;
 
-    public int Width => _width;
-    public int Height => _height;
+    public int Width => _dimensions.X;
+    public int Height => _dimensions.Y;
     public XElement Schema { get => _schema; set => _schema = value; }
 
     protected SvgBase(int width, int height)
     {
-        _width = width;
-        _height = height;
+        _dimensions = new Dimensions(width, height);
         SchemaBuilder = InitializeBuilder();
         _schema = SchemaBuilder.Build();
     }
@@ -25,8 +24,8 @@ public abstract class SvgBase
     private XElementBuilder InitializeBuilder()
     {
         return new XElementBuilder("svg")
-            .WithAttribute("width", _width)
-            .WithAttribute("height", _height);
+            .WithAttribute("width", Width)
+            .WithAttribute("height", Height);
     }
 
     public override string ToString()

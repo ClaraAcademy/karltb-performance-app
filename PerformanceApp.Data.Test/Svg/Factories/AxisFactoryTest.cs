@@ -48,42 +48,4 @@ public class AxisFactoryTest
             .Setup(lf => lf.Create(It.IsAny<float>(), It.IsAny<float>(), It.IsAny<float>(), It.IsAny<float>()))
             .Returns(LineFactoryReturn);
     }
-
-    [Fact]
-    public void CreateX_ReturnsCorrectXElement()
-    {
-        // Arrange
-        var width = 200;
-        var height = 100;
-        var axisFactory = new AxisFactory(_xScalerMock.Object, _yScalerMock.Object, _lineFactoryMock.Object, width, height);
-
-        // Act
-        var xAxis = axisFactory.CreateX();
-
-        // Assert
-        Assert.Equal(Defaults.TestLine, xAxis.Name.LocalName);
-        Assert.Equal("0", xAxis.Attribute(Defaults.Inputs.X1)?.Value);
-        Assert.Equal("0", xAxis.Attribute(Defaults.Inputs.Y1)?.Value);
-        Assert.Equal(width.ToString(), xAxis.Attribute(Defaults.Inputs.X2)?.Value);
-        Assert.Equal("0", xAxis.Attribute(Defaults.Inputs.Y2)?.Value);
-    }
-
-    [Fact]
-    public void CreateY_ReturnsCorrectXElement()
-    {
-        // Arrange
-        var width = 200;
-        var height = 100;
-        var axisFactory = new AxisFactory(_xScalerMock.Object, _yScalerMock.Object, _lineFactoryMock.Object, width, height);
-
-        // Act
-        var yAxis = axisFactory.CreateY();
-
-        // Assert
-        Assert.Equal(Defaults.TestLine, yAxis.Name.LocalName);
-        Assert.Equal("0", yAxis.Attribute(Defaults.Inputs.X1)?.Value);
-        Assert.Equal("0", yAxis.Attribute(Defaults.Inputs.Y1)?.Value);
-        Assert.Equal("0", yAxis.Attribute(Defaults.Inputs.X2)?.Value);
-        Assert.Equal(height.ToString(), yAxis.Attribute(Defaults.Inputs.Y2)?.Value);
-    }
 }

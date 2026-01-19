@@ -1,28 +1,34 @@
-using PerformanceApp.Data.Svg.Samplers.Base;
-using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Dtos;
+using PerformanceApp.Data.Extensions;
+using PerformanceApp.Data.Svg.Samplers.Coordinate;
+using PerformanceApp.Data.Svg.Samplers.Label;
 
 namespace PerformanceApp.Data.Svg.Samplers;
 
-public class XSampler<T>(XScaler xScaler, Func<T, string> selector)
-    : Sampler<T>(xScaler, selector)
+public class XSampler
 {
-    private readonly float _margin = xScaler.Margin;
-    private readonly float _doubleMargin = 2 * xScaler.Margin;
-    private readonly float _width = xScaler.Width;
+    private readonly CoordinateSampler _coordinateSampler;
+    private readonly LabelSampler _labelSampler;
 
-    public override List<(float, string)> Sample(IEnumerable<T> data, int count)
+    public XSampler(IEnumerable<DataPoint2> dataPoints, int width, int margin, int samples)
     {
-        var list = data.ToList();
-        var result = new List<(float, string)>();
-        var step = (data.Count() - 1f) / (count - 1f);
-        for (int i = 0; i < count; i++)
-        {
-            var index = (int)Math.Floor(i * step);
-            var label = _selector(list[index]);
-            var x = _margin + i * (_width - _doubleMargin) / (count - 1f);
-
-            result.Add((x, label));
-        }
-        return result;
+        var xs = dataPoints
+            .GetXs()
+            .Distinct()
+            .Select(i => (float)i.DayNumber)
+            .ToList();
+        var min = xs.Min();
+        var max = xs.Max();
+        _labelSampler = new LabelSampler(min, max, ToLabel, samples);
+        _coordinateSampler = new(margin, width - 2 * margin, samples);
     }
+
+    static string ToLabel(float f)
+    {
+        var i = (int)Math.Floor(f);
+        return DateOnly.FromDayNumber(i).ToString();
+    }
+
+    public List<string> Labels => _labelSampler.Samples;
+    public List<float> Coordinates => _coordinateSampler.Samples;
 }

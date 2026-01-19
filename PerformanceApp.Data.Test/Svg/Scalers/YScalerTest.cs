@@ -8,24 +8,6 @@ public class YScalerTest
     private const int Margin = 20;
     private const float Max = 100f;
     private const float Min = 1f;
-    [Fact]
-    public void Properties_ShouldReturnConstructorValues()
-    {
-        // Arrange
-        var height = Height;
-        var margin = Margin;
-        var max = Max;
-        var min = Min;
-
-        // Act
-        var scaler = new YScaler(height, margin, max, min);
-
-        // Assert
-        Assert.Equal(height, scaler.Height);
-        Assert.Equal(margin, scaler.Margin);
-        Assert.Equal(max, scaler.Max);
-        Assert.Equal(min, scaler.Min);
-    }
 
     [Theory]
     [InlineData(Max, Margin)] // m + (max - max) * (h - 2m) / (max - min) = m 

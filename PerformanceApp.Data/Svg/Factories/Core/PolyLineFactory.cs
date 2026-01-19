@@ -1,55 +1,21 @@
 using System.Xml.Linq;
+using PerformanceApp.Data.Dtos;
 using PerformanceApp.Data.Svg.Builders;
-using PerformanceApp.Data.Svg.Constants;
-using PerformanceApp.Data.Svg.Defaults;
-using PerformanceApp.Data.Svg.Utilities;
+using PerformanceApp.Data.Svg.Scalers.Interface;
 
 namespace PerformanceApp.Data.Svg.Factories.Core;
 
-public class PolyLineFactory
+public class PolyLineFactory(IEnumerable<DataPoint> dataPoints, IScaler xScaler, IScaler yScaler, string color, int width, bool dotted)
 {
-    public static XElement Create(
-        List<string> points, 
-        string color = ColorConstants.Black, 
-        int width = 1, 
-        bool dotted = false
-    )
-    {
-        var joined = SvgUtilities.MapToString(points);
+    private readonly PointFactory _pointFactory = new(dataPoints, xScaler, yScaler);
+    private readonly string _color = color;
+    private readonly int _width = width;
+    private readonly bool _dotted = dotted;
 
-        var element = new XElementBuilder(XElementConstants.Polyline)
-            .WithAttribute(XAttributeConstants.Points, joined)
-            .WithAttribute(XAttributeConstants.Fill, XAttributeConstants.None)
-            .WithAttribute(XAttributeConstants.Stroke, color)
-            .WithAttribute(XAttributeConstants.StrokeWidth, width);
-
-        if (dotted)
-        {
-            var spacing = SvgUtilities.MapToPoint(2, 2);
-            element = element
-                .WithAttribute(XAttributeConstants.StrokeDashArray, spacing);
-        }
-
-        return element.Build();
-    }
-
-    public static XElement CreatePrimary(
-        List<string> points,
-        string color = SvgDefaults.PrimaryColor,
-        int width = 2,
-        bool dotted = false
-    )
-    {
-        return Create(points, color, width, dotted);
-    }
-
-    public static XElement CreateSecondary(
-        List<string> points,
-        string color = SvgDefaults.SecondaryColor,
-        int width = 2,
-        bool dotted = true
-    )
-    {
-        return Create(points, color, width, dotted);
-    }
+    public XElement PolyLine => new PolyLineBuilder()
+        .WithColor(_color)
+        .WithWidth(_width)
+        .IsDotted(_dotted)
+        .WithPoints(_pointFactory.Points)
+        .Build();
 }

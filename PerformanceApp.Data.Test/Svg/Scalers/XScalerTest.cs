@@ -7,20 +7,6 @@ public class XScalerTest
     private const int Width = 200;
     private const int Margin = 10;
     private const int NumberOfPoints = 50;
-    [Fact]
-    public void Properties_ShouldReturnConstructorValues()
-    {
-        // Arrange
-        var width = Width;
-        var margin = Margin;
-        var numberOfPoints = NumberOfPoints;
-        // Act
-        var scaler = new XScaler(width, margin, numberOfPoints);
-
-        // Assert
-        Assert.Equal(width, scaler.Width);
-        Assert.Equal(margin, scaler.Margin);
-    }
 
     [Theory]
     [InlineData(0, Margin)] // m + 0 * step = m

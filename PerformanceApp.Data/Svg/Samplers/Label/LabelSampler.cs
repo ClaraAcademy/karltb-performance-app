@@ -1,23 +1,18 @@
-using PerformanceApp.Data.Svg.Samplers.Label.Index;
+using PerformanceApp.Data.Svg.Samplers.Interface;
 
 namespace PerformanceApp.Data.Svg.Samplers.Label;
 
-public class LabelSampler<T>(IndexSampler indexSampler, IEnumerable<T> data, Func<T, string> labelSelector)
+public class LabelSampler(float min, float max, Func<float, string> toLabel, int nSamples)
+    : ISampler<string>
 {
-    private readonly IndexSampler _indexSampler = indexSampler;
-    private readonly Func<T, string> _labelSelector = labelSelector;
-    private readonly IEnumerable<T> _data = data;
+    private readonly float _min = min;
+    private readonly Func<float, string> _toLabel = toLabel;
+    private readonly int _nSamples = nSamples;
+    private readonly float _step = (max - min) / (nSamples - 1f);
 
-    public LabelSampler(IEnumerable<T> data, Func<T, string> labelSelector, int samples)
-        : this(new IndexSampler(data.Count(), samples), data, labelSelector)
-    { }
-
-    public IReadOnlyList<string> Sample()
-    {
-        return _indexSampler
-            .Sample()
-            .Select(_data.ElementAt)
-            .Select(_labelSelector)
-            .ToList();
-    }
+    public List<string> Samples => Enumerable
+        .Range(0, _nSamples)
+        .Select(i => _min + i * _step)
+        .Select(_toLabel)
+        .ToList();
 }
