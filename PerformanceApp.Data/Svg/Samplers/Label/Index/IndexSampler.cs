@@ -1,16 +1,23 @@
-using PerformanceApp.Data.Svg.Samplers.Uniform;
+using PerformanceApp.Data.Svg.Samplers.Interface;
+using PerformanceApp.Data.Svg.Scalers.Interface;
+using PerformanceApp.Data.Svg.Scalers.Linear;
 
 namespace PerformanceApp.Data.Svg.Samplers.Label.Index;
 
-public class IndexSampler(int total, int samples)
-    : UniformSampler<int>(samples)
+public class IndexSampler(IScaler scaler, int nSamples)
+    : ISampler<int>
 {
-    private readonly int _total = total;
-    private readonly int _samples = samples;
+    private readonly IScaler _scaler = scaler;
+    private readonly int _nSamples = nSamples;
 
-    private float StepSize => (_total - 1f) / (_samples - 1f);
-    public override int Transform(int index)
-    {
-        return (int)Math.Floor(index * StepSize);
-    }
+    public IndexSampler(int nTotal, int nSamples)
+        : this(new LinearScaler(0, nTotal - 1, nSamples - 1), nSamples)
+    { }
+
+    public List<int> Samples => Enumerable
+        .Range(0, _nSamples)
+        .Select(Sample)
+        .ToList();
+
+    int Sample(int index) => (int)Math.Floor(_scaler.Scale(index));
 }
