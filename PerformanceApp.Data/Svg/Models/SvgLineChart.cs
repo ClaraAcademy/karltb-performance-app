@@ -1,5 +1,4 @@
 using PerformanceApp.Data.Dtos;
-using PerformanceApp.Data.Extensions;
 using PerformanceApp.Data.Mappers;
 using PerformanceApp.Data.Svg.Common;
 using PerformanceApp.Data.Svg.Defaults;
