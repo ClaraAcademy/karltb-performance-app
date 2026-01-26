@@ -8,27 +8,13 @@ public class DecimalFormatterTest
     public void Format_SingleValue_ReturnsFormattedString()
     {
         // Arrange
-        var formatter = new DecimalFormatter();
-        var value = 123.456f;
+        var value = 12.3456f;
+        var expected = "12.35";
 
         // Act
-        var result = formatter.Format(value);
+        var actual = DecimalFormatter.Format(value);
 
         // Assert
-        Assert.Equal("123.46", result);
-    }
-
-    [Fact]
-    public void Format_MultipleValues_ReturnsFormattedStrings()
-    {
-        // Arrange
-        var formatter = new DecimalFormatter();
-        var values = new List<float> { 123.456f, 78.9f, 0.1234f };
-
-        // Act
-        var results = formatter.Format(values).ToList();
-
-        // Assert
-        Assert.Equal(["123.46", "78.90", "0.12"], results);
+        Assert.Equal(expected, actual);
     }
 }

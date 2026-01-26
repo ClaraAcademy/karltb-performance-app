@@ -8,27 +8,13 @@ public class PercentageFormatterTest
     public void Format_SingleValue_ReturnsFormattedString()
     {
         // Arrange
-        var formatter = new PercentageFormatter();
-        var value = 0.256f;
+        var value = 0.756f;
+        var expected = "76 %";
 
         // Act
-        var result = formatter.Format(value);
+        var actual = PercentageFormatter.Format(value);
 
         // Assert
-        Assert.Equal("26 %", result);
-    }
-
-    [Fact]
-    public void Format_MultipleValues_ReturnsFormattedStrings()
-    {
-        // Arrange
-        var formatter = new PercentageFormatter();
-        var values = new List<float> { 0.256f, 0.5f, 0.1234f };
-
-        // Act
-        var results = formatter.Format(values).ToList();
-
-        // Assert
-        Assert.Equal(["26 %", "50 %", "12 %"], results);
+        Assert.Equal(expected, actual);
     }
 }

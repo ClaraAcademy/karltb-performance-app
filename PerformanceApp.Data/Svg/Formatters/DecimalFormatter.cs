@@ -1,8 +1,8 @@
-using PerformanceApp.Data.Svg.Formatters.Base;
+using System.Globalization;
 
 namespace PerformanceApp.Data.Svg.Formatters;
 
-public class DecimalFormatter() : Formatter(FormatString)
+public class DecimalFormatter
 {
-    private const string FormatString = "F2";
+    public static string Format(float value) => value.ToString("0.00", CultureInfo.InvariantCulture);
 }

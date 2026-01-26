@@ -1,8 +1,8 @@
-using PerformanceApp.Data.Svg.Formatters.Base;
+using System.Globalization;
 
 namespace PerformanceApp.Data.Svg.Formatters;
 
-public class PercentageFormatter(): Formatter(FormatString)
+public class PercentageFormatter
 {
-    private const string FormatString = "P0";
+    public static string Format(float value) => value.ToString("0 %", CultureInfo.InvariantCulture);
 }
