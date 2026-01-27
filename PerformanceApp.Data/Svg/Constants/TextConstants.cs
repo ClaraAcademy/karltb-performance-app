@@ -1,1 +1,0 @@
-namespace PerformanceApp.Data.Svg.Constants;
