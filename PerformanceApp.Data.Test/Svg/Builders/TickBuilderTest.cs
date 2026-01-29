@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Formatters;
@@ -6,55 +7,40 @@ namespace PerformanceApp.Data.Test.Svg.Builders;
 
 public class TickBuilderTest
 {
+    private readonly Func<float, string> _format = DecimalFormatter.Format;
     [Fact]
-    public void BuildXs_ShouldBuildCorrectElements()
+    public void BuildX_CreatesVerticalLineWithCorrectCoordinates()
     {
-        // Arrange
-        var xs = new List<float> { 10f, 20f, 30f };
-        var y0 = 50f;
+        float x = 10f;
+        float y0 = 20f;
+        float offset = TickDefaults.Length / 2;
 
-        // Act
-        var elements = TickBuilder.BuildXs(xs, y0);
+        XElement element = TickBuilder.BuildX(x, y0);
 
-        // Assert
-        Assert.Equal(3, elements.Count);
-        var offset = TickDefaults.Length / 2;
-        for (int i = 0; i < elements.Count; i++)
-        {
-            var element = elements[i];
-            Assert.Equal("line", element.Name.LocalName);
-            Assert.Equal(DecimalFormatter.Format(xs[i]), element.Attribute("x1")?.Value);
-            Assert.Equal(DecimalFormatter.Format(y0 - offset), element.Attribute("y1")?.Value);
-            Assert.Equal(DecimalFormatter.Format(xs[i]), element.Attribute("x2")?.Value);
-            Assert.Equal(DecimalFormatter.Format(y0 + offset), element.Attribute("y2")?.Value);
-            Assert.Equal("black", element.Attribute("stroke")?.Value);
-            Assert.Equal("1", element.Attribute("stroke-width")?.Value);
-        }
+        Assert.Equal("line", element.Name.LocalName);
+        Assert.Equal(_format(x), element.Attribute("x1")?.Value);
+        Assert.Equal(_format(y0 - offset), element.Attribute("y1")?.Value);
+        Assert.Equal(_format(x), element.Attribute("x2")?.Value);
+        Assert.Equal(_format(y0 + offset), element.Attribute("y2")?.Value);
+        Assert.Equal("black", element.Attribute("stroke")?.Value);
+        Assert.Equal("1", element.Attribute("stroke-width")?.Value);
     }
 
     [Fact]
-    public void BuildYs_ShouldBuildCorrectElements()
+    public void BuildY_CreatesHorizontalLineWithCorrectCoordinates()
     {
-        // Arrange
-        var ys = new List<float> { 15f, 25f, 35f };
-        var x0 = 100f;
+        float x0 = 15f;
+        float y = 25f;
+        float offset = TickDefaults.Length / 2;
 
-        // Act
-        var elements = TickBuilder.BuildYs(ys, x0);
+        XElement element = TickBuilder.BuildY(x0, y);
 
-        // Assert
-        Assert.Equal(3, elements.Count);
-        var offset = TickDefaults.Length / 2;
-        for (int i = 0; i < elements.Count; i++)
-        {
-            var element = elements[i];
-            Assert.Equal("line", element.Name.LocalName);
-            Assert.Equal(DecimalFormatter.Format(x0 - offset), element.Attribute("x1")?.Value);
-            Assert.Equal(DecimalFormatter.Format(ys[i]), element.Attribute("y1")?.Value);
-            Assert.Equal(DecimalFormatter.Format(x0 + offset), element.Attribute("x2")?.Value);
-            Assert.Equal(DecimalFormatter.Format(ys[i]), element.Attribute("y2")?.Value);
-            Assert.Equal("black", element.Attribute("stroke")?.Value);
-            Assert.Equal("1", element.Attribute("stroke-width")?.Value);
-        }
+        Assert.Equal("line", element.Name.LocalName);
+        Assert.Equal(_format(x0 - offset), element.Attribute("x1")?.Value);
+        Assert.Equal(_format(y), element.Attribute("y1")?.Value);
+        Assert.Equal(_format(x0 + offset), element.Attribute("x2")?.Value);
+        Assert.Equal(_format(y), element.Attribute("y2")?.Value);
+        Assert.Equal("black", element.Attribute("stroke")?.Value);
+        Assert.Equal("1", element.Attribute("stroke-width")?.Value);
     }
 }
