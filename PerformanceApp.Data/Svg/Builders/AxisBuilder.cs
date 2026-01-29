@@ -31,4 +31,11 @@ public class AxisBuilder
             .To(_x2, _y2)
             .Build();
     }
+    public static XElement Build((float x, float y) start, (float x, float y) end)
+    {
+        return new AxisBuilder()
+            .From(start.x, start.y)
+            .To(end.x, end.y)
+            .Build();
+    }
 }
