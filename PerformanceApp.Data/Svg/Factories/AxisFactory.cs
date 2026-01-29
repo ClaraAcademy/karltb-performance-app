@@ -1,21 +1,10 @@
 using System.Xml.Linq;
-using PerformanceApp.Data.Svg.Common;
-using PerformanceApp.Data.Svg.Defaults;
-using PerformanceApp.Data.Svg.Factories.Core;
-using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Svg.Builders;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class AxisFactory(Dimensions dimensions, XScaler xScaler, YScaler yScaler)
+public class AxisFactory(float x0, float y0, float nX, float nY)
 {
-    private readonly LineFactory _lineFactory = AxisDefaults.LineFactory;
-    private readonly Dimensions _dimensions = dimensions;
-    private readonly XScaler _xScaler = xScaler;
-    private readonly YScaler _yScaler = yScaler;
-
-    float ScaledX => _xScaler.Scale(0f);
-    float ScaledY => _yScaler.Scale(0f);
-
-    public XElement X => _lineFactory.Create(0, ScaledY, _dimensions.X, ScaledY);
-    public XElement Y => _lineFactory.Create(ScaledX, 0, ScaledX, _dimensions.Y);
+    public XElement X => AxisBuilder.Build((0, y0), (nX, y0));
+    public XElement Y => AxisBuilder.Build((x0, 0), (x0, nY));
 }
