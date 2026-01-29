@@ -1,67 +1,56 @@
+using System.Xml.Linq;
 using PerformanceApp.Data.Svg.Builders;
 using PerformanceApp.Data.Svg.Enums;
-using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Test.Svg.Builders;
 
 public class LabelBuilderTest
 {
     [Fact]
-    public void BuildXs_ShouldBuildCorrectElements()
+    public void BuildY_ShouldReturnXElementWithCorrectAttributes()
     {
         // Arrange
-        var texts = new List<string> { "Label1", "Label2", "Label3" };
-        var xs = new List<float> { 10f, 20f, 30f };
         var builder = new LabelBuilder()
-            .WithTexts(texts)
-            .WithY(50f)
-            .WithAngle(0)
-            .WithAnchor(Anchor.Middle)
-            .WithXs(xs);
+            .WithX(10f)
+            .WithY(20f)
+            .WithText("TestLabel")
+            .WithAnchor(Anchor.Start)
+            .WithAngle(45f)
+            .WithOffset(5f)
+            .WithSize(12);
 
         // Act
-        var elements = builder.BuildXs();
+        XElement element = builder.BuildY();
 
         // Assert
-        Assert.Equal(3, elements.Count);
-        for (int i = 0; i < elements.Count; i++)
-        {
-            var element = elements[i];
-            Assert.Equal("text", element.Name.LocalName);
-            Assert.Equal(DecimalFormatter.Format(xs[i]), element.Attribute("x")?.Value);
-            Assert.Equal("50.00", element.Attribute("y")?.Value);
-            Assert.Equal("middle", element.Attribute("text-anchor")?.Value);
-            Assert.Equal(texts[i], element.Value);
-        }
+        Assert.Equal("text", element.Name.LocalName);
+        Assert.Equal("15.00", element.Attribute("x")?.Value); // 10 + 5 offset
+        Assert.Equal("20.00", element.Attribute("y")?.Value);
+        Assert.Equal(Anchor.Start.Value, element.Attribute("text-anchor")?.Value);
+        Assert.Equal("rotate(45.00 15.00,20.00)", element.Attribute("transform")?.Value);
+        Assert.Equal("12", element.Attribute("font-size")?.Value);
+        Assert.Equal("TestLabel", element.Value);
     }
 
     [Fact]
-    public void BuildYs_ShouldBuildCorrectElements()
+    public void BuildY_DefaultValues_ShouldReturnXElementWithDefaults()
     {
         // Arrange
-        var texts = new List<string> { "LabelA", "LabelB", "LabelC" };
-        var ys = new List<float> { 15f, 25f, 35f };
         var builder = new LabelBuilder()
-            .WithTexts(texts)
-            .WithX(100f)
-            .WithAngle(0)
-            .WithAnchor(Anchor.Start)
-            .WithYs(ys);
+            .WithX(0f)
+            .WithY(0f)
+            .WithText("Default");
 
         // Act
-        var elements = builder.BuildYs();
+        XElement element = builder.BuildY();
 
         // Assert
-        Assert.Equal(3, elements.Count);
-        for (int i = 0; i < elements.Count; i++)
-        {
-            var element = elements[i];
-            Assert.Equal("text", element.Name.LocalName);
-            Assert.Equal("100.00", element.Attribute("x")?.Value);
-            Assert.Equal(DecimalFormatter.Format(ys[i]), element.Attribute("y")?.Value);
-            Assert.Equal("start", element.Attribute("text-anchor")?.Value);
-            Assert.Equal(texts[i], element.Value);
-        }
+        Assert.Equal("text", element.Name.LocalName);
+        Assert.Equal("0.00", element.Attribute("x")?.Value);
+        Assert.Equal("0.00", element.Attribute("y")?.Value);
+        Assert.Equal(Anchor.Middle.Value, element.Attribute("text-anchor")?.Value);
+        Assert.Equal("rotate(0.00 0.00,0.00)", element.Attribute("transform")?.Value);
+        Assert.Equal("12", element.Attribute("font-size")?.Value); // Assuming LabelDefaults.Size is 16
+        Assert.Equal("Default", element.Value);
     }
-
 }
