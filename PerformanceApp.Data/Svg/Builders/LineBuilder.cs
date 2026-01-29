@@ -1,12 +1,13 @@
+using System.Drawing;
 using System.Xml.Linq;
-using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Builders;
 
 public class LineBuilder
 {
-    private string _color = ColorConstants.Black;
+    private readonly XElementBuilder _elementBuilder = new("line");
+    private string _color = Color.Black.Name;
     private int _width = 1;
     private float _x1;
     private float _y1;
@@ -37,7 +38,7 @@ public class LineBuilder
     }
     public XElement Build()
     {
-        return new XElementBuilder(XElementConstants.Line)
+        return _elementBuilder
             .WithAttribute("x1", DecimalFormatter.Format(_x1))
             .WithAttribute("y1", DecimalFormatter.Format(_y1))
             .WithAttribute("x2", DecimalFormatter.Format(_x2))
