@@ -1,16 +1,15 @@
+using System.Drawing;
 using System.Xml.Linq;
-using PerformanceApp.Data.Svg.Constants;
-using PerformanceApp.Data.Svg.Utilities;
 
 namespace PerformanceApp.Data.Svg.Builders;
 
 public class PolyLineBuilder
 {
-    private XElementBuilder _elementBuilder = new(XElementConstants.Polyline);
-    private string _color = "black";
-    private int _width = 1;
+    private readonly XElementBuilder _elementBuilder = new("polyline");
+    private string _color = Color.Black.Name.ToLowerInvariant();
+    private int _width = 2;
     private bool _dotted = false;
-    private List<string> _points = [];
+    private IEnumerable<string> _points = [];
     public PolyLineBuilder WithColor(string color)
     {
         _color = color;
@@ -26,25 +25,34 @@ public class PolyLineBuilder
         _dotted = dotted;
         return this;
     }
-    public PolyLineBuilder WithPoints(List<string> points)
+    public PolyLineBuilder WithPoints(IEnumerable<string> points)
     {
         _points = points;
         return this;
     }
     public XElement Build()
     {
-        var joinedPoints = string.Join(" ", _points);
-        _elementBuilder = _elementBuilder
-            .WithAttribute(XAttributeConstants.Points, joinedPoints)
-            .WithAttribute(XAttributeConstants.Fill, XAttributeConstants.None)
-            .WithAttribute(XAttributeConstants.Stroke, _color)
-            .WithAttribute(XAttributeConstants.StrokeWidth, _width);
+        var joined = string.Join(" ", _points);
+        _elementBuilder
+            .WithAttribute("points", joined)
+            .WithAttribute("fill", "none")
+            .WithAttribute("stroke", _color)
+            .WithAttribute("stroke-width", _width);
         if (_dotted)
         {
-            var spacing = SvgUtilities.MapToPoint(2, 2);
-            _elementBuilder = _elementBuilder
-                .WithAttribute(XAttributeConstants.StrokeDashArray, spacing);
+            var spacing = PointBuilder.Build(2, 2);
+            _elementBuilder
+                .WithAttribute("stroke-dasharray", spacing);
         }
         return _elementBuilder.Build();
+    }
+
+    public static XElement Build(IEnumerable<string> points, string color, bool isDotted)
+    {
+        return new PolyLineBuilder()
+            .WithPoints(points)
+            .WithColor(color)
+            .IsDotted(isDotted)
+            .Build();
     }
 }
