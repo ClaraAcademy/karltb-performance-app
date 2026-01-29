@@ -39,8 +39,5 @@ public class XElementBuilder(string name)
         return this;
     }
 
-    public XElement Build()
-    {
-        return _element;
-    }
+    public XElement Build() => _element;
 }
