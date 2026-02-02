@@ -1,22 +1,14 @@
-using PerformanceApp.Data.Dtos;
-using PerformanceApp.Data.Svg.Extractors;
-using PerformanceApp.Data.Svg.Extractors.Interface;
-using PerformanceApp.Data.Svg.Scalers.Interface;
-using PerformanceApp.Data.Svg.Utilities;
+using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class PointFactory(IExtractor xExtractor, IExtractor yExtractor)
+public class PointFactory(Func<float, float, string> toPoint, IEnumerable<float> xs, IEnumerable<float> ys)
 {
-    private readonly IExtractor _xExtractor = xExtractor;
-    private readonly IExtractor _yExtractor = yExtractor;
-
-    public PointFactory(IEnumerable<DataPoint> dataPoints, IScaler xScaler, IScaler yScaler)
-        : this(new IndexExtractor(dataPoints, xScaler), new ValueExtractor(dataPoints, yScaler, d => d.Y))
-    { }
-
-    List<float> Xs => _xExtractor.Coordinates;
-    List<float> Ys => _yExtractor.Coordinates;
-
-    public List<string> Points => SvgUtilities.MapToPoints(Xs, Ys);
+    public IEnumerable<string> Points => xs.Zip(ys, toPoint);
+    public static PointFactory Default(IEnumerable<float> xs, IEnumerable<float> ys)
+    {
+        static string Format(float value) => DecimalFormatter.Format(value);
+        static string ToPoint(float x, float y) => $"{Format(x)},{Format(y)}";
+        return new PointFactory(ToPoint, xs, ys);
+    }
 }
