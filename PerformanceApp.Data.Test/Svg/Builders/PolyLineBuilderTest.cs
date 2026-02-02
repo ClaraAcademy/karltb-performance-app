@@ -58,17 +58,6 @@ public class PolyLineBuilderTest
     }
 
     [Fact]
-    public void Build_StaticMethod_CreatesElementWithGivenParameters()
-    {
-        var points = new[] { "0,0", "10,10" };
-        var element = PolyLineBuilder.Build(points, "blue", true);
-
-        Assert.Equal("polyline", element.Name.LocalName);
-        Assert.Equal("blue", element.Attribute("stroke")?.Value);
-        Assert.NotNull(element.Attribute("stroke-dasharray"));
-    }
-
-    [Fact]
     public void DefaultValues_AreSetCorrectly()
     {
         var builder = new PolyLineBuilder()

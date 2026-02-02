@@ -1,31 +1,33 @@
 using System.Drawing;
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Builders.Interfaces;
 
 namespace PerformanceApp.Data.Svg.Builders;
 
-public class PolyLineBuilder
+public class PolyLineBuilder : IPolyLineBuilder
 {
     private readonly XElementBuilder _elementBuilder = new("polyline");
     private string _color = Color.Black.Name.ToLowerInvariant();
     private int _width = 2;
     private bool _dotted = false;
     private IEnumerable<string> _points = [];
-    public PolyLineBuilder WithColor(string color)
+
+    public IPolyLineBuilder WithColor(string color)
     {
         _color = color;
         return this;
     }
-    public PolyLineBuilder WithWidth(int width)
+    public IPolyLineBuilder WithWidth(int width)
     {
         _width = width;
         return this;
     }
-    public PolyLineBuilder IsDotted(bool dotted = true)
+    public IPolyLineBuilder IsDotted(bool dotted = true)
     {
         _dotted = dotted;
         return this;
     }
-    public PolyLineBuilder WithPoints(IEnumerable<string> points)
+    public IPolyLineBuilder WithPoints(IEnumerable<string> points)
     {
         _points = points;
         return this;
@@ -45,14 +47,5 @@ public class PolyLineBuilder
                 .WithAttribute("stroke-dasharray", spacing);
         }
         return _elementBuilder.Build();
-    }
-
-    public static XElement Build(IEnumerable<string> points, string color, bool isDotted)
-    {
-        return new PolyLineBuilder()
-            .WithPoints(points)
-            .WithColor(color)
-            .IsDotted(isDotted)
-            .Build();
     }
 }
