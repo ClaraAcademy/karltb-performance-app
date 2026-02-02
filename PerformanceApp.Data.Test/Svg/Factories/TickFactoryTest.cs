@@ -1,96 +1,76 @@
 using System.Xml.Linq;
-using Moq;
+using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Factories;
-using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
+using PerformanceApp.Data.Svg.Formatters;
 
 namespace PerformanceApp.Data.Test.Svg.Factories;
 
 public class TickFactoryTest
 {
-    private readonly Mock<ILineFactory> _lineFactoryMock;
-
-    public TickFactoryTest()
+    static string Format(float f) => DecimalFormatter.Format(f);
+    const int Offset = TickDefaults.Length / 2;
+    [Fact]
+    public void Ticks_ShouldReturnElements_ForGivenCoordinates()
     {
-        _lineFactoryMock = new Mock<ILineFactory>();
-        _lineFactoryMock
-            .Setup(lf => lf.Create(It.IsAny<float>(), It.IsAny<float>(), It.IsAny<float>(), It.IsAny<float>()))
-            .Returns<float, float, float, float>((x1, y1, x2, y2) =>
-                new XElement("line",
-                    new XAttribute("x1", x1),
-                    new XAttribute("y1", y1),
-                    new XAttribute("x2", x2),
-                    new XAttribute("y2", y2)
-                ));
+        // Arrange
+        var coordinates = new List<float> { 1f, 2f, 3f };
+        Func<float, XElement> createTick = x => new XElement("tick", new XAttribute("pos", x));
+        var factory = new TickFactory(coordinates, createTick);
+
+        // Act
+        var ticks = factory.Ticks.ToList();
+
+        // Assert
+        Assert.Equal(3, ticks.Count);
+        Assert.Equal("tick", ticks[0].Name.LocalName);
+        Assert.Equal("1", ticks[0].Attribute("pos")?.Value);
+        Assert.Equal("2", ticks[1].Attribute("pos")?.Value);
+        Assert.Equal("3", ticks[2].Attribute("pos")?.Value);
     }
 
     [Fact]
-    public void Create_ReturnsCorrectResult()
+    public void CreateX_ShouldBuildTicksWithCorrectY()
     {
         // Arrange
-        var tickFactory = new TickFactory(_lineFactoryMock.Object);
-        var x1 = 1f;
-        var y1 = 2f;
-        var x2 = 3f;
-        var y2 = 4f;
+        var xs = new List<float> { 10f, 20f };
+        float y0 = 5f;
 
         // Act
-        var actual = tickFactory.Create(x1, y1, x2, y2);
+        var factory = TickFactory.CreateX(xs, y0);
+        var ticks = factory.Ticks.ToList();
 
         // Assert
-        Assert.Equal("line", actual.Name.LocalName);
-        Assert.Equal(x1, float.Parse(actual.Attribute("x1")!.Value));
-        Assert.Equal(y1, float.Parse(actual.Attribute("y1")!.Value));
-        Assert.Equal(x2, float.Parse(actual.Attribute("x2")!.Value));
-        Assert.Equal(y2, float.Parse(actual.Attribute("y2")!.Value));
-    }
-
-    [Fact]
-    public void CreateXs_ReturnsCorrectResults()
-    {
-        // Arrange
-        var tickFactory = new TickFactory(_lineFactoryMock.Object, 10);
-        var xs = new List<float> { 1f, 2f, 3f };
-        var y = 5f;
-        var expectedY1 = y - 5f;
-        var expectedY2 = y + 5f;
-
-        // Act
-        var actual = tickFactory.CreateXs(xs, y).ToList();
-
-        // Assert
-        Assert.Equal(xs.Count, actual.Count);
-        for (int i = 0; i < xs.Count; i++)
+        Assert.Equal(2, ticks.Count);
+        foreach (var (tick, x) in ticks.Zip(xs, (t, x) => (t, x)))
         {
-            var line = actual[i];
-            Assert.Equal(xs[i], float.Parse(line.Attribute("x1")!.Value));
-            Assert.Equal(expectedY1, float.Parse(line.Attribute("y1")!.Value));
-            Assert.Equal(xs[i], float.Parse(line.Attribute("x2")!.Value));
-            Assert.Equal(expectedY2, float.Parse(line.Attribute("y2")!.Value));
+            Assert.Equal("line", tick.Name.LocalName);
+            Assert.Equal(Format(x), tick.Attribute("x1")?.Value);
+            Assert.Equal(Format(x), tick.Attribute("x2")?.Value);
+            Assert.Equal(Format(y0 - Offset), tick.Attribute("y1")?.Value);
+            Assert.Equal(Format(y0 + Offset), tick.Attribute("y2")?.Value);
         }
     }
 
     [Fact]
-    public void CreateYs_ReturnsCorrectResults()
+    public void CreateY_ShouldBuildTicksWithCorrectX()
     {
         // Arrange
-        var tickFactory = new TickFactory(_lineFactoryMock.Object, 10);
-        var ys = new List<float> { 1f, 2f, 3f };
-        var x = 5f;
-        var expectedX1 = x - 5f;
-        var expectedX2 = x + 5f;
+        var ys = new List<float> { 15f, 25f };
+        float x0 = 7f;
 
         // Act
-        var actual = tickFactory.CreateYs(ys, x).ToList();
+        var factory = TickFactory.CreateY(ys, x0);
+        var ticks = factory.Ticks.ToList();
 
         // Assert
-        Assert.Equal(ys.Count, actual.Count);
-        for (int i = 0; i < ys.Count; i++)
+        Assert.Equal(2, ticks.Count);
+        foreach (var (tick, y) in ticks.Zip(ys, (t, y) => (t, y)))
         {
-            var line = actual[i];
-            Assert.Equal(expectedX1, float.Parse(line.Attribute("x1")!.Value));
-            Assert.Equal(ys[i], float.Parse(line.Attribute("y1")!.Value));
-            Assert.Equal(expectedX2, float.Parse(line.Attribute("x2")!.Value));
-            Assert.Equal(ys[i], float.Parse(line.Attribute("y2")!.Value));
+            Assert.Equal("line", tick.Name.LocalName);
+            Assert.Equal(Format(y), tick.Attribute("y1")?.Value);
+            Assert.Equal(Format(y), tick.Attribute("y2")?.Value);
+            Assert.Equal(Format(x0 - Offset), tick.Attribute("x1")?.Value);
+            Assert.Equal(Format(x0 + Offset), tick.Attribute("x2")?.Value);
         }
     }
 }
