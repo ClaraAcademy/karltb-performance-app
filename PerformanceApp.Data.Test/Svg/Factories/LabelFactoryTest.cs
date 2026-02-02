@@ -1,150 +1,77 @@
-using System.Linq.Expressions;
-using System.Xml.Linq;
-using Moq;
-using PerformanceApp.Data.Svg.Constants;
 using PerformanceApp.Data.Svg.Factories;
-using PerformanceApp.Data.Svg.Factories.Core;
-using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
+using PerformanceApp.Data.Svg.Builders;
 
 namespace PerformanceApp.Data.Test.Svg.Factories;
 
 public class LabelFactoryTest
 {
-    private readonly Mock<ITextFactory> _textFactoryMock;
-
-    private class Defaults
-    {
-        public static XElement TextFactoryReturn(string text, float x, float y, string anchor, float angle)
-        {
-            return new XElement("text",
-                new XAttribute("x", x),
-                new XAttribute("y", y),
-                new XAttribute("text-anchor", anchor),
-                new XAttribute("transform", $"rotate({angle},{x},{y})"), text);
-        }
-    }
-
-    public LabelFactoryTest()
-    {
-        _textFactoryMock = new Mock<ITextFactory>();
-        _textFactoryMock
-            .Setup(tf => tf.Create(It.IsAny<string>(), It.IsAny<float>(), It.IsAny<float>(), It.IsAny<string>(), It.IsAny<float>()))
-            .Returns(Defaults.TextFactoryReturn);
-    }
-
+    static string ToString(int i) => i.ToString();
+    static string ToString(float v) => v.ToString();
     [Fact]
-    public void Create_ShouldReturnExpectedElement()
+    public void CreateX_ReturnsCorrectLabels()
     {
         // Arrange
-        var x = 100f;
-        var y = 200f;
-        var text = "Test Label";
-        var anchor = "start";
-        var angle = 45f;
-
-        var labelFactory = new LabelFactory(_textFactoryMock.Object);
+        var xs = new float[] { 10f, 20f, 30f };
+        var indexes = new int[] { 1, 2, 3 };
+        float y0 = 50f;
 
         // Act
-        var result = labelFactory.Create(x, y, text, anchor, angle);
+        var factory = LabelFactory.CreateX(xs, indexes, ToString, y0);
+        var labels = factory.Labels.ToList();
 
         // Assert
-        Assert.Equal("text", result.Name.LocalName);
-        Assert.Equal(x.ToString(), result.Attribute("x")?.Value);
-        Assert.Equal(y.ToString(), result.Attribute("y")?.Value);
-        Assert.Equal(anchor, result.Attribute("text-anchor")?.Value);
-        Assert.Equal($"rotate({angle},{x},{y})", result.Attribute("transform")?.Value);
-        Assert.Equal(text, result.Value);
-    }
-
-    [Fact]
-    public void CreateXs_ShouldReturnEmptyList_WhenNoSamplesProvided()
-    {
-        // Arrange
-        var labelFactory = new LabelFactory(_textFactoryMock.Object);
-        var samples = new List<(float, string)>();
-        var y = 150f;
-
-        // Act
-        var result = labelFactory.CreateXs(samples, y);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public void CreateXs_ShouldReturnExpectedElements()
-    {
-        // Arrange
-        var labelFactory = new LabelFactory(_textFactoryMock.Object);
-        var samples = new List<(float, string)>
+        Assert.Equal(3, labels.Count);
+        for (int i = 0; i < xs.Length; i++)
         {
-            (50f, "Label 1"),
-            (100f, "Label 2"),
-            (150f, "Label 3")
-        };
-        var y = 150f;
-
-        // Act
-        var result = labelFactory.CreateXs(samples, y);
-
-        // Assert
-        Assert.Equal(samples.Count, result.Count);
-        for (int i = 0; i < samples.Count; i++)
-        {
-            var (x, text) = samples[i];
-            var element = result[i];
-
-            Assert.Equal("text", element.Name.LocalName);
-            Assert.Equal(x.ToString(), element.Attribute("x")?.Value);
-            Assert.Equal(y.ToString(), element.Attribute("y")?.Value);
-            Assert.Equal(text, element.Value);
+            var expected = LabelBuilder.BuildX(xs[i], y0, indexes[i].ToString());
+            Assert.Equal(expected.ToString(), labels[i].ToString());
         }
     }
 
     [Fact]
-    public void CreateYs_ShouldReturnEmptyList_WhenNoSamplesProvided()
+    public void CreateX_EmptyInputs_ReturnsNoLabels()
     {
         // Arrange
-        var labelFactory = new LabelFactory(_textFactoryMock.Object);
-        var samples = new List<(float, string)>();
-        var x = 200f;
+        float y0 = 0f;
 
         // Act
-        var result = labelFactory.CreateYs(samples, x);
+        var factory = LabelFactory.CreateX([], [], ToString, y0);
 
         // Assert
-        Assert.Empty(result);
+        Assert.False(factory.Labels.Any());
     }
 
     [Fact]
-    public void CreateYs_ShouldReturnExpectedElements()
+    public void CreateY_ReturnsCorrectLabels()
     {
         // Arrange
-        var labelFactory = new LabelFactory(_textFactoryMock.Object);
-        var samples = new List<(float, string)>
-        {
-            (50f, "Label A"),
-            (100f, "Label B"),
-            (150f, "Label C")
-        };
-        var x = 200f;
+        var ys = new float[] { 5f, 15f };
+        var values = new float[] { 100f, 200f };
+        float x0 = 42f;
 
         // Act
-        var result = labelFactory.CreateYs(samples, x);
+        var factory = LabelFactory.CreateY(ys, values, ToString, x0);
+        var labels = factory.Labels.ToList();
 
         // Assert
-        Assert.Equal(samples.Count, result.Count);
-        for (int i = 0; i < samples.Count; i++)
+        Assert.Equal(2, labels.Count);
+        for (int i = 0; i < ys.Length; i++)
         {
-            var (y, text) = samples[i];
-            var element = result[i];
-
-            Assert.Equal("text", element.Name.LocalName);
-            Assert.Equal(x.ToString(), element.Attribute("x")?.Value);
-            Assert.Equal(y.ToString(), element.Attribute("y")?.Value);
-            Assert.Equal(text, element.Value);
+            var expected = LabelBuilder.BuildY(x0, ys[i], values[i].ToString());
+            Assert.Equal(expected.ToString(), labels[i].ToString());
         }
     }
 
+    [Fact]
+    public void CreateY_EmptyInputs_ReturnsNoLabels()
+    {
+        // Arrange
+        float x0 = 0f;
 
+        // Act
+        var factory = LabelFactory.CreateY([], [], ToString, x0);
+
+        // Assert
+        Assert.False(factory.Labels.Any());
+    }
 }

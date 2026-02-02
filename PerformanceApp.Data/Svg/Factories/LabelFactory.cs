@@ -1,49 +1,22 @@
 using System.Xml.Linq;
-using PerformanceApp.Data.Svg.Defaults;
-using PerformanceApp.Data.Svg.Factories.Core;
-using PerformanceApp.Data.Svg.Factories.Core.Interfaces;
+using PerformanceApp.Data.Svg.Builders;
 
 namespace PerformanceApp.Data.Svg.Factories;
 
-public class LabelFactory(ITextFactory textFactory)
+public class LabelFactory(IEnumerable<float> coordinates, IEnumerable<string> strings, Func<float, string, XElement> createLabel)
 {
-    private readonly ITextFactory _textFactory = textFactory;
-    private class Defaults
+    public IEnumerable<XElement> Labels => coordinates.Zip(strings, createLabel);
+
+    public static LabelFactory CreateX(IEnumerable<float> xs, IEnumerable<int> indexes, Func<int, string> toString, float y0)
     {
-        public static readonly ITextFactory TextFactory = new TextFactory(TextDefaults.FontSize);
+        var strings = indexes.Select(toString);
+        XElement toLabel(float x, string text) => LabelBuilder.BuildX(x, y0, text);
+        return new LabelFactory(xs, strings, toLabel);
     }
-
-    public LabelFactory() : this(Defaults.TextFactory) { }
-
-    public XElement Create(
-        float x,
-        float y,
-        string text,
-        string anchor = "middle",
-        float angle = 0
-    )
+    public static LabelFactory CreateY(IEnumerable<float> ys, IEnumerable<float> values, Func<float, string> toString, float x0)
     {
-        return _textFactory.Create(text, x, y, anchor, angle);
+        var strings = values.Select(toString);
+        XElement toLabel(float y, string text) => LabelBuilder.BuildY(x0, y, text);
+        return new LabelFactory(ys, strings, toLabel);
     }
-
-    public List<XElement> CreateXs(IEnumerable<(float, string)> samples, float y, string anchor = "middle", float angle = 0)
-    {
-        var result = new List<XElement>();
-        foreach (var (x, text) in samples)
-        {
-            result.Add(Create(x, y, text, anchor, angle));
-        }
-        return result;
-    }
-
-    public List<XElement> CreateYs(IEnumerable<(float, string)> samples, float x, string anchor = "middle", float angle = 0)
-    {
-        var result = new List<XElement>();
-        foreach (var (y, text) in samples)
-        {
-            result.Add(Create(x, y, text, anchor, angle));
-        }
-        return result;
-    }
-
 }
