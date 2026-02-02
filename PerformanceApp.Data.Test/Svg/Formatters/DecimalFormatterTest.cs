@@ -4,17 +4,17 @@ namespace PerformanceApp.Data.Test.Svg.Formatters;
 
 public class DecimalFormatterTest
 {
-    [Fact]
-    public void Format_SingleValue_ReturnsFormattedString()
+    [Theory]
+    [InlineData(0f, "0.00")]
+    [InlineData(1f, "1.00")]
+    [InlineData(-1f, "-1.00")]
+    [InlineData(123.4567f, "123.46")]
+    [InlineData(0.004f, "0.00")]
+    [InlineData(0.005f, "0.01")]
+    [InlineData(-0.005f, "-0.01")]
+    public void Format_ReturnsExpectedString(float value, string expected)
     {
-        // Arrange
-        var value = 12.3456f;
-        var expected = "12.35";
-
-        // Act
-        var actual = DecimalFormatter.Format(value);
-
-        // Assert
-        Assert.Equal(expected, actual);
+        var result = DecimalFormatter.Format(value);
+        Assert.Equal(expected, result);
     }
 }
