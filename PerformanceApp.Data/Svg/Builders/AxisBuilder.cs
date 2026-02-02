@@ -1,22 +1,24 @@
+using System.Drawing;
 using System.Xml.Linq;
+using PerformanceApp.Data.Svg.Builders.Interfaces;
 using PerformanceApp.Data.Svg.Constants;
 
 namespace PerformanceApp.Data.Svg.Builders;
 
-public class AxisBuilder
+public class AxisBuilder : IAxisBuilder
 {
     private float _x1;
     private float _y1;
     private float _x2;
     private float _y2;
 
-    public AxisBuilder From(float x1, float y1)
+    public IAxisBuilder From(float x1, float y1)
     {
         _x1 = x1;
         _y1 = y1;
         return this;
     }
-    public AxisBuilder To(float x2, float y2)
+    public IAxisBuilder To(float x2, float y2)
     {
         _x2 = x2;
         _y2 = y2;
@@ -29,13 +31,6 @@ public class AxisBuilder
             .WithWidth(1)
             .From(_x1, _y1)
             .To(_x2, _y2)
-            .Build();
-    }
-    public static XElement Build((float x, float y) start, (float x, float y) end)
-    {
-        return new AxisBuilder()
-            .From(start.x, start.y)
-            .To(end.x, end.y)
             .Build();
     }
 }
