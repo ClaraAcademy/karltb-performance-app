@@ -1,65 +1,42 @@
 using System.Xml.Linq;
-using PerformanceApp.Data.Dtos;
-using PerformanceApp.Data.Extensions;
 using PerformanceApp.Data.Svg.Common;
-using PerformanceApp.Data.Svg.Defaults;
 using PerformanceApp.Data.Svg.Factories;
-using PerformanceApp.Data.Svg.Scalers;
+using PerformanceApp.Data.Svg.Formatters;
+using PerformanceApp.Data.Svg.Samplers.Coordinate;
+using PerformanceApp.Data.Svg.Samplers.Interface;
+using PerformanceApp.Data.Svg.Samplers.Value;
 using PerformanceApp.Data.Svg.Scalers.Interface;
-using PerformanceApp.Data.Svg.Scalers.Linear;
 
 namespace PerformanceApp.Data.Svg.Samplers;
 
-public class Sampler
+public class Sampler(TickFactory tickFactory, LabelFactory labelFactory)
+    : ISampler
 {
-    private readonly XSampler _xSampler;
-    private readonly YSampler _ySampler;
-    private readonly IScaler _xScaler;
-    private readonly IScaler _yScaler;
-    private readonly TickFactory _tickFactory = new();
-    private readonly LabelFactory _labelFactory = new();
-
-    public Sampler(IEnumerable<DataPoint2> dataPoints, Dimensions dimensions, Margins margins, Samples samples)
+    public static Sampler CreateX(ChartData data, IScaler scaler, int count, float y0)
     {
-        _xSampler = new(dataPoints, dimensions.X, margins.X, samples.X);
-        _ySampler = new(dataPoints, dimensions.Y, margins.Y, samples.Y);
-        _xScaler = new XScaler(dimensions.X, margins.X, samples.X);
-        _yScaler = new YScaler(dimensions.Y, margins.Y, _ySampler.Max, _ySampler.Min);
+        var indexes = ValueFactory<int>
+            .CreateForIndex(data.PointCount, count)
+            .Values;
+        var xs = new CoordinateFactory<int>(indexes, scaler.Scale).Coordinates;
+
+        var tickFactory = TickFactory.CreateX(xs, y0);
+        var labelFactory = LabelFactory.CreateX(xs, indexes, data.GetXLabel, y0);
+
+        return new(tickFactory, labelFactory);
+    }
+    public static Sampler CreateY(ChartData data, IScaler scaler, int count, float x0)
+    {
+        var values = ValueFactory<float>
+            .CreateForRange(data.Min, data.Max, count)
+            .Values;
+        var ys = new CoordinateFactory<float>(values, scaler.Scale).Coordinates;
+
+        var tickFactory = TickFactory.CreateY(ys, x0);
+        var labelFactory = LabelFactory.CreateY(ys, values, PercentageFormatter.Format, x0);
+
+        return new(tickFactory, labelFactory);
     }
 
-    float Y0 => _yScaler.Scale(0f);
-    float X0 => _xScaler.Scale(0f);
-    List<float> Xs => _xSampler.Coordinates;
-    List<float> Ys => _ySampler.Coordinates;
-
-    public List<XElement> XTicks => _tickFactory.CreateXs(Xs, Y0);
-    public List<XElement> YTicks => _tickFactory.CreateYs(Ys, X0);
-    public List<XElement> XLabels => GetXLabels();
-    public List<XElement> YLabels => GetYLabels();
-    public float MinY => _ySampler.Min;
-    public float MaxY => _ySampler.Max;
-
-    static IEnumerable<(float, string)> Combine(IEnumerable<float> coordintates, IEnumerable<string> labels)
-    {
-        return coordintates
-            .Zip(labels)
-            .Select(x => (x.First, x.Second));
-    }
-
-    List<XElement> GetXLabels()
-    {
-        var y = Y0 + LabelDefaults.OffsetY;
-        var labels = _xSampler.Labels;
-        var combined = Combine(Xs, labels);
-        var result = _labelFactory.CreateXs(combined, y, "start", 45);
-        return result;
-    }
-    List<XElement> GetYLabels()
-    {
-        var x = X0 - LabelDefaults.OffsetX;
-        var labels = _ySampler.Labels;
-        var combined = Combine(Ys, labels);
-        var result = _labelFactory.CreateYs(combined, x, "middle");
-        return result;
-    }
+    public IEnumerable<XElement> Ticks => tickFactory.Ticks;
+    public IEnumerable<XElement> Labels => labelFactory.Labels;
 }
