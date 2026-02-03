@@ -1,6 +1,9 @@
-namespace   PerformanceApp.Data.Svg.Samplers.Interface;
+using System.Xml.Linq;
 
-public interface ISampler<T>
+namespace PerformanceApp.Data.Svg.Samplers.Interface;
+
+public interface ISampler
 {
-    List<T> Samples { get; }
+    public IEnumerable<XElement> Ticks { get; }
+    public IEnumerable<XElement> Labels { get; }
 }
