@@ -12,8 +12,11 @@ public class LinearScalerTest
     [InlineData(10f, 0f, 7f, 10f)]
     public void Scale_FloatValue_ReturnsExpected(float offset, float step, float value, float expected)
     {
+        // Arrange
         var scaler = new LinearScaler(offset, step);
+        // Act
         var result = scaler.Scale(value);
+        // Assert
         Assert.Equal(expected, result, 5);
     }
 
@@ -25,8 +28,11 @@ public class LinearScalerTest
     [InlineData(10f, 0f, 7, 10f)]
     public void Scale_IntValue_ReturnsExpected(float offset, float step, int value, float expected)
     {
+        // Arrange
         var scaler = new LinearScaler(offset, step);
+        // Act
         var result = scaler.Scale(value);
+        // Assert
         Assert.Equal(expected, result, 5);
     }
 }
