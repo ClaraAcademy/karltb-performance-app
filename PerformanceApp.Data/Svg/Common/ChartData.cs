@@ -1,8 +1,8 @@
 namespace PerformanceApp.Data.Svg.Common;
 
-public class ChartData(List<string> xs, List<ChartSeries> series)
+public class ChartData(IEnumerable<string> xs, List<ChartSeries> series)
 {
-    private readonly List<string> _xs = xs;
+    private readonly List<string> _xs = xs.ToList();
     public List<ChartSeries> Series { get; } = series;
 
     public string GetXLabel(int index) => _xs[index]?.ToString() ?? string.Empty;
