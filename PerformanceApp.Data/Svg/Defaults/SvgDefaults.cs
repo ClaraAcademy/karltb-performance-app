@@ -15,4 +15,9 @@ public class SvgDefaults
             .WithAttribute("width", dimensions.X)
             .WithAttribute("height", dimensions.Y);
     }
+    public static class Color
+    {
+        public const string Primary = "#211f5e";
+        public const string Secondary = "#ec646b";
+    }
 }

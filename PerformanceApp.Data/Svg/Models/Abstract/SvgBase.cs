@@ -5,7 +5,6 @@ using PerformanceApp.Data.Svg.Defaults;
 
 namespace PerformanceApp.Data.Svg.Models.Abstract;
 
-// public abstract class SvgBase(int width, int height)
 public abstract class SvgBase(Dimensions dimensions)
 {
     protected XElementBuilder SchemaBuilder { get; set; } = SvgDefaults.CreateBaseSchema(dimensions);
