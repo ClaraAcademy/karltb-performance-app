@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "powerbi-client-react": "^2.0.0",
+    "prettier": "^3.8.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
