@@ -14,7 +14,7 @@ interface MainAppProps {
 function MainApp({ onLogout }: MainAppProps) {
     return (
         <>
-            <Header onLogout={onLogout}/>
+            <Header onLogout={onLogout} />
             <div className="mainContent-container">
                 <div className="mainContent">
                     <PortfolioGrid />

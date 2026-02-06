@@ -16,8 +16,9 @@ export const PortfolioBenchmarkProvider = ({
 }: {
     children: ReactNode;
 }) => {
-    const [portfolioBenchmark, setPortfolioBenchmark] =
-        useState<PortfolioBenchmark[] | null>(null);
+    const [portfolioBenchmark, setPortfolioBenchmark] = useState<
+        PortfolioBenchmark[] | null
+    >(null);
 
     return (
         <PortfolioBenchmarkContext.Provider
