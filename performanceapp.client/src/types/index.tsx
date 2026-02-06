@@ -1,3 +1,13 @@
+export interface KeyValue<T, S> {
+  key: T;
+  value: S;
+}
+
+export interface Row {
+  key: string;
+  values: KeyValue<string, string>[];
+}
+
 export interface Portfolio {
   portfolioId: number;
   portfolioName: string;
