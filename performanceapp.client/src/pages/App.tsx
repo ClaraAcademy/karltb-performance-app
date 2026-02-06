@@ -24,9 +24,8 @@ const App: React.FC = () => {
                 <LoginForm onLogin={handleLogin} />
             ) : (
                 <div>
-                    <button onClick={handleLogout}>Logout</button>
                     {/* Render your main app content here */}
-                    <MainApp />
+                    <MainApp onLogout={handleLogout} />
                 </div>
             )}
         </div>
