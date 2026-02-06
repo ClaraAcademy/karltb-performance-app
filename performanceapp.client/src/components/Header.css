@@ -1,33 +1,33 @@
 .header {
-    /* padding: 15px 0;  */
-    background-color: #211f5e;
-    color: #e9b85f;
-    /* font-size: 56px; */
-    font-weight: bold;
-    text-align: center;
-    box-sizing: border-box;
-    width: 100%;
-    place-items: center;
+  /* padding: 15px 0;  */
+  background-color: #211f5e;
+  color: #e9b85f;
+  /* font-size: 56px; */
+  font-weight: bold;
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+  place-items: center;
 }
 
 .header .header-container {
-    align-items: center;
-    min-width: 800px;
-    max-width: 1200px;
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
+  align-items: center;
+  min-width: 800px;
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .header-text {
-    flex: 1;
-    font-size: 56px;
-    padding: 15px 0;
-    text-align: left;
+  flex: 1;
+  font-size: 56px;
+  padding: 15px 0;
+  text-align: left;
 }
 
 .header h1 {
-    /* max-width: 800px; */
-    margin: 0;
-    font-size: inherit;
+  /* max-width: 800px; */
+  margin: 0;
+  font-size: inherit;
 }

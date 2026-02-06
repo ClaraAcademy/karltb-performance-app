@@ -1,31 +1,31 @@
 .tdText {
-    text-align: left;
+  text-align: left;
 }
 
 .tdNumber {
-    text-align: right;
+  text-align: right;
 }
 
 .tdInvalid {
-    text-align: center;
+  text-align: center;
 }
 
 table th {
-    text-align: center;
-    background-color: rgb(33, 31, 94, 1);
-    /* color: rgb(233, 184, 95); */
-    color: white;
+  text-align: center;
+  background-color: rgb(33, 31, 94, 1);
+  /* color: rgb(233, 184, 95); */
+  color: white;
 }
 
 table tbody tr:nth-child(odd) {
-    background-color: rgb(33, 31, 94, 0.4);
+  background-color: rgb(33, 31, 94, 0.4);
 }
 
 table tbody tr:nth-child(even) {
-    background-color: rgb(33, 31, 94, 0.2);
+  background-color: rgb(33, 31, 94, 0.2);
 }
 
 table tbody tr:hover {
-    background-color: rgb(33, 31, 94, 0.5);
-    color: white;
+  background-color: rgb(33, 31, 94, 0.5);
+  color: white;
 }

@@ -4,32 +4,32 @@ import MainApp from "../components/MainApp";
 import LoginForm from "../components/LoginForm";
 
 const App: React.FC = () => {
-    const { login, logout, isAuthenticated } = useAuth();
+  const { login, logout, isAuthenticated } = useAuth();
 
-    const handleLogin = async (
-        username: string,
-        password: string,
-    ): Promise<boolean> => {
-        const success = await login(username, password);
-        return success;
-    };
+  const handleLogin = async (
+    username: string,
+    password: string,
+  ): Promise<boolean> => {
+    const success = await login(username, password);
+    return success;
+  };
 
-    const handleLogout = () => {
-        logout();
-    };
+  const handleLogout = () => {
+    logout();
+  };
 
-    return (
+  return (
+    <div>
+      {!isAuthenticated ? (
+        <LoginForm onLogin={handleLogin} />
+      ) : (
         <div>
-            {!isAuthenticated ? (
-                <LoginForm onLogin={handleLogin} />
-            ) : (
-                <div>
-                    {/* Render your main app content here */}
-                    <MainApp onLogout={handleLogout} />
-                </div>
-            )}
+          {/* Render your main app content here */}
+          <MainApp onLogout={handleLogout} />
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default App;

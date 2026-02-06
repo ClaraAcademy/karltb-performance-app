@@ -8,29 +8,29 @@ import KeyFigureTable from "./KeyFigureTable";
 import Report from "./Report";
 
 interface MainAppProps {
-    onLogout?: () => void;
+  onLogout?: () => void;
 }
 
 function MainApp({ onLogout }: MainAppProps) {
-    return (
-        <>
-            <Header onLogout={onLogout} />
-            <div className="mainContent-container">
-                <div className="mainContent">
-                    <PortfolioGrid />
-                    <h2 id="stockTableHeader">Stocks</h2>
-                    <StockTable />
-                    <h2 id="bondTableHeader">Bonds</h2>
-                    <BondTable />
-                    <h2>Line chart</h2>
-                    <LineChart />
-                    <h2>Key Figures</h2>
-                    <KeyFigureTable />
-                    <Report />
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <Header onLogout={onLogout} />
+      <div className="mainContent-container">
+        <div className="mainContent">
+          <PortfolioGrid />
+          <h2 id="stockTableHeader">Stocks</h2>
+          <StockTable />
+          <h2 id="bondTableHeader">Bonds</h2>
+          <BondTable />
+          <h2>Line chart</h2>
+          <LineChart />
+          <h2>Key Figures</h2>
+          <KeyFigureTable />
+          <Report />
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default MainApp;

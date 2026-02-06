@@ -8,15 +8,15 @@ import { PortfolioBenchmarkProvider } from "./contexts/PortfolioBenchmarkContext
 import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <AuthProvider>
-            <BankdayProvider>
-                <PortfolioProvider>
-                    <PortfolioBenchmarkProvider>
-                        <App />
-                    </PortfolioBenchmarkProvider>
-                </PortfolioProvider>
-            </BankdayProvider>
-        </AuthProvider>
-    </StrictMode>,
+  <StrictMode>
+    <AuthProvider>
+      <BankdayProvider>
+        <PortfolioProvider>
+          <PortfolioBenchmarkProvider>
+            <App />
+          </PortfolioBenchmarkProvider>
+        </PortfolioProvider>
+      </BankdayProvider>
+    </AuthProvider>
+  </StrictMode>,
 );
