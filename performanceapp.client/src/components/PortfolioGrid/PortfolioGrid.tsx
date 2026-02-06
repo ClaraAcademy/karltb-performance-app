@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import PortfolioDropdown from "./PortfolioDropdown";
+import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
+import { usePortfolio } from "../../contexts/PortfolioContext";
+import PortfolioDropdown from "../PortfolioDropdown/PortfolioDropdown";
 import "./PortfolioGrid.css";
-import DateDropdown from "./DateDropdown";
-import { api } from "../api/api";
+import DateDropdown from "../DateDropdown/DateDropdown";
+import { api } from "../../api/api";
 
 const PortfolioGrid = () => {
   const { portfolio } = usePortfolio();

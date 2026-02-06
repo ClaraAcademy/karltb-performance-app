@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./LineChart.css";
-import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
-import { api } from "../api/api";
+import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
+import { api } from "../../api/api";
 
 const LineChart = () => {
   const { portfolioBenchmark } = usePortfolioBenchmark();

@@ -1,6 +1,6 @@
 import PositionTable from "./PositionTable";
-import type { StockPosition } from "../types";
-import { formatSEK, formatInt } from "../utilities/format";
+import type { StockPosition } from "../../types";
+import { formatSEK, formatInt } from "../../utilities/format";
 
 const stockColumns = [
   {

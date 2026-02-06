@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import MainApp from "../components/MainApp";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/Login/LoginForm";
 
 const App: React.FC = () => {
   const { login, logout, isAuthenticated } = useAuth();

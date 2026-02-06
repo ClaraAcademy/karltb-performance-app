@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import type { Portfolio } from "../types";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import { api } from "../api/api";
+import type { Portfolio } from "../../types";
+import { usePortfolio } from "../../contexts/PortfolioContext";
+import { api } from "../../api/api";
 
 interface PortfolioDropdownProps {
   onSelect?: (portfolio: Portfolio | null) => void;

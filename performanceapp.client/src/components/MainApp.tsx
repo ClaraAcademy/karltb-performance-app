@@ -1,11 +1,11 @@
 import "./MainApp.css";
-import StockTable from "./StockTable";
-import BondTable from "./BondTable";
-import PortfolioGrid from "./PortfolioGrid";
-import Header from "./Header";
-import LineChart from "./LineChart";
-import KeyFigureTable from "./KeyFigureTable";
-import Report from "./Report";
+import StockTable from "./Positions/StockTable";
+import BondTable from "./Positions/BondTable";
+import PortfolioGrid from "./PortfolioGrid/PortfolioGrid";
+import Header from "./Header/Header";
+import LineChart from "./Charts/LineChart";
+import KeyFigureTable from "./KeyFigures/KeyFigureTable";
+import Report from "./Report/Report";
 
 interface MainAppProps {
   onLogout?: () => void;

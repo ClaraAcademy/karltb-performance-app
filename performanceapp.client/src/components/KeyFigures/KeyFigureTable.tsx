@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import { usePortfolioBenchmark } from "../contexts/PortfolioBenchmarkContext";
-import { formatPercent } from "../utilities/format";
+import { usePortfolio } from "../../contexts/PortfolioContext";
+import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
+import { formatPercent } from "../../utilities/format";
 import "./KeyFigureTable.css";
-import type { PortfolioBenchmarkKeyFigure } from "../types";
-import { api } from "../api/api";
+import type { PortfolioBenchmarkKeyFigure } from "../../types";
+import { api } from "../../api/api";
 
 function KeyFigureTable() {
   const [portfolioBenchmarkKeyFigures, setPortfolioBenchmarkKeyFigures] =

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { usePortfolio } from "../contexts/PortfolioContext";
-import { useBankday } from "../contexts/BankdayContext";
+import { usePortfolio } from "../../contexts/PortfolioContext";
+import { useBankday } from "../../contexts/BankdayContext";
 import "./Table.css";
-import { api } from "../api/api";
+import { api } from "../../api/api";
 
 interface PositionTableProps<T> {
   endpoint: string | undefined;
