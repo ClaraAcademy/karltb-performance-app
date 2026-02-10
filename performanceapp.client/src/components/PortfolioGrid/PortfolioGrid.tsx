@@ -5,6 +5,7 @@ import "./PortfolioGrid.css";
 import DateDropdown from "../DateDropdown/DateDropdown";
 import type { Portfolio } from "../../types";
 import fetchPortfolioBenchmarks from "../../api/FetchPortfolioBenchmark";
+import PortfolioInfo from "./PortfolioInfo";
 
 interface PortfolioGridProps {
   portfolio: Portfolio | null;
@@ -15,15 +16,13 @@ const PortfolioGrid = (props: PortfolioGridProps) => {
   const { portfolio, setPortfolio } = props;
   const { portfolioBenchmark, setPortfolioBenchmark } = usePortfolioBenchmark();
 
-  async function fetchAndSetPortfolioBenchmark() {
-    if (portfolio == null) {
-      return;
-    }
-    const dtos = await fetchPortfolioBenchmarks(portfolio.portfolioId);
-    setPortfolioBenchmark(dtos);
-  }
-
   useEffect(() => {
+    async function fetchAndSetPortfolioBenchmark() {
+      if (portfolio != null) {
+        const dtos = await fetchPortfolioBenchmarks(portfolio.portfolioId);
+        setPortfolioBenchmark(dtos);
+      }
+    }
     fetchAndSetPortfolioBenchmark();
   }, [portfolio]);
 
@@ -35,15 +34,6 @@ const PortfolioGrid = (props: PortfolioGridProps) => {
     ? portfolioBenchmark[0].benchmarkName
     : "";
 
-  function getPortfolioInfo(header: string, name: string) {
-    return (
-      <div className="subGridWrapper">
-        <div className="labelHeader">{header}</div>
-        <div className="labelName">{name}</div>
-      </div>
-    );
-  }
-
   return (
     <div className="gridWrapper">
       <div className="cell" id="portfolioDropdown">
@@ -52,12 +42,8 @@ const PortfolioGrid = (props: PortfolioGridProps) => {
       <div className="cell" id="dateDropdown">
         <DateDropdown />
       </div>
-      <div className="cell portfolioInfo" id="portfolioLabel">
-        {getPortfolioInfo("Selected Portfolio", portfolioName)}
-      </div>
-      <div className="cell portfolioInfo" id="benchmarkLabel">
-        {getPortfolioInfo("Selected Benchmark", benchmarkName)}
-      </div>
+      <PortfolioInfo header="Selected Portfolio" name={portfolioName} />
+      <PortfolioInfo header="Selected Benchmark" name={benchmarkName} />
     </div>
   );
 };
