@@ -4,7 +4,6 @@ import "./PortfolioGrid.css";
 import type { Portfolio, PortfolioBenchmark, SetPortfolio } from "../../types";
 import { fetchAndSetPortfolios } from "../../api/FetchPortfolio";
 import { fetchAndSetPortfolioBenchmarks } from "../../api/FetchPortfolioBenchmark";
-import DateDropdown from "../DateDropdown/DateDropdown";
 
 interface PortfolioGridProps {
   portfolio: Portfolio | null;
@@ -56,9 +55,6 @@ const PortfolioGrid = ({
           portfolios={benchmarks}
           setPortfolio={setBenchmark}
         />
-      </div>
-      <div className="cell" id="dateDropdown">
-        <DateDropdown />
       </div>
     </div>
   );

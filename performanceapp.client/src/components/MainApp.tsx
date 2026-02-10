@@ -8,6 +8,7 @@ import KeyFigureTable from "./KeyFigures/KeyFigureTable";
 import Report from "./Report/Report";
 import { useState } from "react";
 import type { Portfolio } from "../types";
+import DatePicker from "./Picker/DatePicker";
 
 interface MainAppProps {
   onLogout?: () => void;
@@ -16,6 +17,7 @@ interface MainAppProps {
 function MainApp({ onLogout }: MainAppProps) {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [benchmark, setBenchmark] = useState<Portfolio | null>(null);
+  const [date, setDate] = useState<Date | null>(null);
   return (
     <>
       <Header onLogout={onLogout} />
@@ -27,6 +29,9 @@ function MainApp({ onLogout }: MainAppProps) {
             benchmark={benchmark}
             setBenchmark={setBenchmark}
           />
+          <div className="cell" id="dateDropdown">
+            <DatePicker date={date} setDate={setDate} />
+          </div>
           <h2 id="stockTableHeader">Stocks</h2>
           <StockTable />
           <h2 id="bondTableHeader">Bonds</h2>
