@@ -1,3 +1,4 @@
+export type OnChange = (e: React.ChangeEvent<HTMLSelectElement>) => void;
 export type SetPortfolio = (portfolio: Portfolio | null) => void;
 export type SetPortfolios = (portfolios: Portfolio[]) => void;
 export type SetPortfolioBenchmark = (

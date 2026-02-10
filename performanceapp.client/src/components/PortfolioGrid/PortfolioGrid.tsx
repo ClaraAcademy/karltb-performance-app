@@ -20,34 +20,26 @@ const PortfolioGrid = ({
   setBenchmark,
 }: PortfolioGridProps) => {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [benchmarks, setBenchmarks] = useState<Portfolio[]>([]);
-
   const [portfolioBenchmarks, setPortfolioBenchmarks] = useState<
     PortfolioBenchmark[]
   >([]);
 
-  console.log("Portfolios: ", portfolios);
-  console.log("Benchmarks: ", benchmarks);
-  console.log("Selected portfolio: ", portfolio);
-  console.log("Selected benchmark: ", benchmark);
-  console.log("Portfolio benchmarks: ", portfolioBenchmarks);
+  useEffect(() => {
+    fetchAndSetPortfolios(setPortfolios);
+  }, []);
 
   useEffect(() => {
-    if (!portfolio) {
-      fetchAndSetPortfolios(setPortfolios);
-    }
     if (portfolio) {
       fetchAndSetPortfolioBenchmarks(portfolio, setPortfolioBenchmarks);
+    } else {
+      setPortfolioBenchmarks([]);
     }
   }, [portfolio]);
 
-  useEffect(() => {
-    const benchmarks = portfolioBenchmarks.map((pb) => ({
-      portfolioId: pb.benchmarkId,
-      portfolioName: pb.benchmarkName,
-    }));
-    setBenchmarks(benchmarks);
-  }, [portfolioBenchmarks]);
+  const benchmarks = portfolioBenchmarks.map((pb) => ({
+    portfolioId: pb.benchmarkId,
+    portfolioName: pb.benchmarkName,
+  }));
 
   return (
     <div className="gridWrapper">
@@ -58,7 +50,6 @@ const PortfolioGrid = ({
           setPortfolio={setPortfolio}
         />
       </div>
-
       <div className="cell" id="benchmarkDropdown">
         <PortfolioPicker
           portfolio={benchmark}

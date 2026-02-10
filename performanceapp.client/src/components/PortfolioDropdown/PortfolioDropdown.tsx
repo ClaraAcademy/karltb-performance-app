@@ -1,6 +1,7 @@
 import { type Portfolio } from "../../types";
 import { createKeyValuesFromPortfolios } from "../../Factories/KeyValueFactory";
 import Picker from "../Picker/Picker";
+import { useEffect, useState } from "react";
 
 interface Props {
   portfolio: Portfolio | null;
@@ -10,9 +11,22 @@ interface Props {
 
 export default function PortfolioPicker(props: Props) {
   const { portfolio, portfolios, setPortfolio } = props;
+  const [selected, setSelected] = useState<string>("");
 
-  const selected = portfolio?.portfolioId.toString() ?? "";
-  const placeholder = "Select a portfolio";
+  useEffect(() => {
+    if (portfolios.length === 1) {
+      const onlyPortfolio = portfolios[0];
+      setSelected(onlyPortfolio.portfolioId.toString());
+      if (!portfolio || onlyPortfolio.portfolioId !== portfolio.portfolioId) {
+        setPortfolio(onlyPortfolio);
+      }
+    } else if (portfolio) {
+      setSelected(portfolio.portfolioId.toString());
+    } else {
+      setSelected("");
+    }
+  }, [portfolio, portfolios, setPortfolio]);
+
   const values = createKeyValuesFromPortfolios(portfolios);
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -21,12 +35,5 @@ export default function PortfolioPicker(props: Props) {
     setPortfolio(selected);
   };
 
-  return (
-    <Picker
-      selected={selected}
-      onChange={onChange}
-      placeholder={placeholder}
-      values={values}
-    />
-  );
+  return <Picker selected={selected} onChange={onChange} values={values} />;
 }

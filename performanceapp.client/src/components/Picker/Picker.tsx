@@ -1,20 +1,15 @@
-import type { KeyValue } from "../../types";
+import type { KeyValue, OnChange } from "../../types";
 
 interface PickerProps {
   selected: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  placeholder: string;
+  onChange: OnChange;
   values: KeyValue<string, string>[];
 }
 
 export default function Picker(props: PickerProps) {
-  const { selected, onChange, placeholder, values } = props;
+  const { selected, onChange, values } = props;
   return (
     <select value={selected} onChange={onChange}>
-      {/* Placeholder that disappears after choice */}
-      <option value="" disabled hidden>
-        {placeholder}
-      </option>
       {values.map((p) => (
         <option key={p.key} value={p.key}>
           {p.value}
