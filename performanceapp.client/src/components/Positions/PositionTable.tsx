@@ -1,70 +1,27 @@
-import { useState, useEffect } from "react";
-import { usePortfolio } from "../../contexts/PortfolioContext";
-import { useBankday } from "../../contexts/BankdayContext";
 import "./Table.css";
-import { api } from "../../api/api";
+import Table from "../Table/Table";
+import type { PositionColumn } from "../../types";
+import { createHeaderForPositions } from "../../Factories/HeaderFactory";
+import { createRowsForPositions } from "../../Factories/RowFactory";
 
 interface PositionTableProps<T> {
-  endpoint: string | undefined;
-  columns: {
-    header: string;
-    className: string;
-    accessor: (row: T) => React.ReactNode;
-  }[];
+  name: string;
+  columns: PositionColumn<T>[];
+  positions: T[];
 }
 
-function PositionTable<T>({ endpoint, columns }: PositionTableProps<T>) {
-  const { portfolio } = usePortfolio();
-  const { bankday } = useBankday();
-  const [positions, setPositions] = useState<T[]>([]);
+export default function PositionTable<T>(props: PositionTableProps<T>) {
+  const { name, columns, positions } = props;
 
-  const getDateString = (date: Date | null) => {
-    return date ? date.toISOString().split("T")[0] : "";
-  };
+  const header = createHeaderForPositions(columns, name);
+  const rows = createRowsForPositions(columns, positions);
 
-  const fetchPositions = async () => {
-    if (endpoint == null || portfolio == null || bankday == null) {
-      return;
-    }
-    try {
-      const portfolioId = portfolio.portfolioId;
-      const dateString = getDateString(bankday);
-      const url = `api/position/${endpoint}?portfolioId=${portfolioId}&date=${dateString}`;
-      const response = await api(url);
-      const data = await response.json();
-      setPositions(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    setPositions([]);
-    fetchPositions();
-  }, [portfolio, bankday, endpoint]);
+  const headerID = name + "TableHeader";
 
   return (
-    <table className="table table-striped" aria-labelledby="stockTableLabel">
-      <thead>
-        <tr>
-          {columns.map((col, idx) => (
-            <th key={idx}>{col.header}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {positions.map((row: T, idx) => (
-          <tr key={idx}>
-            {columns.map((col, cidx) => (
-              <td key={cidx} className={col.className}>
-                {col.accessor(row)}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <>
+      <h2 id={headerID}>{name}</h2>
+      <Table header={header} rows={rows} />;
+    </>
   );
 }
-
-export default PositionTable;

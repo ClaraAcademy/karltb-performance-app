@@ -1,8 +1,8 @@
 import PositionTable from "./PositionTable";
-import type { StockPosition } from "../../types";
+import type { PositionColumn, StockPosition } from "../../types";
 import { formatSEK, formatInt } from "../../utilities/format";
 
-const stockColumns = [
+const stockColumns: PositionColumn<StockPosition>[] = [
   {
     header: "Name",
     className: "tdText",
@@ -25,8 +25,16 @@ const stockColumns = [
   },
 ];
 
-const StockTable = () => (
-  <PositionTable<StockPosition> endpoint="stocks" columns={stockColumns} />
-);
+interface StockTableProps {
+  positions: StockPosition[];
+}
 
-export default StockTable;
+export default function StockTable({ positions }: StockTableProps) {
+  return (
+    <PositionTable<StockPosition>
+      name={"stock"}
+      columns={stockColumns}
+      positions={positions}
+    />
+  );
+}

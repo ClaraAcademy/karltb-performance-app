@@ -1,3 +1,9 @@
+export interface PositionColumn<T> {
+  header: string;
+  className: string;
+  accessor: (row: T) => string;
+}
+
 export interface KeyValue<T, S> {
   key: T;
   value: S;
@@ -38,7 +44,7 @@ export interface DateInfo {
 export interface Position {
   portfolioId: number;
   instrumentId: number;
-  instrumentName: number;
+  instrumentName: string;
   bankday: Date;
   value: number;
   unitPrice: number;

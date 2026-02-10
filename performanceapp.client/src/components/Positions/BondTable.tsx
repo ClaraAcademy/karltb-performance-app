@@ -1,8 +1,8 @@
 import PositionTable from "./PositionTable";
-import type { BondPosition } from "../../types";
+import type { BondPosition, PositionColumn } from "../../types";
 import { formatPercent, formatSEK } from "../../utilities/format";
 
-const stockColumns = [
+const stockColumns: PositionColumn<BondPosition>[] = [
   {
     header: "Name",
     className: "tdText",
@@ -25,8 +25,16 @@ const stockColumns = [
   },
 ];
 
-const BondTable = () => (
-  <PositionTable<BondPosition> endpoint="bonds" columns={stockColumns} />
-);
+interface BondTableProps {
+  positions: BondPosition[];
+}
 
-export default BondTable;
+export default function BondTable({ positions }: BondTableProps) {
+  return (
+    <PositionTable<BondPosition>
+      name={"bond"}
+      columns={stockColumns}
+      positions={positions}
+    />
+  );
+}

@@ -8,6 +8,7 @@ import KeyFigureTable from "./KeyFigures/KeyFigureTable";
 import Report from "./Report/Report";
 import { useState } from "react";
 import type { Portfolio } from "../types";
+import Positions from "./Positions/Positions";
 
 interface MainAppProps {
   onLogout?: () => void;
@@ -15,16 +16,16 @@ interface MainAppProps {
 
 function MainApp({ onLogout }: MainAppProps) {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [bankday, setBankday] = useState<Date>(new Date());
   return (
     <>
       <Header onLogout={onLogout} />
       <div className="mainContent-container">
         <div className="mainContent">
           <PortfolioGrid portfolio={portfolio} setPortfolio={setPortfolio} />
-          <h2 id="stockTableHeader">Stocks</h2>
-          <StockTable />
-          <h2 id="bondTableHeader">Bonds</h2>
-          <BondTable />
+          {portfolio ? (
+            <Positions portfolio={portfolio} bankday={bankday} />
+          ) : null}
           <h2>Line chart</h2>
           <LineChart />
           <h2>Key Figures</h2>
