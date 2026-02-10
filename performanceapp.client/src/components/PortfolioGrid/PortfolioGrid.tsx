@@ -42,12 +42,18 @@ const PortfolioGrid = ({
 
   return (
     <div className="gridWrapper">
+      <div className="cell portfolioInfo" id="portfolioInfo">
+        <p>Portfolio</p>
+      </div>
       <div className="cell" id="portfolioDropdown">
         <PortfolioPicker
           portfolio={portfolio}
           portfolios={portfolios}
           setPortfolio={setPortfolio}
         />
+      </div>
+      <div className="cell benchmarkInfo" id="benchmarkInfo">
+        <p>Benchmark</p>
       </div>
       <div className="cell" id="benchmarkDropdown">
         <PortfolioPicker

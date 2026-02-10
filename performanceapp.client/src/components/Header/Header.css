@@ -10,17 +10,16 @@
   place-items: center;
 }
 
-.header .header-container {
+.header-container {
   align-items: center;
   min-width: 800px;
   max-width: 1200px;
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .header-text {
-  flex: 1;
   font-size: 56px;
   padding: 15px 0;
   text-align: left;

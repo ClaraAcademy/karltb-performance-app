@@ -20,15 +20,16 @@ function MainApp({ onLogout }: MainAppProps) {
   const [date, setDate] = useState<Date | null>(null);
   return (
     <>
-      <Header onLogout={onLogout} />
+      <Header onLogout={onLogout}>
+        <PortfolioGrid
+          portfolio={portfolio}
+          setPortfolio={setPortfolio}
+          benchmark={benchmark}
+          setBenchmark={setBenchmark}
+        />
+      </Header>
       <div className="mainContent-container">
         <div className="mainContent">
-          <PortfolioGrid
-            portfolio={portfolio}
-            setPortfolio={setPortfolio}
-            benchmark={benchmark}
-            setBenchmark={setBenchmark}
-          />
           <div className="cell" id="dateDropdown">
             <DatePicker date={date} setDate={setDate} />
           </div>
