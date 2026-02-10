@@ -1,31 +1,30 @@
 import { useEffect } from "react";
 import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
-import { usePortfolio } from "../../contexts/PortfolioContext";
-import PortfolioDropdown from "../PortfolioDropdown/PortfolioDropdown";
+import PortfolioPicker from "../PortfolioDropdown/PortfolioDropdown";
 import "./PortfolioGrid.css";
 import DateDropdown from "../DateDropdown/DateDropdown";
-import { api } from "../../api/api";
+import type { Portfolio } from "../../types";
+import fetchPortfolioBenchmarks from "../../api/FetchPortfolioBenchmark";
 
-const PortfolioGrid = () => {
-  const { portfolio } = usePortfolio();
+interface PortfolioGridProps {
+  portfolio: Portfolio | null;
+  setPortfolio: (portfolio: Portfolio | null) => void;
+}
+
+const PortfolioGrid = (props: PortfolioGridProps) => {
+  const { portfolio, setPortfolio } = props;
   const { portfolioBenchmark, setPortfolioBenchmark } = usePortfolioBenchmark();
 
-  const fetchPortfolioBenchmark = async () => {
-    try {
-      const endpoint = `api/PortfolioBenchmark?portfolioId=${portfolio?.portfolioId}`;
-      const response = await api(endpoint);
-      const data = await response.json();
-      setPortfolioBenchmark(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
+  async function fetchAndSetPortfolioBenchmark() {
     if (portfolio == null) {
       return;
     }
-    fetchPortfolioBenchmark();
+    const dtos = await fetchPortfolioBenchmarks(portfolio.portfolioId);
+    setPortfolioBenchmark(dtos);
+  }
+
+  useEffect(() => {
+    fetchAndSetPortfolioBenchmark();
   }, [portfolio]);
 
   const portfolioName = portfolioBenchmark
@@ -48,7 +47,7 @@ const PortfolioGrid = () => {
   return (
     <div className="gridWrapper">
       <div className="cell" id="portfolioDropdown">
-        <PortfolioDropdown />
+        <PortfolioPicker portfolio={portfolio} setPortfolio={setPortfolio} />
       </div>
       <div className="cell" id="dateDropdown">
         <DateDropdown />

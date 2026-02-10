@@ -1,53 +1,48 @@
 import { useState, useEffect } from "react";
-import type { Portfolio } from "../../types";
-import { usePortfolio } from "../../contexts/PortfolioContext";
-import { api } from "../../api/api";
+import { type KeyValue, type Portfolio } from "../../types";
+import { fetchPortfolios } from "../../api/FetchPortfolio";
+import { createKeyValuesFromPortfolios } from "../../Factories/KeyValueFactory";
+import Picker from "../Picker/Picker";
 
-interface PortfolioDropdownProps {
-  onSelect?: (portfolio: Portfolio | null) => void;
+interface PortfolioPickerProps {
+  portfolio: Portfolio | null;
+  setPortfolio: (portfolio: Portfolio | null) => void;
 }
 
-const PortfolioDropdown: React.FC<PortfolioDropdownProps> = ({ onSelect }) => {
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const { portfolio, setPortfolio } = usePortfolio();
+export default function PortfolioPicker(props: PortfolioPickerProps) {
+  const { portfolio, setPortfolio } = props;
 
-  const fetchPortfolios = async () => {
-    try {
-      const response = await api("api/Portfolio");
-      const data: Portfolio[] = await response.json();
-      setPortfolios(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [values, setValues] = useState<KeyValue<string, string>[]>([]);
+
+  const selected = portfolio?.portfolioId.toString() ?? "";
+  const placeholder = "Select a portfolio";
+
+  async function fetchAndSetPortfolios() {
+    const portfolios = await fetchPortfolios();
+    setPortfolios(portfolios);
+  }
 
   useEffect(() => {
-    fetchPortfolios();
+    fetchAndSetPortfolios();
   }, [portfolio]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    setValues(createKeyValuesFromPortfolios(portfolios));
+  }, [portfolios]);
+
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = Number(e.target.value);
-    const selectedPortfolio =
-      portfolios.find((p) => p.portfolioId === id) ?? null;
-    setPortfolio(selectedPortfolio);
-    if (onSelect) {
-      onSelect(portfolio);
-    }
+    const selected = portfolios.find((p) => p.portfolioId === id) ?? null;
+    setPortfolio(selected);
   };
 
   return (
-    <select value={portfolio?.portfolioId ?? ""} onChange={handleChange}>
-      {/* Placeholder that disappears after choice */}
-      <option value="" disabled hidden>
-        Select a portfolio
-      </option>
-      {portfolios.map((p) => (
-        <option key={p.portfolioId} value={p.portfolioId}>
-          {p.portfolioName}
-        </option>
-      ))}
-    </select>
+    <Picker
+      selected={selected}
+      onChange={onChange}
+      placeholder={placeholder}
+      values={values}
+    />
   );
-};
-
-export default PortfolioDropdown;
+}
