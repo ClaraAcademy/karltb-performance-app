@@ -1,35 +1,19 @@
-import { useState, useEffect } from "react";
-import { type KeyValue, type Portfolio } from "../../types";
-import { fetchPortfolios } from "../../api/FetchPortfolio";
+import { type Portfolio } from "../../types";
 import { createKeyValuesFromPortfolios } from "../../Factories/KeyValueFactory";
 import Picker from "../Picker/Picker";
 
-interface PortfolioPickerProps {
+interface Props {
   portfolio: Portfolio | null;
+  portfolios: Portfolio[];
   setPortfolio: (portfolio: Portfolio | null) => void;
 }
 
-export default function PortfolioPicker(props: PortfolioPickerProps) {
-  const { portfolio, setPortfolio } = props;
-
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [values, setValues] = useState<KeyValue<string, string>[]>([]);
+export default function PortfolioPicker(props: Props) {
+  const { portfolio, portfolios, setPortfolio } = props;
 
   const selected = portfolio?.portfolioId.toString() ?? "";
   const placeholder = "Select a portfolio";
-
-  async function fetchAndSetPortfolios() {
-    const portfolios = await fetchPortfolios();
-    setPortfolios(portfolios);
-  }
-
-  useEffect(() => {
-    fetchAndSetPortfolios();
-  }, [portfolio]);
-
-  useEffect(() => {
-    setValues(createKeyValuesFromPortfolios(portfolios));
-  }, [portfolios]);
+  const values = createKeyValuesFromPortfolios(portfolios);
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = Number(e.target.value);

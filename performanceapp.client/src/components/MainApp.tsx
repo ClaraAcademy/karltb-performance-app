@@ -15,12 +15,18 @@ interface MainAppProps {
 
 function MainApp({ onLogout }: MainAppProps) {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [benchmark, setBenchmark] = useState<Portfolio | null>(null);
   return (
     <>
       <Header onLogout={onLogout} />
       <div className="mainContent-container">
         <div className="mainContent">
-          <PortfolioGrid portfolio={portfolio} setPortfolio={setPortfolio} />
+          <PortfolioGrid
+            portfolio={portfolio}
+            setPortfolio={setPortfolio}
+            benchmark={benchmark}
+            setBenchmark={setBenchmark}
+          />
           <h2 id="stockTableHeader">Stocks</h2>
           <StockTable />
           <h2 id="bondTableHeader">Bonds</h2>

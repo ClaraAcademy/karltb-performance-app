@@ -1,4 +1,4 @@
-import type { Portfolio } from "../types";
+import type { Portfolio, SetPortfolios } from "../types";
 import { api } from "./api";
 
 export async function fetchPortfolios(): Promise<Portfolio[]> {
@@ -11,4 +11,9 @@ export async function fetchPortfolios(): Promise<Portfolio[]> {
     console.error(err);
   }
   return [];
+}
+
+export async function fetchAndSetPortfolios(setPortfolios: SetPortfolios) {
+  const portfolios = await fetchPortfolios();
+  setPortfolios(portfolios);
 }

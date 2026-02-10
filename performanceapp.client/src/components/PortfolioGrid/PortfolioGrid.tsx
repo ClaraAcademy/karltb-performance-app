@@ -1,49 +1,74 @@
-import { useEffect } from "react";
-import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
+import { useEffect, useState } from "react";
 import PortfolioPicker from "../PortfolioDropdown/PortfolioDropdown";
 import "./PortfolioGrid.css";
+import type { Portfolio, PortfolioBenchmark, SetPortfolio } from "../../types";
+import { fetchAndSetPortfolios } from "../../api/FetchPortfolio";
+import { fetchAndSetPortfolioBenchmarks } from "../../api/FetchPortfolioBenchmark";
 import DateDropdown from "../DateDropdown/DateDropdown";
-import type { Portfolio } from "../../types";
-import fetchPortfolioBenchmarks from "../../api/FetchPortfolioBenchmark";
-import PortfolioInfo from "./PortfolioInfo";
 
 interface PortfolioGridProps {
   portfolio: Portfolio | null;
-  setPortfolio: (portfolio: Portfolio | null) => void;
+  setPortfolio: SetPortfolio;
+  benchmark: Portfolio | null;
+  setBenchmark: SetPortfolio;
 }
 
-const PortfolioGrid = (props: PortfolioGridProps) => {
-  const { portfolio, setPortfolio } = props;
-  const { portfolioBenchmark, setPortfolioBenchmark } = usePortfolioBenchmark();
+const PortfolioGrid = ({
+  portfolio,
+  setPortfolio,
+  benchmark,
+  setBenchmark,
+}: PortfolioGridProps) => {
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [benchmarks, setBenchmarks] = useState<Portfolio[]>([]);
+
+  const [portfolioBenchmarks, setPortfolioBenchmarks] = useState<
+    PortfolioBenchmark[]
+  >([]);
+
+  console.log("Portfolios: ", portfolios);
+  console.log("Benchmarks: ", benchmarks);
+  console.log("Selected portfolio: ", portfolio);
+  console.log("Selected benchmark: ", benchmark);
+  console.log("Portfolio benchmarks: ", portfolioBenchmarks);
 
   useEffect(() => {
-    async function fetchAndSetPortfolioBenchmark() {
-      if (portfolio != null) {
-        const dtos = await fetchPortfolioBenchmarks(portfolio.portfolioId);
-        setPortfolioBenchmark(dtos);
-      }
+    if (!portfolio) {
+      fetchAndSetPortfolios(setPortfolios);
     }
-    fetchAndSetPortfolioBenchmark();
+    if (portfolio) {
+      fetchAndSetPortfolioBenchmarks(portfolio, setPortfolioBenchmarks);
+    }
   }, [portfolio]);
 
-  const portfolioName = portfolioBenchmark
-    ? portfolioBenchmark[0].portfolioName
-    : "";
-
-  const benchmarkName = portfolioBenchmark
-    ? portfolioBenchmark[0].benchmarkName
-    : "";
+  useEffect(() => {
+    const benchmarks = portfolioBenchmarks.map((pb) => ({
+      portfolioId: pb.benchmarkId,
+      portfolioName: pb.benchmarkName,
+    }));
+    setBenchmarks(benchmarks);
+  }, [portfolioBenchmarks]);
 
   return (
     <div className="gridWrapper">
       <div className="cell" id="portfolioDropdown">
-        <PortfolioPicker portfolio={portfolio} setPortfolio={setPortfolio} />
+        <PortfolioPicker
+          portfolio={portfolio}
+          portfolios={portfolios}
+          setPortfolio={setPortfolio}
+        />
+      </div>
+
+      <div className="cell" id="benchmarkDropdown">
+        <PortfolioPicker
+          portfolio={benchmark}
+          portfolios={benchmarks}
+          setPortfolio={setBenchmark}
+        />
       </div>
       <div className="cell" id="dateDropdown">
         <DateDropdown />
       </div>
-      <PortfolioInfo header="Selected Portfolio" name={portfolioName} />
-      <PortfolioInfo header="Selected Benchmark" name={benchmarkName} />
     </div>
   );
 };

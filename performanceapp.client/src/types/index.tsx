@@ -1,3 +1,12 @@
+export type SetPortfolio = (portfolio: Portfolio | null) => void;
+export type SetPortfolios = (portfolios: Portfolio[]) => void;
+export type SetPortfolioBenchmark = (
+  portfolioBenchmark: PortfolioBenchmark | null,
+) => void;
+export type SetPortfolioBenchmarks = (
+  portfolioBenchmarks: PortfolioBenchmark[],
+) => void;
+
 export interface KeyValue<T, S> {
   key: T;
   value: S;
