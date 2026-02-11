@@ -1,11 +1,11 @@
+import LogoutButton from "../Auth/LogoutButton";
 import "./Header.css";
 
 interface HeaderProps {
-  onLogout?: () => void;
   children?: React.ReactNode;
 }
 
-export default function Header({ onLogout, children }: HeaderProps) {
+export default function Header({ children }: HeaderProps) {
   return (
     <header className="header">
       <div className="header-container">
@@ -13,9 +13,7 @@ export default function Header({ onLogout, children }: HeaderProps) {
           <h1>Performance App</h1>
         </div>
         {children}
-        <div className="header-logout">
-          <button onClick={onLogout}>Logout</button>
-        </div>
+        <LogoutButton />
       </div>
     </header>
   );

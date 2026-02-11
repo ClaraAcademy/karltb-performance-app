@@ -10,17 +10,13 @@ import { useState } from "react";
 import type { Portfolio } from "../types";
 import DatePicker from "./Picker/DatePicker";
 
-interface MainAppProps {
-  onLogout?: () => void;
-}
-
-function MainApp({ onLogout }: MainAppProps) {
+export default function MainApp() {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
   const [benchmark, setBenchmark] = useState<Portfolio | null>(null);
   const [date, setDate] = useState<Date | null>(null);
   return (
     <>
-      <Header onLogout={onLogout}>
+      <Header>
         <PortfolioGrid
           portfolio={portfolio}
           setPortfolio={setPortfolio}
@@ -47,5 +43,3 @@ function MainApp({ onLogout }: MainAppProps) {
     </>
   );
 }
-
-export default MainApp;
