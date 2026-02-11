@@ -6,9 +6,7 @@
 }
 
 .portfolio-grid-cell {
-  background-color: #6d4a80;
   padding: 8px;
-  border-radius: 8px;
 }
 
 #portfolioDropdown {
@@ -17,4 +15,18 @@
 
 #benchmarkDropdown {
   grid-column: 2;
+}
+
+.portfolio-grid select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  background-color: #6d4a80;
+  color: #e9b85f;
+}
+
+.portfolio-grid option {
+  background-color: #6d4a80;
+  color: #e9b85f;
 }
