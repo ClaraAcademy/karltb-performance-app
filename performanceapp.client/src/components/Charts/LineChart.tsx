@@ -1,41 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { HEIGHT, WIDTH } from "../../enums/SvgDimensions";
+import { useEffect, useState } from "react";
 import "./LineChart.css";
-import { usePortfolioBenchmark } from "../../contexts/PortfolioBenchmarkContext";
-import { api } from "../../api/api";
+import { fetchAndSetLineChart } from "../../api/FetchLineChart";
+import Svg from "../Svg/Svg";
 
-const LineChart = () => {
-  const { portfolioBenchmark } = usePortfolioBenchmark();
+interface LineChartProps {
+  portfolioId: number | undefined;
+}
 
-  const [svg, setSvg] = useState<string | undefined>(undefined);
-
-  const WIDTH = 800;
-  const HEIGHT = 500;
-
-  const fetchSvg = async () => {
-    if (portfolioBenchmark == null) {
-      return;
-    }
-    try {
-      const portfolioId = portfolioBenchmark[0].portfolioId;
-      const endpoint = `api/svg?portfolioId=${portfolioId}&width=${WIDTH}&height=${HEIGHT}`;
-      const response = await api(endpoint);
-      const data = await response.text();
-      const encoded = "data:image/svg+xml;base64," + btoa(data);
-      setSvg(encoded);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+export default function LineChart({ portfolioId }: LineChartProps) {
+  const [svg, setSvg] = useState("");
 
   useEffect(() => {
-    fetchSvg();
-  }, [portfolioBenchmark]);
+    portfolioId
+      ? fetchAndSetLineChart(portfolioId, WIDTH, HEIGHT, setSvg)
+      : setSvg("");
+  }, [portfolioId]);
 
-  return svg == null ? (
-    <div className="svg" style={{ width: WIDTH, height: HEIGHT }} />
-  ) : (
-    <img className="svg" src={svg} alt="Chart" />
+  return (
+    <>
+      <h2>Performance Line Chart</h2>
+      <Svg content={svg} />;
+    </>
   );
-};
-
-export default LineChart;
+}

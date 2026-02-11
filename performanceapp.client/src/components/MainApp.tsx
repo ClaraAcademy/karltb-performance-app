@@ -33,8 +33,7 @@ export default function MainApp() {
           <StockTable />
           <h2 id="bondTableHeader">Bonds</h2>
           <BondTable />
-          <h2>Line chart</h2>
-          <LineChart />
+          <LineChart portfolioId={portfolio?.portfolioId} />
           <h2>Key Figures</h2>
           <KeyFigureTable />
           <Report />

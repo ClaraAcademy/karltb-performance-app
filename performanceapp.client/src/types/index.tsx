@@ -9,6 +9,7 @@ export type SetPortfolioBenchmark = (
 export type SetPortfolioBenchmarks = (
   portfolioBenchmarks: PortfolioBenchmark[],
 ) => void;
+export type SetSvg = (svg: string) => void;
 
 export interface LoginDto {
   username: string;
