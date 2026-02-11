@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import "./LoginForm.css";
+import LoginButton from "./LoginButton";
+import LoginField from "./LoginField";
+import { LoginFieldType } from "../../enums/LoginFieldType";
 
 interface LoginFormProps {
   onLogin?: (username: string, password: string) => Promise<boolean>;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+export default function LoginForm({ onLogin }: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    const msg = `username: ${username}, password: ${password}`;
-    console.log(msg);
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!username || !password) {
       setError("Please enter both username and password.");
@@ -25,37 +26,27 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         setError("Invalid credentials");
       }
     }
-  };
+  }
 
   return (
     <div className="login-form-container">
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={onSubmit}>
         <h2 className="login-title">Login</h2>
         {error && <div className="login-error">{error}</div>}
-        <label htmlFor="username">Username</label>
-        <input
+        <LoginField
           id="username"
-          type="text"
           value={username}
+          label={LoginFieldType.Username}
           onChange={(e) => setUsername(e.target.value)}
-          className="login-input"
-          autoComplete="username"
         />
-        <label htmlFor="password">Password</label>
-        <input
+        <LoginField
           id="password"
-          type="password"
           value={password}
+          label={LoginFieldType.Password}
           onChange={(e) => setPassword(e.target.value)}
-          className="login-input"
-          autoComplete="current-password"
         />
-        <button type="submit" className="login-button">
-          Login
-        </button>
+        <LoginButton />
       </form>
     </div>
   );
-};
-
-export default LoginForm;
+}

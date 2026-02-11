@@ -10,6 +10,11 @@ export type SetPortfolioBenchmarks = (
   portfolioBenchmarks: PortfolioBenchmark[],
 ) => void;
 
+export interface LoginDto {
+  username: string;
+  password: string;
+}
+
 export interface KeyValue<T, S> {
   key: T;
   value: S;
