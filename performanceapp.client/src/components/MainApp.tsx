@@ -26,9 +26,7 @@ export default function MainApp() {
       </Header>
       <div className="mainContent-container">
         <div className="mainContent">
-          <div className="cell" id="dateDropdown">
-            <DatePicker date={date} setDate={setDate} />
-          </div>
+          <DatePicker date={date} setDate={setDate} />
           <h2 id="stockTableHeader">Stocks</h2>
           <StockTable />
           <h2 id="bondTableHeader">Bonds</h2>
