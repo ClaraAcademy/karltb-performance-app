@@ -17,11 +17,12 @@ export default function PositionTable<T>(props: PositionTableProps<T>) {
   const rows = createRowsForPositions(columns, positions);
 
   const headerID = name + "TableHeader";
+  const label = name[0].toUpperCase() + name.slice(1) + " Positions";
 
   return (
     <>
-      <h2 id={headerID}>{name}</h2>
-      <Table header={header} rows={rows} />;
+      <h2 id={headerID}>{label}</h2>
+      <Table header={header} rows={rows} />
     </>
   );
 }
