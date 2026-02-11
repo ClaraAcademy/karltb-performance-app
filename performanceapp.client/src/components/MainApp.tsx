@@ -1,6 +1,4 @@
 import "./MainApp.css";
-import StockTable from "./Positions/StockTable";
-import BondTable from "./Positions/BondTable";
 import PortfolioGrid from "./PortfolioGrid/PortfolioGrid";
 import Header from "./Header/Header";
 import LineChart from "./Charts/LineChart";
@@ -30,7 +28,7 @@ export default function MainApp() {
           {portfolio && date ? (
             <Positions portfolio={portfolio} bankday={date} />
           ) : null}
-          <h2>Line chart</h2>
+          <DatePicker date={date} setDate={setDate} />
           <LineChart portfolioId={portfolio?.portfolioId} />
           <h2>Key Figures</h2>
           <KeyFigureTable />
