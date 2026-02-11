@@ -1,22 +1,20 @@
 .portfolio-grid {
   display: grid;
-  grid-template-rows: 1fr 1fr;
-  background-color: rgb(33, 31, 94, 0.2);
-  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 300px;
 }
 
-.portfolio-grid .cell {
+.portfolio-grid-cell {
   background-color: #6d4a80;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 #portfolioDropdown {
   grid-column: 1;
-  grid-row: 1;
 }
 
 #benchmarkDropdown {
-  grid-column: 1;
-  grid-row: 2;
+  grid-column: 2;
 }

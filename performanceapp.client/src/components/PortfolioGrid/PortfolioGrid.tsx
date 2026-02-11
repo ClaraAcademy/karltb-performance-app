@@ -42,7 +42,7 @@ const PortfolioGrid = ({
 
   return (
     <div className="portfolio-grid">
-      <div className="cell" id="portfolioDropdown">
+      <div className="portfolio-grid-cell" id="portfolioDropdown">
         <PortfolioPicker
           label={"Portfolio"}
           portfolio={portfolio}
@@ -50,7 +50,7 @@ const PortfolioGrid = ({
           setPortfolio={setPortfolio}
         />
       </div>
-      <div className="cell" id="benchmarkDropdown">
+      <div className="portfolio-grid-cell" id="benchmarkDropdown">
         <PortfolioPicker
           label={"Benchmark"}
           portfolio={benchmark}

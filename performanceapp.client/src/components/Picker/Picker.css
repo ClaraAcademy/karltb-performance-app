@@ -1,16 +1,16 @@
 .picker-group {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .picker-group label {
-  grid-column: 1;
+  grid-row: 1;
   text-align: left;
 }
 
 .picker-group select {
-  grid-column: 2;
+  grid-row: 2;
 }
 
 .picker-cell {
