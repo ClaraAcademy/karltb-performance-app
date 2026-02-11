@@ -15,6 +15,7 @@ export type SetPortfolioBenchmarks = (
   portfolioBenchmarks: PortfolioBenchmark[],
 ) => void;
 export type SetSvg = (svg: string) => void;
+export type SetKeyFigures = (keyFigures: PortfolioBenchmarkKeyFigure[]) => void;
 
 export interface LoginDto {
   username: string;

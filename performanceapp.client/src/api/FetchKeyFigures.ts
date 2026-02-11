@@ -1,4 +1,4 @@
-import type { PortfolioBenchmarkKeyFigure } from "../types";
+import type { PortfolioBenchmarkKeyFigure, SetKeyFigures } from "../types";
 import { api } from "./api";
 
 export default async function fetchKeyFigures(
@@ -14,4 +14,12 @@ export default async function fetchKeyFigures(
     console.error(err);
   }
   return [];
+}
+
+export async function fetchAndSetKeyFigures(
+  portfolioId: number,
+  setKeyFigures: SetKeyFigures,
+) {
+  const keyFigures = await fetchKeyFigures(portfolioId);
+  setKeyFigures(keyFigures);
 }

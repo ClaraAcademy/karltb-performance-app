@@ -29,7 +29,7 @@ export default function MainApp() {
           <Positions portfolio={portfolio} date={date} />
           <LineChart portfolioId={portfolio?.portfolioId} />
           <h2>Key Figures</h2>
-          <KeyFigureTable />
+          <KeyFigureTable portfolio={portfolio} benchmark={benchmark} />
           <Report />
         </div>
       </div>

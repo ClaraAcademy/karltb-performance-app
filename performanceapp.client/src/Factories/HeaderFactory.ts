@@ -1,4 +1,10 @@
-import type { PortfolioBenchmark, PositionColumn, Row } from "../types";
+import type {
+  Portfolio,
+  PortfolioBenchmark,
+  PositionColumn,
+  Row,
+} from "../types";
+import createPortfolioBenchmark from "./PortfolioBenchmarkFactory";
 
 export function createHeaderForPositions<T>(
   columns: PositionColumn<T>[],
@@ -15,7 +21,9 @@ export function createHeaderForPositions<T>(
   };
 }
 
-export function createHeader(portfolioBenchmark: PortfolioBenchmark): Row {
+export function createHeaderForPortfolioBenchmark(
+  portfolioBenchmark: PortfolioBenchmark,
+): Row {
   return {
     key: "keyFigureName-header",
     values: [
@@ -33,4 +41,12 @@ export function createHeader(portfolioBenchmark: PortfolioBenchmark): Row {
       },
     ],
   };
+}
+
+export function createHeaderForPortfolioAndBenchmark(
+  portfolio: Portfolio,
+  benchmark: Portfolio,
+): Row {
+  const portfolioBenchmark = createPortfolioBenchmark(portfolio, benchmark);
+  return createHeaderForPortfolioBenchmark(portfolioBenchmark);
 }
