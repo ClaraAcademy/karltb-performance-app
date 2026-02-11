@@ -26,9 +26,7 @@ export default function MainApp() {
       <div className="mainContent-container">
         <div className="mainContent">
           <DatePicker date={date} setDate={setDate} />
-          {portfolio && date ? (
-            <Positions portfolio={portfolio} bankday={date} />
-          ) : null}
+          <Positions portfolio={portfolio} date={date} />
           <LineChart portfolioId={portfolio?.portfolioId} />
           <h2>Key Figures</h2>
           <KeyFigureTable />
