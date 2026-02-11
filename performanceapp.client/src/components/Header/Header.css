@@ -1,8 +1,6 @@
 .header {
-  /* padding: 15px 0;  */
   background-color: #211f5e;
   color: #e9b85f;
-  /* font-size: 56px; */
   font-weight: bold;
   text-align: center;
   box-sizing: border-box;
@@ -26,7 +24,6 @@
 }
 
 .header h1 {
-  /* max-width: 800px; */
   margin: 0;
   font-size: inherit;
 }
