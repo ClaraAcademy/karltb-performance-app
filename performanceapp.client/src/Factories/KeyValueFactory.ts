@@ -1,4 +1,6 @@
+import type { Key } from "react";
 import type { KeyValue, Portfolio } from "../types";
+import formatDate from "../formatters/FormatDate";
 
 export function createKeyValue(
   key: string,
@@ -20,4 +22,17 @@ export function createKeyValuesFromPortfolios(
   portfolios: Portfolio[],
 ): KeyValue<string, string>[] {
   return portfolios.map((p) => createKeyValueFromPortfolio(p));
+}
+
+export function createKeyValueFromDate(date: Date): KeyValue<string, string> {
+  return {
+    key: date.getTime().toString(),
+    value: formatDate(date),
+  };
+}
+
+export function createKeyValuesFromDates(
+  dates: Date[],
+): KeyValue<string, string>[] {
+  return dates.map((d) => createKeyValueFromDate(d));
 }

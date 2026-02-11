@@ -3,6 +3,23 @@ export interface PositionColumn<T> {
   className: string;
   accessor: (row: T) => string;
 }
+export type OnChange = (e: React.ChangeEvent<HTMLSelectElement>) => void;
+export type SetDate = (date: Date | null) => void;
+export type SetDates = (dates: Date[]) => void;
+export type SetPortfolio = (portfolio: Portfolio | null) => void;
+export type SetPortfolios = (portfolios: Portfolio[]) => void;
+export type SetPortfolioBenchmark = (
+  portfolioBenchmark: PortfolioBenchmark | null,
+) => void;
+export type SetPortfolioBenchmarks = (
+  portfolioBenchmarks: PortfolioBenchmark[],
+) => void;
+export type SetSvg = (svg: string) => void;
+
+export interface LoginDto {
+  username: string;
+  password: string;
+}
 
 export interface KeyValue<T, S> {
   key: T;

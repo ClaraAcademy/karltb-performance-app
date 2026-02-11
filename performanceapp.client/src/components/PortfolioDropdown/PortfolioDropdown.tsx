@@ -1,35 +1,39 @@
-import { useState, useEffect } from "react";
-import { type KeyValue, type Portfolio } from "../../types";
-import { fetchPortfolios } from "../../api/FetchPortfolio";
+import { type Portfolio } from "../../types";
 import { createKeyValuesFromPortfolios } from "../../Factories/KeyValueFactory";
 import Picker from "../Picker/Picker";
+import { useEffect, useState } from "react";
+import "./PortfolioPicker.css"
 
-interface PortfolioPickerProps {
+interface Props {
+  label: string;
   portfolio: Portfolio | null;
+  portfolios: Portfolio[];
   setPortfolio: (portfolio: Portfolio | null) => void;
 }
 
-export default function PortfolioPicker(props: PortfolioPickerProps) {
-  const { portfolio, setPortfolio } = props;
-
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [values, setValues] = useState<KeyValue<string, string>[]>([]);
-
-  const selected = portfolio?.portfolioId.toString() ?? "";
-  const placeholder = "Select a portfolio";
-
-  async function fetchAndSetPortfolios() {
-    const portfolios = await fetchPortfolios();
-    setPortfolios(portfolios);
-  }
+export default function PortfolioPicker({
+  label,
+  portfolio,
+  portfolios,
+  setPortfolio,
+}: Props) {
+  const [selected, setSelected] = useState<string>("");
 
   useEffect(() => {
-    fetchAndSetPortfolios();
-  }, [portfolio]);
+    if (portfolios.length === 1) {
+      const onlyPortfolio = portfolios[0];
+      setSelected(onlyPortfolio.portfolioId.toString());
+      if (!portfolio || onlyPortfolio.portfolioId !== portfolio.portfolioId) {
+        setPortfolio(onlyPortfolio);
+      }
+    } else if (portfolio) {
+      setSelected(portfolio.portfolioId.toString());
+    } else {
+      setSelected("");
+    }
+  }, [portfolio, portfolios, setPortfolio]);
 
-  useEffect(() => {
-    setValues(createKeyValuesFromPortfolios(portfolios));
-  }, [portfolios]);
+  const values = createKeyValuesFromPortfolios(portfolios);
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = Number(e.target.value);
@@ -37,12 +41,5 @@ export default function PortfolioPicker(props: PortfolioPickerProps) {
     setPortfolio(selected);
   };
 
-  return (
-    <Picker
-      selected={selected}
-      onChange={onChange}
-      placeholder={placeholder}
-      values={values}
-    />
-  );
+  return <Picker label={label} selected={selected} onChange={onChange} values={values} />;
 }

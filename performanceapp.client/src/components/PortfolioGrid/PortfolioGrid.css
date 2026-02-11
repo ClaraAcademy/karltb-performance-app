@@ -1,45 +1,32 @@
-.gridWrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-  grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.subGridWrapper {
-  width: 100%;
+.portfolio-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
+  gap: 32px;
+  width: 300px;
 }
 
-.labelHeader {
-  font-weight: bold;
-}
-
-.cell {
-  background-color: rgb(33, 31, 94, 0.2);
-  /* padding: 5px; */
-  display: grid;
-  align-items: center; /* vertical alignment */
-  justify-items: center; /* horizontal alignment */
+.portfolio-grid-cell {
+  padding: 8px;
 }
 
 #portfolioDropdown {
   grid-column: 1;
-  grid-row: 1 / 3;
 }
 
-#dateDropdown {
+#benchmarkDropdown {
   grid-column: 2;
-  grid-row: 1 / 3;
 }
 
-#portfolioInfo {
-  grid-column: 3;
-  grid-row: 1;
+.portfolio-grid select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  background-color: #6d4a80;
+  color: #e9b85f;
 }
 
-#benchmarkInfo {
-  grid-column: 3;
-  grid-row: 2;
+.portfolio-grid option {
+  background-color: #6d4a80;
+  color: #e9b85f;
 }

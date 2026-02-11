@@ -1,7 +1,7 @@
-import type { PortfolioBenchmark } from "../types";
+import type { Portfolio, PortfolioBenchmark, SetPortfolioBenchmarks } from "../types";
 import { api } from "./api";
 
-export default async function fetchPortfolioBenchmarks(
+export async function fetchPortfolioBenchmarks(
   portfolioId: number,
 ): Promise<PortfolioBenchmark[]> {
   try {
@@ -14,4 +14,12 @@ export default async function fetchPortfolioBenchmarks(
     console.error(err);
   }
   return [];
+}
+
+export async function fetchAndSetPortfolioBenchmarks(
+  portfolio: Portfolio,
+  setPortfolioBenchmarks: SetPortfolioBenchmarks,
+) {
+  const dtos = await fetchPortfolioBenchmarks(portfolio.portfolioId);
+  setPortfolioBenchmarks(dtos);
 }

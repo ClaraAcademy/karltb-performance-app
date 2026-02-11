@@ -1,0 +1,18 @@
+.picker-group {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.picker-group label {
+  grid-row: 1;
+  text-align: left;
+}
+
+.picker-group select {
+  grid-row: 2;
+}
+
+.picker-cell {
+  width: 100%;
+}

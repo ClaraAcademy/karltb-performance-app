@@ -8,26 +8,30 @@ import KeyFigureTable from "./KeyFigures/KeyFigureTable";
 import Report from "./Report/Report";
 import { useState } from "react";
 import type { Portfolio } from "../types";
+import DatePicker from "./Picker/DatePicker";
 import Positions from "./Positions/Positions";
 
-interface MainAppProps {
-  onLogout?: () => void;
-}
-
-function MainApp({ onLogout }: MainAppProps) {
+export default function MainApp() {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
-  const [bankday, setBankday] = useState<Date>(new Date());
+  const [benchmark, setBenchmark] = useState<Portfolio | null>(null);
+  const [date, setDate] = useState<Date | null>(null);
   return (
     <>
-      <Header onLogout={onLogout} />
+      <Header>
+        <PortfolioGrid
+          portfolio={portfolio}
+          setPortfolio={setPortfolio}
+          benchmark={benchmark}
+          setBenchmark={setBenchmark}
+        />
+      </Header>
       <div className="mainContent-container">
         <div className="mainContent">
-          <PortfolioGrid portfolio={portfolio} setPortfolio={setPortfolio} />
-          {portfolio ? (
-            <Positions portfolio={portfolio} bankday={bankday} />
+          {portfolio && date ? (
+            <Positions portfolio={portfolio} bankday={date} />
           ) : null}
           <h2>Line chart</h2>
-          <LineChart />
+          <LineChart portfolioId={portfolio?.portfolioId} />
           <h2>Key Figures</h2>
           <KeyFigureTable />
           <Report />
@@ -36,5 +40,3 @@ function MainApp({ onLogout }: MainAppProps) {
     </>
   );
 }
-
-export default MainApp;
