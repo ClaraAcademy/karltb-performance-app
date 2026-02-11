@@ -16,21 +16,26 @@ export default function Picker({
   values,
   placeholder,
 }: PickerProps) {
+  const id = `${label.toLowerCase()}-picker`;
   return (
     <div className="picker-group">
-      <label>
-        <p>{label}</p>
-        <select value={selected} onChange={onChange} style={{ width: "100%" }}>
-          <option value="" disabled hidden>
-            {placeholder ?? ""}
+      <label htmlFor={id} className="picker-cell">{label}</label>
+      <select
+        value={selected}
+        onChange={onChange}
+        style={{ width: "100%" }}
+        id={id}
+        className="picker-cell"
+      >
+        <option value="" disabled hidden>
+          {placeholder ?? ""}
+        </option>
+        {values.map((p) => (
+          <option key={p.key} value={p.key}>
+            {p.value}
           </option>
-          {values.map((p) => (
-            <option key={p.key} value={p.key}>
-              {p.value}
-            </option>
-          ))}
-        </select>
-      </label>
+        ))}
+      </select>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { type Portfolio } from "../../types";
 import { createKeyValuesFromPortfolios } from "../../Factories/KeyValueFactory";
 import Picker from "../Picker/Picker";
 import { useEffect, useState } from "react";
+import "./PortfolioPicker.css"
 
 interface Props {
   label: string;

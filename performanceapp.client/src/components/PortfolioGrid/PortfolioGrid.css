@@ -1,21 +1,14 @@
-.gridWrapper {
+.portfolio-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 1fr 1fr;
   background-color: rgb(33, 31, 94, 0.2);
-  gap: 10px;
+  gap: 8px;
 }
 
-.labelHeader {
-  font-weight: bold;
-}
-
-.cell {
-  background-color: rgb(33, 31, 94, 0.2);
-  /* padding: 5px; */
-  display: grid;
-  align-items: center; /* vertical alignment */
-  justify-items: center; /* horizontal alignment */
+.portfolio-grid .cell {
+  background-color: #6d4a80;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 #portfolioDropdown {
@@ -24,6 +17,6 @@
 }
 
 #benchmarkDropdown {
-  grid-column: 2;
-  grid-row: 1;
+  grid-column: 1;
+  grid-row: 2;
 }

@@ -1,5 +1,18 @@
 .picker-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.picker-group label {
+  grid-column: 1;
+  text-align: left;
+}
+
+.picker-group select {
+  grid-column: 2;
+}
+
+.picker-cell {
+  width: 100%;
 }

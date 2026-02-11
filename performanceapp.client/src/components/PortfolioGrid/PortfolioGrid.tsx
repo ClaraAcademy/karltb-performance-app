@@ -41,7 +41,7 @@ const PortfolioGrid = ({
   }));
 
   return (
-    <div className="gridWrapper">
+    <div className="portfolio-grid">
       <div className="cell" id="portfolioDropdown">
         <PortfolioPicker
           label={"Portfolio"}
