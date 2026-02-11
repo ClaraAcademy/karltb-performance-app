@@ -1,24 +1,36 @@
 import type { KeyValue, OnChange } from "../../types";
+import "./Picker.css";
 
 interface PickerProps {
+  label: string;
   selected: string;
   onChange: OnChange;
   values: KeyValue<string, string>[];
   placeholder?: string;
 }
 
-export default function Picker(props: PickerProps) {
-  const { selected, onChange, values, placeholder } = props;
+export default function Picker({
+  label,
+  selected,
+  onChange,
+  values,
+  placeholder,
+}: PickerProps) {
   return (
-    <select value={selected} onChange={onChange}>
-      <option value="" disabled hidden>
-        {placeholder ?? ""}
-      </option>
-      {values.map((p) => (
-        <option key={p.key} value={p.key}>
-          {p.value}
-        </option>
-      ))}
-    </select>
+    <div className="picker-group">
+      <label>
+        <p>{label}</p>
+        <select value={selected} onChange={onChange} style={{ width: "100%" }}>
+          <option value="" disabled hidden>
+            {placeholder ?? ""}
+          </option>
+          {values.map((p) => (
+            <option key={p.key} value={p.key}>
+              {p.value}
+            </option>
+          ))}
+        </select>
+      </label>
+    </div>
   );
 }

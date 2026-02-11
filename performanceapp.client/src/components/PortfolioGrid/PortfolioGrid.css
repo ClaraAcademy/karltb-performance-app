@@ -1,15 +1,9 @@
 .gridWrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
   background-color: rgb(33, 31, 94, 0.2);
-}
-
-.subGridWrapper {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
+  gap: 10px;
 }
 
 .labelHeader {
@@ -24,22 +18,12 @@
   justify-items: center; /* horizontal alignment */
 }
 
-#portfolioInfo {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 #portfolioDropdown {
   grid-column: 1;
-  grid-row: 2;
-}
-
-#benchmarkInfo {
-  grid-column: 2;
   grid-row: 1;
 }
 
 #benchmarkDropdown {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
 }

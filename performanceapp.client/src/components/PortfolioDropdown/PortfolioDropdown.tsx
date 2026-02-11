@@ -4,13 +4,18 @@ import Picker from "../Picker/Picker";
 import { useEffect, useState } from "react";
 
 interface Props {
+  label: string;
   portfolio: Portfolio | null;
   portfolios: Portfolio[];
   setPortfolio: (portfolio: Portfolio | null) => void;
 }
 
-export default function PortfolioPicker(props: Props) {
-  const { portfolio, portfolios, setPortfolio } = props;
+export default function PortfolioPicker({
+  label,
+  portfolio,
+  portfolios,
+  setPortfolio,
+}: Props) {
   const [selected, setSelected] = useState<string>("");
 
   useEffect(() => {
@@ -35,5 +40,5 @@ export default function PortfolioPicker(props: Props) {
     setPortfolio(selected);
   };
 
-  return <Picker selected={selected} onChange={onChange} values={values} />;
+  return <Picker label={label} selected={selected} onChange={onChange} values={values} />;
 }

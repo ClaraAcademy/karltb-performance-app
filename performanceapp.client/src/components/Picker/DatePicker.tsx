@@ -33,9 +33,11 @@ export default function DatePicker({ date, setDate }: DatePickerProps) {
   };
 
   const values = createKeyValuesFromDates(dates);
+  const label = "Date";
 
   return (
     <Picker
+      label={label}
       selected={selected}
       onChange={onChange}
       values={values}
